@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Impact Map · Коплю–Трачу–Помогаю</title>
+<style>
+  :root {
+    --ink: #1b1f24;
+    --muted: #5a6270;
+    --goal-bg: #ffe2bf;  --goal-bd: #e07b12;
+    --actor-bg: #d7e6ff; --actor-bd: #2f67c9;
+    --imp-bg: #d8f1de;   --imp-bd: #2a8f4a;
+    --idea-bg: #ece3ff;  --idea-bd: #6f46c9;
+    --line: #9aa3b0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 2400px; background: #ffffff; }
+  body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    padding: 48px 60px 40px;
+    position: relative;
+  }
+  header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 26px; }
+  h1 { font-size: 44px; font-weight: 800; letter-spacing: -0.5px; }
+  h1 span { color: var(--muted); font-weight: 500; }
+  .sub { font-size: 22px; color: var(--muted); }
+
+  .cols, .map { display: flex; gap: 0; }
+  .c-goal  { width: 400px; }
+  .c-actor { width: 310px; margin-left: 120px; }
+  .c-imp   { width: 560px; margin-left: 120px; }
+  .c-idea  { width: 590px; margin-left: 120px; }
+
+  .cols { margin-bottom: 18px; }
+  .cols div { font-size: 20px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); }
+  .cols div b { font-weight: 800; }
+  .cols .q { display: block; font-size: 19px; letter-spacing: 0; text-transform: none; font-weight: 500; margin-top: 2px; }
+  .cols .c-goal  b { color: var(--goal-bd); }
+  .cols .c-actor b { color: var(--actor-bd); }
+  .cols .c-imp   b { color: var(--imp-bd); }
+  .cols .c-idea  b { color: var(--idea-bd); }
+
+  .goal-wrap { display: flex; align-items: center; }
+  .bands { display: flex; flex-direction: column; gap: 34px; }
+  .band { display: flex; align-items: center; padding: 18px 0; border-top: 2px dashed #e3e6ea; }
+  .band:first-child { border-top: none; padding-top: 0; }
+  .band > .c-actor { flex: none; }
+  .impacts { display: flex; flex-direction: column; gap: 26px; }
+  .igroup { display: flex; align-items: center; }
+  .ideas { display: flex; flex-direction: column; gap: 12px; }
+
+  .card { border: 3px solid; border-radius: 14px; padding: 16px 20px; position: relative; z-index: 2; }
+  .goal  { background: var(--goal-bg);  border-color: var(--goal-bd); padding: 26px 26px; }
+  .actor { background: var(--actor-bg); border-color: var(--actor-bd); }
+  .impact{ background: var(--imp-bg);   border-color: var(--imp-bd); }
+  .idea  { background: var(--idea-bg);  border-color: var(--idea-bd); padding: 12px 18px; }
+  .idea.opt { border-style: dashed; background: #f7f3ff; }
+
+  .goal .t  { font-size: 31px; font-weight: 800; line-height: 1.22; }
+  .goal .m  { font-size: 19px; line-height: 1.35; margin-top: 16px; padding-top: 14px; border-top: 2px solid rgba(224,123,18,.35); }
+  .goal .m b { display: block; font-size: 17px; text-transform: uppercase; letter-spacing: 1px; color: #a85a0c; margin-bottom: 4px; }
+  .goal .u  { font-size: 17px; color: #7a4a14; margin-top: 10px; font-style: italic; }
+
+  .actor .t { font-size: 27px; font-weight: 800; line-height: 1.2; }
+  .actor .w { font-size: 18px; color: #2c3f63; margin-top: 8px; line-height: 1.3; }
+
+  .impact .n { font-size: 17px; font-weight: 800; color: var(--imp-bd); letter-spacing: .5px; }
+  .impact .t { font-size: 24px; font-weight: 700; line-height: 1.25; margin-top: 2px; }
+  .impact .m { font-size: 18px; color: #2d5a3a; margin-top: 8px; }
+
+  .idea .t { font-size: 22px; font-weight: 600; line-height: 1.25; }
+  .idea .tag { display: inline-block; font-size: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: .8px; color: var(--idea-bd); margin-left: 8px; vertical-align: 2px; }
+
+  svg#wires { position: absolute; left: 0; top: 0; z-index: 1; pointer-events: none; }
+
+  footer { display: flex; gap: 34px; align-items: center; margin-top: 30px; font-size: 19px; color: var(--muted); }
+  .sw { display: inline-block; width: 26px; height: 18px; border: 3px solid; border-radius: 5px; vertical-align: -3px; margin-right: 8px; }
+  footer .logic { margin-left: auto; font-weight: 600; color: var(--ink); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Impact Map <span>· НЦФГ / «Коплю–Трачу–Помогаю»</span></h1>
+  <div class="sub">Цифровое продолжение «Умной копилки» · дети 6–10 лет и родители</div>
+</header>
+
+<div class="cols">
+  <div class="c-goal"><b>Goal</b><span class="q">Зачем?</span></div>
+  <div class="c-actor"><b>Actors</b><span class="q">Кто влияет?</span></div>
+  <div class="c-imp"><b>Impacts</b><span class="q">Как изменится поведение?</span></div>
+  <div class="c-idea"><b>Ideas</b><span class="q">Что поможет?</span></div>
+</div>
+
+<div class="map">
+  <div class="c-goal goal-wrap">
+    <div class="card goal" id="g">
+      <div class="t">Семьи продолжают регулярно практиковать «Коплю–Трачу–Помогаю» после первого знакомства с «Умной копилкой»</div>
+      <div class="m"><b>Как проверить</b>% семей, которые распределяют деньги по трём секциям ≥ 1 раза в неделю через N недель после получения копилки</div>
+      <div class="u">Нужно уточнить у НЦФГ: baseline, N, целевой уровень</div>
+    </div>
+  </div>
+
+  <div class="bands">
+    <!-- Ребёнок -->
+    <div class="band">
+      <div class="c-actor"><div class="card actor" id="a1" data-p="g">
+        <div class="t">Ребёнок 6–10 лет</div>
+        <div class="w">Сам выполняет практику с копилкой</div>
+      </div></div>
+      <div class="impacts">
+        <div class="igroup">
+          <div class="c-imp"><div class="card impact" id="i11" data-p="a1">
+            <div class="n">1.1</div>
+            <div class="t">Каждую неделю сам распределяет деньги по трём секциям и отмечает это</div>
+            <div class="m">Метрика: недель с отметкой распределения</div>
+          </div></div>
+          <div class="c-idea ideas">
+            <div class="card idea" data-p="i11"><div class="t">Цифровой трекер: отметка в 1–2 касания</div></div>
+            <div class="card idea" data-p="i11"><div class="t">«Задания недели» + серия недель подряд</div></div>
+            <div class="card idea opt" data-p="i11"><div class="t">AR-мини-игра по QR на копилке<span class="tag">опц.</span></div></div>
+          </div>
+        </div>
+        <div class="igroup">
+          <div class="c-imp"><div class="card impact" id="i12" data-p="a1">
+            <div class="n">1.2</div>
+            <div class="t">Ставит цель в «Коплю» и сам возвращается проверить прогресс</div>
+            <div class="m">Метрика: % детей с целью, возвраты к цели</div>
+          </div></div>
+          <div class="c-idea ideas">
+            <div class="card idea" data-p="i12"><div class="t">Цель: картинка, шкала прогресса, история</div></div>
+            <div class="card idea" data-p="i12"><div class="t">Награды за шаги к цели</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Родитель -->
+    <div class="band">
+      <div class="c-actor"><div class="card actor" id="a2" data-p="g">
+        <div class="t">Родитель</div>
+        <div class="w">Задаёт семейный ритм, но не всегда знает, как говорить о деньгах</div>
+      </div></div>
+      <div class="impacts">
+        <div class="igroup">
+          <div class="c-imp"><div class="card impact" id="i21" data-p="a2">
+            <div class="n">2.1</div>
+            <div class="t">Раз в неделю обсуждает с ребёнком, как тот распределил деньги</div>
+            <div class="m">Метрика: % недель с разговором</div>
+          </div></div>
+          <div class="c-idea ideas">
+            <div class="card idea" data-p="i21"><div class="t">Родительский режим «Неделя ребёнка»</div></div>
+            <div class="card idea" data-p="i21"><div class="t">Тема для 5-минутного разговора + «День привычек»</div></div>
+          </div>
+        </div>
+        <div class="igroup">
+          <div class="c-imp"><div class="card impact" id="i22" data-p="a2">
+            <div class="n">2.2</div>
+            <div class="t">При трудности обращается к материалам или в НЦФГ, а не бросает</div>
+            <div class="m">Метрика: вопросы и отзывы в месяц</div>
+          </div></div>
+          <div class="c-idea ideas">
+            <div class="card idea" data-p="i22"><div class="t">Материалы НЦФГ в одном месте, по ситуациям</div></div>
+            <div class="card idea" data-p="i22"><div class="t">Кнопка «Вопрос / отзыв в НЦФГ»</div></div>
+            <div class="card idea opt" data-p="i22"><div class="t">AI-помощник по методике НЦФГ<span class="tag">гипотеза</span></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- НЦФГ -->
+    <div class="band">
+      <div class="c-actor"><div class="card actor" id="a3" data-p="g">
+        <div class="t">НЦФГ и волонтёры</div>
+        <div class="w">Присутствуют на первом контакте и могут вернуть семью</div>
+      </div></div>
+      <div class="impacts">
+        <div class="igroup">
+          <div class="c-imp"><div class="card impact" id="i31" data-p="a3">
+            <div class="n">3.1</div>
+            <div class="t">Подключает семью к цифровому продолжению прямо на мастер-классе</div>
+            <div class="m">Метрика: % семей, подключённых на месте</div>
+          </div></div>
+          <div class="c-idea ideas">
+            <div class="card idea" data-p="i31"><div class="t">QR на копилке: старт и цель за 2–3 минуты</div></div>
+            <div class="card idea" data-p="i31"><div class="t">Сценарий для волонтёра «подключить на месте»</div></div>
+          </div>
+        </div>
+        <div class="igroup">
+          <div class="c-imp"><div class="card impact" id="i32" data-p="a3">
+            <div class="n">3.2</div>
+            <div class="t">Ежемесячно разбирает, где семьи выпадают, и возвращает их</div>
+            <div class="m">Метрика: % вернувшихся семей</div>
+          </div></div>
+          <div class="c-idea ideas">
+            <div class="card idea" data-p="i32"><div class="t">Обезличенная сводка активности и отзывов</div></div>
+            <div class="card idea" data-p="i32"><div class="t">Сообщения и новые задания неактивным семьям</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span><i class="sw" style="background:var(--goal-bg);border-color:var(--goal-bd)"></i>Цель</span>
+  <span><i class="sw" style="background:var(--actor-bg);border-color:var(--actor-bd)"></i>Актор</span>
+  <span><i class="sw" style="background:var(--imp-bg);border-color:var(--imp-bd)"></i>Изменение поведения</span>
+  <span><i class="sw" style="background:var(--idea-bg);border-color:var(--idea-bd)"></i>Идея / решение</span>
+  <span><i class="sw" style="background:#f7f3ff;border-color:var(--idea-bd);border-style:dashed"></i>Пунктир — проверяем позже, не ядро</span>
+  <span class="logic">Читать: идея → вызывает изменение поведения → приближает цель</span>
+</footer>
+
+<svg id="wires"></svg>
+<script>
+  const svg = document.getElementById('wires');
+  const W = document.documentElement.scrollWidth, H = document.documentElement.scrollHeight;
+  svg.setAttribute('width', W); svg.setAttribute('height', H);
+  const ns = 'http://www.w3.org/2000/svg';
+  const box = el => { const r = el.getBoundingClientRect(); return { l: r.left + scrollX, r: r.right + scrollX, m: r.top + scrollY + r.height / 2 }; };
+  const colors = { g: '#e07b12', a: '#2f67c9', i: '#2a8f4a' };
+  document.querySelectorAll('[data-p]').forEach(el => {
+    const pid = el.dataset.p, p = document.getElementById(pid);
+    const a = box(p), b = box(el);
+    const x1 = a.r, y1 = a.m, x2 = b.l, y2 = b.m, dx = (x2 - x1) * 0.5;
+    const path = document.createElementNS(ns, 'path');
+    path.setAttribute('d', `M${x1},${y1} C${x1 + dx},${y1} ${x2 - dx},${y2} ${x2 - 6},${y2}`);
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', colors[pid[0]]);
+    path.setAttribute('stroke-width', '3');
+    path.setAttribute('stroke-opacity', '.75');
+    svg.appendChild(path);
+    const head = document.createElementNS(ns, 'path');
+    head.setAttribute('d', `M${x2 - 14},${y2 - 7} L${x2 - 1},${y2} L${x2 - 14},${y2 + 7} Z`);
+    head.setAttribute('fill', colors[pid[0]]);
+    svg.appendChild(head);
+  });
+  document.title = 'H=' + H;
+</script>
+</body>
+</html>

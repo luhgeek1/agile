@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>OKR · Коплю–Трачу–Помогаю</title>
+<style>
+  :root {
+    --ink: #1b1f24; --muted: #5a6270;
+    --goal-bg: #ffe2bf; --goal-bd: #e07b12;
+    --kr-bg: #f4f7fb; --kr-bd: #d5dce6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1920px; height: 1080px; background: #ffffff; overflow: hidden; }
+  body { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; color: var(--ink); padding: 72px 96px 56px; display: flex; flex-direction: column; }
+
+  .eyebrow { font-size: 22px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: var(--goal-bd); }
+  h1 { font-size: 64px; font-weight: 800; letter-spacing: -1px; margin-top: 10px; }
+  .sub { font-size: 26px; color: var(--muted); margin-top: 12px; }
+
+  .obj { margin-top: 44px; background: var(--goal-bg); border: 3px solid var(--goal-bd); border-radius: 20px; padding: 32px 40px; display: flex; gap: 36px; align-items: center; }
+  .obj .lbl { flex: none; width: 170px; font-size: 22px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #a85a0c; }
+  .obj .t { font-size: 36px; font-weight: 400; line-height: 1.3; }
+  .obj .t b { font-weight: 800; }
+
+  .krs { margin-top: 36px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; flex: 1; }
+  .kr { background: var(--kr-bg); border: 2px solid var(--kr-bd); border-radius: 20px; padding: 30px 32px; display: flex; flex-direction: column; }
+  .kr .h { display: flex; align-items: baseline; gap: 16px; }
+  .kr .id { font-size: 24px; font-weight: 800; color: var(--muted); letter-spacing: 1px; }
+  .kr .big { font-size: 54px; font-weight: 800; color: #2a8f4a; letter-spacing: -1px; }
+  .kr .t { font-size: 28px; line-height: 1.35; margin-top: 14px; }
+  .kr .t b { font-weight: 800; }
+  .kr .how { margin-top: auto; padding: 14px 18px; background: #ffffff; border: 1px solid var(--kr-bd); border-radius: 12px; font-size: 21px; color: var(--ink); line-height: 1.35; }
+  .kr .how b { font-size: 16px; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 2px; }
+  .kr .link { padding-top: 18px; font-size: 21px; color: var(--muted); }
+  .kr .link b { color: #2a8f4a; }
+
+  .note { margin-top: 26px; font-size: 20px; color: var(--muted); }
+</style>
+</head>
+<body>
+  <div class="eyebrow">НЦФГ · «Коплю–Трачу–Помогаю»</div>
+  <h1>OKR: от копилки-подарка к семейной привычке</h1>
+  <div class="sub">Цифровое продолжение «Умной копилки» · дети 6–10 лет и родители</div>
+
+  <div class="obj">
+    <div class="lbl">Objective</div>
+    <div class="t">Превратить «Умную копилку» из разового знакомства в семейную <b>привычку</b>: ребёнок продолжает осознанно копить, тратить и помогать, а родитель уверенно его поддерживает</div>
+  </div>
+
+  <div class="krs">
+    <div class="kr">
+      <div class="h"><span class="id">KR1</span><span class="big">≥ X из Y</span></div>
+      <div class="t">детей пилота с первого раза <b>без подсказок</b> проходят сценарий «распределил → отметил → увидел прогресс к цели»</div>
+      <div class="how"><b>Как измерим</b>юзабилити-тест прототипа с детьми</div>
+      <div class="link">↳ Impact <b>1.1–1.2</b> · ребёнок</div>
+    </div>
+    <div class="kr">
+      <div class="h"><span class="id">KR2</span><span class="big">≥ X из Y</span></div>
+      <div class="t">семей пилота отмечают распределение денег по трём секциям минимум <b>3 недели из 4</b></div>
+      <div class="how"><b>Как измерим</b>отметки в трекере за 4 недели пилота</div>
+      <div class="link">↳ Impact <b>1.1</b> · регулярность = Goal</div>
+    </div>
+    <div class="kr">
+      <div class="h"><span class="id">KR3</span><span class="big">≥ X из Y</span></div>
+      <div class="t">родителей оценивают на <b>4–5 из 5</b>: «вижу прогресс ребёнка и знаю, о чём с ним поговорить на этой неделе»</div>
+      <div class="how"><b>Как измерим</b>короткий опрос родителей после пилота</div>
+      <div class="link">↳ Impact <b>2.1</b> · родитель</div>
+    </div>
+  </div>
+
+  <div class="note">Y (размер пилота) и срок пилота согласуем с НЦФГ. Baseline регулярности пока нет, поэтому измеряем результат пилота, а не «было → стало».</div>
+</body>
+</html>

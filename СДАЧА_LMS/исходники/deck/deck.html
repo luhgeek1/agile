@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>НЦФГ · Коплю–Трачу–Помогаю · Impact Map и OKR</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+  @page { size: 1920px 1080px; margin: 0; }
+  :root {
+    --bg: #efefef; --grid: #e2e2e2; --ink: #111111; --body: #2b2b2b; --muted: #8b8b8b;
+    --yellow: #f2fa6d; --pink: #ff73b8;
+    --display: "Russo One", "Arial Black", sans-serif;
+    --mono: "JetBrains Mono", Menlo, monospace;
+    --sans: "Inter", "Helvetica Neue", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); }
+  body { color: var(--ink); font-family: var(--mono); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  .slide {
+    width: 1920px; height: 1080px; position: relative; overflow: hidden;
+    background-color: var(--bg);
+    background-image:
+      linear-gradient(var(--grid) 1.5px, transparent 1.5px),
+      linear-gradient(90deg, var(--grid) 1.5px, transparent 1.5px);
+    background-size: 54px 54px;
+    break-after: page; page-break-after: always;
+  }
+  .slide:last-child { break-after: auto; page-break-after: auto; }
+  .single .slide { display: none; }
+  .single .slide.on { display: block; }
+
+  /* ---------- chrome ---------- */
+  .num { position: absolute; left: 0; top: 0; width: 64px; height: 42px; background: var(--ink); color: #fff; font: 700 15px var(--mono); padding: 12px 0 0 14px; }
+  .kicker { position: absolute; left: 112px; top: 44px; font: 500 17px var(--mono); letter-spacing: 6px; color: var(--muted); text-transform: uppercase; }
+  .badge {
+    position: absolute; right: 64px; top: 30px; transform: rotate(-2deg);
+    background: var(--pink); border: 3px solid var(--ink); border-radius: 999px;
+    padding: 10px 30px 12px; font: 28px var(--display); box-shadow: 7px 7px 0 var(--ink);
+  }
+  .caption { position: absolute; left: 80px; top: 100px; font: 700 21px var(--mono); padding-bottom: 5px; border-bottom: 3.5px solid var(--ink); }
+  .title { position: absolute; left: 80px; top: 146px; right: 80px; font: 66px/1.0 var(--display); text-transform: uppercase; letter-spacing: -0.5px; }
+  .foot { position: absolute; left: 80px; right: 80px; bottom: 34px; display: flex; align-items: center; gap: 14px; }
+  .foot .note { font: 400 14px/1.45 var(--mono); color: #6b6b6b; margin-left: 18px; max-width: 1180px; }
+  .barcode { margin-left: auto; display: flex; align-items: flex-end; gap: 4px; height: 42px; }
+  .barcode i { display: block; background: var(--ink); height: 100%; }
+
+  .pill { display: inline-block; border: 2.5px solid var(--ink); border-radius: 999px; padding: 7px 18px 6px; font: 500 15px var(--mono); letter-spacing: 2px; text-transform: uppercase; background: #fff0; white-space: nowrap; }
+  .pill.y { background: var(--yellow); color: var(--ink); }
+  .pill.b { background: var(--ink); color: var(--yellow); border-color: var(--ink); }
+
+  /* ---------- cards ---------- */
+  .card { background: #fff; border: 3px solid var(--ink); border-radius: 26px; padding: 26px 32px; position: relative; }
+  .card.sh { box-shadow: 13px 13px 0 var(--yellow); }
+  .card.y { background: var(--yellow); }
+  .card.k { background: var(--ink); color: #fff; }
+  .card h3 { font: 700 23px/1.3 var(--mono); }
+  .card.k h3 { color: var(--yellow); }
+  .card p, .card li { font: 400 18.5px/1.6 var(--mono); color: var(--body); }
+  .card.k p, .card.k li { color: #e9e9e9; }
+  .card h3 + p, .card h3 + ul { margin-top: 10px; }
+  .card ul { list-style: none; }
+  .card li::before { content: "·  "; font-weight: 700; }
+  .src { font: 500 15px var(--mono); color: var(--muted); letter-spacing: 1px; }
+  .lbl { font: 500 14px var(--mono); letter-spacing: 3px; text-transform: uppercase; color: var(--muted); }
+
+  /* ================= 1 · IMPACT MAP ================= */
+  .s-map .caption { top: 92px; }
+  .s-map .title { font-size: 52px; top: 134px; }
+  .s-map .heads { position: absolute; left: 64px; top: 204px; display: flex; }
+  .s-map .heads div { font: 700 15px var(--mono); letter-spacing: 3px; text-transform: uppercase; }
+  .s-map .heads div span { color: var(--muted); font-weight: 500; letter-spacing: 1px; text-transform: none; margin-left: 8px; }
+  .map { position: absolute; left: 64px; top: 236px; display: flex; }
+  .w-goal { width: 330px; } .w-act { width: 232px; margin-left: 62px; } .w-imp { width: 486px; margin-left: 62px; } .w-idea { width: 560px; margin-left: 62px; }
+  .map .gwrap { display: flex; align-items: center; }
+  .bands { display: flex; flex-direction: column; gap: 26px; }
+  .band { display: flex; align-items: center; }
+  .imps { display: flex; flex-direction: column; gap: 11px; }
+  .ig { display: flex; align-items: center; }
+  .ideas { display: flex; flex-direction: column; gap: 7px; }
+  .m { position: relative; z-index: 2; border: 3px solid var(--ink); }
+  .m.goal { background: #fff; color: var(--ink); border-radius: 26px; padding: 24px 26px; box-shadow: 14px 14px 0 var(--yellow); }
+  .m.goal .l { display: inline-block; font: 700 13px var(--mono); letter-spacing: 3px; background: var(--yellow); border: 2.5px solid var(--ink); border-radius: 999px; padding: 3px 12px 2px; }
+  .m.goal .t { font: 800 27px/1.22 var(--sans); margin-top: 10px; }
+  .m.goal .c { margin-top: 18px; padding-top: 14px; border-top: 2px dashed #bdbdbd; font: 400 15px/1.5 var(--mono); color: #444; }
+  .m.goal .c b { color: var(--ink); font-weight: 700; display: block; letter-spacing: 2px; font-size: 13px; margin-bottom: 4px; }
+  .m.goal .u { margin-top: 12px; font: 700 14px/1.6 var(--mono); color: var(--ink); }
+  .m.goal .u span { background: var(--yellow); padding: 1px 4px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+  .m.act { background: var(--yellow); border-radius: 22px; padding: 16px 20px; }
+  .m.act .t { font: 21px/1.15 var(--display); text-transform: uppercase; }
+  .m.act .w { margin-top: 8px; font: 400 14px/1.45 var(--mono); color: #333; }
+  .m.imp { background: #fff; border-radius: 20px; padding: 10px 18px 9px; box-shadow: 8px 8px 0 var(--yellow); }
+  .m.imp .t { font: 700 17px/1.36 var(--mono); }
+  .m.imp .t i { font-style: normal; display: inline-block; background: var(--ink); color: var(--yellow); border-radius: 999px; padding: 1px 10px; font-size: 14px; margin-right: 8px; vertical-align: 1px; }
+  .m.imp .me { margin-top: 3px; font: 400 14px var(--mono); color: #6a6a6a; }
+  .m.idea { background: #fff; border-width: 2.5px; border-radius: 13px; padding: 6px 16px; font: 500 15.5px/1.35 var(--mono); }
+  .m.idea.opt { border-style: dashed; background: #fbfbfb; }
+  .m.idea .tag { display: inline-block; margin-left: 8px; background: var(--yellow); border: 2px solid var(--ink); border-radius: 999px; padding: 0 8px; font: 700 11.5px var(--mono); letter-spacing: 1px; vertical-align: 1px; }
+  .wires { position: absolute; left: 0; top: 0; z-index: 1; overflow: visible; }
+  .legend { display: flex; gap: 20px; align-items: center; margin-left: 18px; font: 500 14px var(--mono); color: #444; }
+  .legend i { display: inline-block; width: 22px; height: 15px; border: 2.5px solid var(--ink); border-radius: 5px; vertical-align: -2px; margin-right: 7px; }
+
+  /* ================= 2 · OKR ================= */
+  .s-okr .obj { position: absolute; left: 80px; right: 80px; top: 316px; display: flex; gap: 34px; align-items: center; padding: 30px 40px; }
+  .s-okr .obj .t { font: 700 31px/1.38 var(--sans); color: var(--ink); }
+  .s-okr .obj .t mark { background: var(--ink); color: var(--yellow); padding: 0 8px; border-radius: 8px; }
+  .s-okr .krs { position: absolute; left: 80px; right: 80px; top: 526px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 44px; }
+  .s-okr .kr { min-height: 406px; display: flex; flex-direction: column; padding: 26px 30px 24px; }
+  .s-okr .kr .top { display: flex; align-items: center; justify-content: space-between; }
+  .s-okr .kr .imp { font: 500 14px var(--mono); color: #555; letter-spacing: 1px; }
+  .s-okr .kr .imp b { color: var(--ink); }
+  .s-okr .kr .big { margin-top: 18px; font: 62px/1 var(--display); letter-spacing: -1px; }
+  .s-okr .kr p { margin-top: 18px; font: 400 21px/1.55 var(--mono); color: var(--body); }
+  .s-okr .kr p b { color: var(--ink); background: var(--yellow); padding: 0 4px; }
+  .s-okr .kr .how { margin-top: auto; background: var(--bg); border: 2.5px solid var(--ink); border-radius: 16px; padding: 12px 16px; font: 400 16.5px/1.4 var(--mono); }
+  .s-okr .kr .how span { display: block; font: 700 12.5px var(--mono); letter-spacing: 2.5px; color: #555; margin-bottom: 3px; }
+
+</style>
+</head>
+<body>
+
+<!-- ============================ 1 · IMPACT MAP ============================ -->
+<section class="slide s-map" id="s1">
+  <div class="num">01</div>
+  <div class="kicker">НЦФГ · Коплю–Трачу–Помогаю</div>
+  <div class="badge">✦ НЦФГ · AGILE</div>
+  <div class="caption">Impact Map</div>
+  <div class="title">Как копилка станет привычкой</div>
+
+  <div class="heads">
+    <div class="w-goal" style="margin-left:0">Goal<span>зачем?</span></div>
+    <div class="w-act">Actors<span>кто влияет?</span></div>
+    <div class="w-imp">Impacts<span>что изменится в поведении?</span></div>
+    <div class="w-idea">Ideas<span>что поможет?</span></div>
+  </div>
+
+  <div class="map" id="map">
+    <svg class="wires" id="wires"></svg>
+    <div class="w-goal gwrap">
+      <div class="m goal" id="g">
+        <div class="l">GOAL</div>
+        <div class="t">Семьи продолжают регулярно практиковать «Коплю–Трачу–Помогаю» после первого знакомства с «Умной копилкой»</div>
+        <div class="c"><b>КАК ПРОВЕРИТЬ</b>% семей, которые распределяют деньги по трём секциям ≥ 1 раза в неделю через N недель после получения копилки</div>
+        <div class="u"><span>Нужно уточнить у НЦФГ: baseline, N, целевой уровень</span></div>
+      </div>
+    </div>
+
+    <div class="bands">
+      <div class="band">
+        <div class="w-act"><div class="m act" id="a1" data-p="g"><div class="t">Ребёнок 6–10 лет</div><div class="w">сам выполняет практику с копилкой</div></div></div>
+        <div class="imps">
+          <div class="ig">
+            <div class="w-imp"><div class="m imp" id="i11" data-p="a1"><div class="t"><i>1.1</i>Каждую неделю сам распределяет деньги по трём секциям и отмечает это</div><div class="me">метрика: недель с отметкой</div></div></div>
+            <div class="w-idea ideas">
+              <div class="m idea" data-p="i11">Цифровой трекер: отметка в 1–2 касания</div>
+              <div class="m idea" data-p="i11">«Задания недели» + серия недель подряд</div>
+              <div class="m idea opt" data-p="i11">AR-мини-игра по QR на копилке<span class="tag">ОПЦ.</span></div>
+            </div>
+          </div>
+          <div class="ig">
+            <div class="w-imp"><div class="m imp" id="i12" data-p="a1"><div class="t"><i>1.2</i>Ставит цель в «Коплю» и сам возвращается проверить прогресс</div><div class="me">метрика: % детей с целью, возвраты к цели</div></div></div>
+            <div class="w-idea ideas">
+              <div class="m idea" data-p="i12">Цель: картинка, шкала прогресса, история</div>
+              <div class="m idea" data-p="i12">Награды за шаги к цели</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="band">
+        <div class="w-act"><div class="m act" id="a2" data-p="g"><div class="t">Родитель</div><div class="w">задаёт семейный ритм, но не всегда знает, как говорить о деньгах</div></div></div>
+        <div class="imps">
+          <div class="ig">
+            <div class="w-imp"><div class="m imp" id="i21" data-p="a2"><div class="t"><i>2.1</i>Раз в неделю обсуждает с ребёнком, как тот распределил деньги</div><div class="me">метрика: % недель с разговором</div></div></div>
+            <div class="w-idea ideas">
+              <div class="m idea" data-p="i21">Родительский режим «Неделя ребёнка»</div>
+              <div class="m idea" data-p="i21">Тема для разговора на 5 минут + «День привычек»</div>
+            </div>
+          </div>
+          <div class="ig">
+            <div class="w-imp"><div class="m imp" id="i22" data-p="a2"><div class="t"><i>2.2</i>При трудности обращается к материалам или в НЦФГ, а не бросает</div><div class="me">метрика: вопросы и отзывы в месяц</div></div></div>
+            <div class="w-idea ideas">
+              <div class="m idea" data-p="i22">Материалы НЦФГ в одном месте, по ситуациям</div>
+              <div class="m idea" data-p="i22">Кнопка «Вопрос / отзыв в НЦФГ»</div>
+              <div class="m idea opt" data-p="i22">AI-помощник по методике НЦФГ<span class="tag">ГИПОТЕЗА</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="band">
+        <div class="w-act"><div class="m act" id="a3" data-p="g"><div class="t">НЦФГ и волонтёры</div><div class="w">есть на первом контакте и могут вернуть семью</div></div></div>
+        <div class="imps">
+          <div class="ig">
+            <div class="w-imp"><div class="m imp" id="i31" data-p="a3"><div class="t"><i>3.1</i>Подключает семью к цифровому продолжению прямо на мастер-классе</div><div class="me">метрика: % семей, подключённых на месте</div></div></div>
+            <div class="w-idea ideas">
+              <div class="m idea" data-p="i31">QR на копилке: старт и цель за 2–3 минуты</div>
+              <div class="m idea" data-p="i31">Сценарий для волонтёра «подключить на месте»</div>
+            </div>
+          </div>
+          <div class="ig">
+            <div class="w-imp"><div class="m imp" id="i32" data-p="a3"><div class="t"><i>3.2</i>Ежемесячно разбирает, где семьи выпадают, и возвращает их</div><div class="me">метрика: % вернувшихся семей</div></div></div>
+            <div class="w-idea ideas">
+              <div class="m idea" data-p="i32">Обезличенная сводка активности и отзывов</div>
+              <div class="m idea" data-p="i32">Сообщения и новые задания неактивным семьям</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span class="pill">• Impact Map •</span><span class="pill">1/2</span>
+    <div class="legend">
+      <span><i style="background:#fff;box-shadow:4px 4px 0 var(--yellow);border-width:3.5px"></i>цель</span>
+      <span><i style="background:var(--yellow)"></i>актор</span>
+      <span><i style="background:#fff;box-shadow:4px 4px 0 var(--yellow)"></i>изменение поведения</span>
+      <span><i style="background:#fff"></i>идея</span>
+      <span><i style="background:#fff;border-style:dashed"></i>опционально / гипотеза</span>
+      <span style="margin-left:14px;color:var(--ink);font-weight:700">идея → поведение → цель</span>
+    </div>
+    <div class="barcode"></div>
+  </div>
+</section>
+
+<!-- ============================ 2 · OKR ============================ -->
+<section class="slide s-okr" id="s2">
+  <div class="num">02</div>
+  <div class="kicker">НЦФГ · Коплю–Трачу–Помогаю</div>
+  <div class="badge">✦ НЦФГ · AGILE</div>
+  <div class="caption">OKR · вытекает из Impact Map</div>
+  <div class="title">От копилки-подарка<br>к семейной привычке</div>
+
+  <div class="card y obj">
+    <span class="pill b" style="flex:none">Objective</span>
+    <div class="t">Превратить «Умную копилку» из разового знакомства в семейную <mark>привычку</mark>: ребёнок продолжает осознанно копить, тратить и помогать, а родитель уверенно его поддерживает</div>
+  </div>
+
+  <div class="krs">
+    <div class="card sh kr">
+      <div class="top"><span class="pill b">KR1</span><span class="imp">↳ IMPACT <b>1.1–1.2</b> · РЕБЁНОК</span></div>
+      <div class="big">≥ X из Y</div>
+      <p>детей пилота с первого раза <b>без подсказок</b> проходят сценарий «распределил → отметил → увидел прогресс к цели»</p>
+      <div class="how"><span>КАК ИЗМЕРИМ</span>юзабилити-тест прототипа с детьми</div>
+    </div>
+    <div class="card sh kr">
+      <div class="top"><span class="pill b">KR2</span><span class="imp">↳ IMPACT <b>1.1</b> · РЕГУЛЯРНОСТЬ</span></div>
+      <div class="big">≥ X из Y</div>
+      <p>семей пилота отмечают распределение денег по трём секциям минимум <b>3 недели из 4</b></p>
+      <div class="how"><span>КАК ИЗМЕРИМ</span>отметки в трекере за 4 недели пилота</div>
+    </div>
+    <div class="card sh kr">
+      <div class="top"><span class="pill b">KR3</span><span class="imp">↳ IMPACT <b>2.1</b> · РОДИТЕЛЬ</span></div>
+      <div class="big">≥ X из Y</div>
+      <p>родителей оценивают на <b>4–5 из 5</b>: «вижу прогресс ребёнка и знаю, о чём с ним поговорить на этой неделе»</p>
+      <div class="how"><span>КАК ИЗМЕРИМ</span>короткий опрос родителей после пилота</div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span class="pill">• OKR •</span><span class="pill">2/2</span>
+    <div class="note">Y (размер пилота) и срок пилота согласуем с НЦФГ. Baseline регулярности пока нет, поэтому измеряем результат пилота, а не «было → стало».</div>
+    <div class="barcode"></div>
+  </div>
+</section>
+
+<script>
+  // Одиночный слайд для PNG: deck.html?s=1
+  const s = new URLSearchParams(location.search).get('s');
+  if (s) { document.body.classList.add('single'); document.getElementById('s' + s).classList.add('on'); }
+
+  // Штрихкод как в шаблоне
+  const bars = [[5,1],[3,1],[6,.62],[3,1],[3,1],[7,.8],[3,1],[5,1],[3,.62],[6,1],[3,1],[3,.8],[7,1],[3,1],[5,.62],[6,1]];
+  document.querySelectorAll('.barcode').forEach(b => bars.forEach(([w, h]) => {
+    const i = document.createElement('i'); i.style.width = w + 'px'; i.style.height = (h * 100) + '%'; b.appendChild(i);
+  }));
+
+  // Стрелки Impact Map
+  function wires() {
+    const map = document.getElementById('map'), svg = document.getElementById('wires');
+    const mr = map.getBoundingClientRect();
+    if (!mr.width) return;
+    svg.setAttribute('width', mr.width); svg.setAttribute('height', mr.height);
+    svg.innerHTML = '';
+    const ns = 'http://www.w3.org/2000/svg';
+    const box = el => { const r = el.getBoundingClientRect(); return { l: r.left - mr.left, r: r.right - mr.left, m: r.top - mr.top + r.height / 2 }; };
+    map.querySelectorAll('[data-p]').forEach(el => {
+      const a = box(document.getElementById(el.dataset.p)), b = box(el);
+      const x1 = a.r, y1 = a.m, x2 = b.l, y2 = b.m, dx = (x2 - x1) * 0.55;
+      const p = document.createElementNS(ns, 'path');
+      p.setAttribute('d', `M${x1},${y1} C${x1 + dx},${y1} ${x2 - dx},${y2} ${x2 - 8},${y2}`);
+      p.setAttribute('fill', 'none'); p.setAttribute('stroke', '#111'); p.setAttribute('stroke-width', '2.5');
+      svg.appendChild(p);
+      const h = document.createElementNS(ns, 'path');
+      h.setAttribute('d', `M${x2 - 13},${y2 - 6} L${x2 - 1},${y2} L${x2 - 13},${y2 + 6} Z`);
+      h.setAttribute('fill', '#111'); svg.appendChild(h);
+    });
+  }
+  document.fonts.ready.then(wires);
+</script>
+</body>
+</html>

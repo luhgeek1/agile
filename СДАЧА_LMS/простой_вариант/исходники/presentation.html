@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Impact Map и OKR · НЦФГ «Коплю–Трачу–Помогаю»</title>
+<style>
+  @page { size: 1920px 1080px; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #ffffff; }
+  .page { width: 1920px; height: 1080px; position: relative; overflow: hidden; page-break-after: always; break-after: page; }
+  .page:last-child { page-break-after: auto; break-after: auto; }
+  iframe { border: 0; position: absolute; top: 0; transform-origin: 0 0; }
+  /* Impact Map: 2400×1536 → вписываем по высоте 1080 (масштаб 0.703) и центрируем */
+  #map { width: 2400px; height: 1536px; transform: scale(0.703125); left: 116px; }
+  #okr { width: 1920px; height: 1080px; left: 0; }
+</style>
+</head>
+<body>
+  <div class="page"><iframe id="map" src="impact_map.html" scrolling="no"></iframe></div>
+  <div class="page"><iframe id="okr" src="okr_slide.html" scrolling="no"></iframe></div>
+</body>
+</html>
