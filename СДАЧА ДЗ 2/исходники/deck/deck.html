@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>НЦФГ · Коплю–Трачу–Помогаю · ДЗ 3 · Kanban и Kick-off</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+  @page { size: 1920px 1080px; margin: 0; }
+  :root {
+    --bg: #efefef; --grid: #e2e2e2; --ink: #111111; --body: #2b2b2b; --muted: #8b8b8b;
+    --yellow: #f2fa6d; --pink: #ff73b8;
+    --display: "Russo One", "Arial Black", sans-serif;
+    --mono: "JetBrains Mono", Menlo, monospace;
+    --sans: "Inter", "Helvetica Neue", Arial, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--bg); }
+  body { color: var(--ink); font-family: var(--mono); -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  .slide {
+    width: 1920px; height: 1080px; position: relative; overflow: hidden;
+    background-color: var(--bg);
+    background-image:
+      linear-gradient(var(--grid) 1.5px, transparent 1.5px),
+      linear-gradient(90deg, var(--grid) 1.5px, transparent 1.5px);
+    background-size: 54px 54px;
+    break-after: page; page-break-after: always;
+  }
+  .slide:last-child { break-after: auto; page-break-after: auto; }
+  .single .slide { display: none; }
+  .single .slide.on { display: block; }
+
+  /* ---------- chrome (как в шаблоне) ---------- */
+  .num { position: absolute; left: 0; top: 0; width: 64px; height: 42px; background: var(--ink); color: #fff; font: 700 15px var(--mono); padding: 12px 0 0 14px; }
+  .kicker { position: absolute; left: 112px; top: 44px; font: 500 17px var(--mono); letter-spacing: 6px; color: var(--muted); text-transform: uppercase; }
+  .badge {
+    position: absolute; right: 64px; top: 30px; transform: rotate(-2deg);
+    background: var(--pink); border: 3px solid var(--ink); border-radius: 999px;
+    padding: 10px 30px 12px; font: 28px var(--display); box-shadow: 7px 7px 0 var(--ink);
+  }
+  .caption { position: absolute; left: 80px; top: 100px; font: 700 21px var(--mono); padding-bottom: 5px; border-bottom: 3.5px solid var(--ink); }
+  .title { position: absolute; left: 80px; top: 146px; right: 80px; font: 72px/1.0 var(--display); text-transform: uppercase; letter-spacing: -0.5px; }
+  .subtitle { position: absolute; left: 80px; top: 232px; font: 400 20px var(--mono); color: #3a3a3a; }
+  .foot { position: absolute; left: 80px; right: 80px; bottom: 34px; display: flex; align-items: center; gap: 14px; }
+  .barcode { margin-left: auto; display: flex; align-items: flex-end; gap: 4px; height: 42px; }
+  .barcode i { display: block; background: var(--ink); height: 100%; }
+
+  .pill { display: inline-block; border: 2.5px solid var(--ink); border-radius: 999px; padding: 7px 18px 6px; font: 500 15px var(--mono); letter-spacing: 2px; text-transform: uppercase; white-space: nowrap; }
+  .pill.y { background: var(--yellow); }
+  .pill.b { background: var(--ink); color: var(--yellow); }
+  .lbl { font: 700 14px var(--mono); letter-spacing: 3px; text-transform: uppercase; color: #555; }
+
+  .card { background: #fff; border: 3px solid var(--ink); border-radius: 26px; padding: 26px 32px; position: relative; }
+  .card.sh { box-shadow: 13px 13px 0 var(--yellow); }
+  .card.y { background: var(--yellow); }
+
+  /* ================= 1 · KANBAN ================= */
+  .s-kb .theses { position: absolute; left: 80px; right: 80px; top: 300px; display: grid; grid-template-columns: 1fr 1fr; gap: 30px 44px; }
+  .s-kb .th { display: flex; gap: 24px; align-items: flex-start; padding: 24px 30px 24px 26px; min-height: 196px; }
+  .s-kb .th .n { flex: none; width: 58px; height: 58px; border-radius: 50%; border: 3px solid var(--ink); background: var(--yellow); display: flex; align-items: center; justify-content: center; font: 24px var(--display); }
+  .s-kb .th h3 { font: 700 25px/1.25 var(--mono); }
+  .s-kb .th p { margin-top: 10px; font: 400 18.5px/1.55 var(--mono); color: var(--body); }
+  .s-kb .th p b { color: var(--ink); background: var(--yellow); padding: 0 4px; }
+  .s-kb .th.soft { box-shadow: none; }
+
+  .board { position: absolute; left: 80px; right: 80px; top: 784px; }
+  .board .lbl { margin-bottom: 14px; }
+  .board .row { display: flex; align-items: center; }
+  .col { width: 196px; height: 64px; border: 3px solid var(--ink); border-radius: 16px; background: #fff; display: flex; align-items: center; justify-content: center; font: 700 19px var(--mono); }
+  .col.done { background: var(--yellow); }
+  .arr { width: 46px; text-align: center; font: 700 26px var(--mono); }
+  .blocked { position: absolute; top: 118px; left: 484px; width: 196px; height: 52px; border: 3px dashed var(--ink); border-radius: 14px; background: var(--pink); display: flex; align-items: center; justify-content: center; font: 700 17px var(--mono); }
+  .blocked-line { position: absolute; top: 96px; left: 580px; width: 3px; height: 22px; background: var(--ink); }
+  .blocked-note { position: absolute; top: 131px; left: 700px; font: 400 15.5px var(--mono); color: #444; }
+  .wip { position: absolute; right: 0; top: 30px; width: 420px; padding: 18px 24px; transform: rotate(1.5deg); }
+  .wip b { display: block; font: 22px var(--display); text-transform: uppercase; }
+  .wip span { display: block; margin-top: 6px; font: 400 16.5px/1.45 var(--mono); }
+
+  /* ================= 2 · KICK-OFF ================= */
+  .s-ko .title { font-size: 66px; top: 142px; }
+  .s-ko .subtitle { top: 222px; }
+  .s-ko .left { position: absolute; left: 80px; top: 282px; width: 1010px; }
+  .s-ko .right { position: absolute; left: 1150px; right: 80px; top: 282px; }
+  .roles { display: flex; flex-direction: column; gap: 11px; margin-top: 12px; }
+  .role { display: flex; align-items: center; gap: 20px; background: #fff; border: 2.5px solid var(--ink); border-radius: 18px; padding: 10px 22px; }
+  .role .who { flex: none; width: 312px; }
+  .role .who b { display: block; font: 25px var(--display); text-transform: uppercase; }
+  .role .who span { display: inline-block; white-space: nowrap; margin-top: 4px; background: var(--yellow); border: 2px solid var(--ink); border-radius: 999px; padding: 1px 10px; font: 700 12.5px var(--mono); letter-spacing: .5px; }
+  .role .resp { font: 400 15.5px/1.5 var(--mono); color: var(--body); }
+  .bounds { margin-top: 22px; padding: 16px 24px 16px; display: grid; grid-template-columns: 1fr; gap: 1px; }
+  .bounds .lbl { grid-column: 1 / -1; }
+  .bounds .lbl { margin-bottom: 8px; }
+  .bounds div.l { font: 400 15px/1.55 var(--mono); color: var(--body); }
+  .bounds div.l b { color: var(--ink); }
+
+  .grid { margin-top: 12px; display: grid; grid-template-columns: 118px repeat(3, 1fr); gap: 8px; }
+  .grid .h { font: 700 15px var(--mono); letter-spacing: 3px; text-align: center; padding: 4px 0; }
+  .grid .w { font: 700 14px var(--mono); letter-spacing: 1px; display: flex; align-items: center; color: #444; }
+  .grid .c { height: 44px; border: 2.5px solid var(--ink); border-radius: 12px; display: flex; align-items: center; justify-content: center; font: 700 14px var(--mono); background: #fff; }
+  .grid .c.p { background: var(--yellow); }
+  .events { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+  .ev { background: #fff; border: 2.5px solid var(--ink); border-radius: 18px; padding: 12px 18px; }
+  .ev .t { display: flex; align-items: center; gap: 12px; font: 700 17px var(--mono); }
+  .ev .t .d { flex: none; background: var(--ink); color: var(--yellow); border-radius: 999px; padding: 2px 11px; font: 700 13px var(--mono); letter-spacing: 1px; }
+  .ev .m { margin-top: 4px; font: 400 14.5px/1.45 var(--mono); color: var(--body); }
+  .ev .m b { color: var(--ink); }
+  .ev.ncfg { border-style: dashed; background: #fafafa; }
+</style>
+</head>
+<body>
+
+<!-- ============================ 1 · KANBAN ============================ -->
+<section class="slide s-kb" id="s1">
+  <div class="num">01</div>
+  <div class="kicker">НЦФГ · Коплю–Трачу–Помогаю</div>
+  <div class="badge">✦ НЦФГ · AGILE</div>
+  <div class="caption">Выбор подхода · Scrum / Kanban</div>
+  <div class="title">Мы выбираем Kanban</div>
+  <div class="subtitle">Проект с внешним НКО и уточняющимися требованиями: нам нужен поток задач, а не фиксированный спринт</div>
+
+  <div class="theses">
+    <div class="card sh th">
+      <div class="n">1</div>
+      <div><h3>Требования НЦФГ ещё уточняются</h3>
+      <p>После каждой встречи с НКО появляются новые вводные — сразу поднимаем их в приоритете, <b>не дожидаясь конца спринта</b></p></div>
+    </div>
+    <div class="card sh th">
+      <div class="n">2</div>
+      <div><h3>Ответы НКО приходят не мгновенно</h3>
+      <p>Задача, ждущая ответа НЦФГ, уходит в <b>Blocked</b>, а команда берёт следующую — работа не встаёт, план не срывается</p></div>
+    </div>
+    <div class="card th soft">
+      <div class="n">3</div>
+      <div><h3>Исследование, дизайн и разработка — в разном темпе</h3>
+      <p>Интервью с семьями, прототипы и backend трудно уложить в один спринт — доска показывает, где застряло</p></div>
+    </div>
+    <div class="card th soft">
+      <div class="n">4</div>
+      <div><h3>Небольшой команде нужен лёгкий процесс</h3>
+      <p>Вместо жёстких спринтов — визуальный поток, <b>WIP-лимит</b> и три коротких синка: этого достаточно, чтобы держать работу прозрачной</p></div>
+    </div>
+  </div>
+
+  <div class="board">
+    <div class="lbl">Наша Kanban-доска</div>
+    <div class="row">
+      <div class="col">Backlog</div><div class="arr">→</div>
+      <div class="col">To Do</div><div class="arr">→</div>
+      <div class="col">In Progress</div><div class="arr">→</div>
+      <div class="col">Review</div><div class="arr">→</div>
+      <div class="col done">Done</div>
+    </div>
+    <div class="blocked-line"></div>
+    <div class="blocked">Blocked</div>
+    <div class="blocked-note">ждём ответа НЦФГ или решения команды</div>
+    <div class="card y wip"><b>WIP ≤ 2</b><span>не больше 2 задач In Progress на одного участника</span></div>
+  </div>
+
+  <div class="foot">
+    <span class="pill">• Approach •</span><span class="pill">1/2</span>
+    <div class="barcode"></div>
+  </div>
+</section>
+
+<!-- ============================ 2 · KICK-OFF ============================ -->
+<section class="slide s-ko" id="s2">
+  <div class="num">02</div>
+  <div class="kicker">НЦФГ · Коплю–Трачу–Помогаю</div>
+  <div class="badge">✦ НЦФГ · AGILE</div>
+  <div class="caption">Kick-off команды</div>
+  <div class="title">Кто за что отвечает</div>
+  <div class="subtitle">Роли и зоны ответственности · ритм работы на 3 недели по Kanban</div>
+
+  <div class="left">
+    <div class="lbl">Роли и ответственность</div>
+    <div class="roles">
+      <div class="role"><div class="who"><b>Степан</b><span>Product Lead · Fullstack · UI/UX</span></div>
+        <div class="resp">Основной контакт с НЦФГ · приоритеты и backlog · пользовательские сценарии · UI/UX и прототипы · frontend · интеграция frontend с API</div></div>
+      <div class="role"><div class="who"><b>Арслан</b><span>Kanban Flow · Project Manager</span></div>
+        <div class="resp">Kanban-доска и WIP-лимит · ведёт все встречи · следит за Blocked и сроками · фиксирует решения команды</div></div>
+      <div class="role"><div class="who"><b>Борис</b><span>Backend Lead</span></div>
+        <div class="resp">Backend-архитектура · API · база данных · бизнес-логика · интеграции · отвечает за весь backend</div></div>
+      <div class="role"><div class="who"><b>София</b><span>UX Research · Analyst</span></div>
+        <div class="resp">Интервью и опросы · сбор обратной связи · проверка гипотез · анализ результатов и выводы для команды</div></div>
+      <div class="role"><div class="who"><b>Кирилл</b><span>QA · Testing Lead</span></div>
+        <div class="resp">Тест-сценарии · проверка задач в колонке Review · баг-репорты · критерии готовности (Definition of Done)</div></div>
+    </div>
+    <div class="card sh bounds">
+      <div class="lbl">Границы зон</div>
+      <div class="l"><b>Приоритеты</b> — Степан · <b>поток и встречи</b> — Арслан</div>
+      <div class="l"><b>Backend и API</b> — Борис · <b>frontend и интеграция с API</b> — Степан</div>
+      <div class="l"><b>Гипотезы</b> — София · <b>качество сделанного</b> — Кирилл</div>
+      <div class="l"><b>Контакт с НЦФГ</b> — Степан · София — на интервью и исследованиях</div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="lbl">Календарь · 3 недели</div>
+    <div class="grid">
+      <div></div><div class="h">ПН</div><div class="h">СР</div><div class="h">ПТ</div>
+      <div class="w">НЕДЕЛЯ 1</div><div class="c p">Planning</div><div class="c">Sync</div><div class="c p">Review+Retro</div>
+      <div class="w">НЕДЕЛЯ 2</div><div class="c p">Planning</div><div class="c">Sync</div><div class="c p">Review+Retro</div>
+      <div class="w">НЕДЕЛЯ 3</div><div class="c p">Planning</div><div class="c">Sync</div><div class="c p">Review+Retro</div>
+    </div>
+    <div class="events">
+      <div class="ev"><div class="t"><span class="d">ПН</span>Weekly Planning / Replenishment</div>
+        <div class="m"><b>15–20 мин</b> · вся команда · созвон у доски · ведёт Арслан<br>Степан задаёт приоритеты, пополняем To Do и проверяем WIP</div></div>
+      <div class="ev"><div class="t"><span class="d">СР</span>Short Sync</div>
+        <div class="m"><b>10–15 мин</b> · вся команда · короткий созвон или чат · ведёт Арслан<br>Что движется, что в Blocked, кому нужна помощь</div></div>
+      <div class="ev"><div class="t"><span class="d">ПТ</span>Review + Retro</div>
+        <div class="m"><b>20–30 мин</b> · вся команда · созвон · ведёт Арслан, Кирилл — итоги проверки<br>Показываем Done, улучшаем процесс, собираем вопросы к НЦФГ</div></div>
+      <div class="ev ncfg"><div class="t"><span class="d">НКО</span>Связь с НЦФГ — по необходимости</div>
+        <div class="m">Основной контакт — Степан · София подключается к интервью и исследованиям<br>Telegram-чат с НЦФГ или созвон — когда есть вопросы или результат</div></div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span class="pill">• Kick-off •</span><span class="pill">2/2</span>
+    <div class="barcode"></div>
+  </div>
+</section>
+
+<script>
+  const s = new URLSearchParams(location.search).get('s');
+  if (s) { document.body.classList.add('single'); document.getElementById('s' + s).classList.add('on'); }
+  const bars = [[5,1],[3,1],[6,.62],[3,1],[3,1],[7,.8],[3,1],[5,1],[3,.62],[6,1],[3,1],[3,.8],[7,1],[3,1],[5,.62],[6,1]];
+  document.querySelectorAll('.barcode').forEach(b => bars.forEach(([w, h]) => {
+    const i = document.createElement('i'); i.style.width = w + 'px'; i.style.height = (h * 100) + '%'; b.appendChild(i);
+  }));
+</script>
+</body>
+</html>
