@@ -1,0 +1,12 @@
+.git
+node_modules
+dist
+artifacts
+playwright-report
+test-results
+doki
+backend
+**/.env
+.env
+*.tsbuildinfo
+.DS_Store
