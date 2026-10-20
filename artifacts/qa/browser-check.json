@@ -1,0 +1,6 @@
+{
+  "target": "production build + Docker API + PostgreSQL",
+  "pages": 7,
+  "consoleErrors": [],
+  "networkErrors": []
+}
