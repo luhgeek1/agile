@@ -1,12 +1,12 @@
 .git
-node_modules
-dist
+**/node_modules
+**/dist
 artifacts
-playwright-report
-test-results
+**/playwright-report
+**/test-results
 doki
 backend
 **/.env
 .env
-*.tsbuildinfo
+**/*.tsbuildinfo
 .DS_Store

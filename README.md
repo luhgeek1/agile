@@ -51,7 +51,7 @@ SQLite — дополнительный вариант локального за
 
 ```sh
 docker compose up -d db
-cp .env.example backend/.env
+cp backend/.env.example backend/.env
 cd backend
 uv sync --frozen
 uv run alembic upgrade head
@@ -96,30 +96,47 @@ Frontend: React 19, TypeScript, Vite, Tailwind CSS 4, компоненты по 
 Backend: FastAPI, Pydantic 2, SQLAlchemy 2, Alembic, PostgreSQL 17; дополнительная поддержка SQLite. Версии зафиксированы в `package-lock.json`, `backend/uv.lock` и экспортированном `backend/requirements.lock` с хешами для контейнера.
 
 ```text
-src/
-  components/       UI primitives, иллюстрации, диалоги, продуктовые карточки
-  lib/              типы, точная обработка денег, API и query hooks
-  app.tsx           маршруты, layout, welcome
-  pages.tsx         страницы продукта
-  styles.css        токены DESIGN.md и адаптивная вёрстка
+frontend/
+  src/
+    app/                 маршруты, провайдеры, глобальные стили, обработка ошибок
+    pages/               welcome, home, goals, history, activities, parent, feedback, settings
+    widgets/             общий каркас продукта, карусель, методическая заметка
+    features/            запись операции, редактирование цели, выполнение задания
+    entities/            wallet, goal, transaction, activity, demo-session
+    shared/              HTTP-клиент и DTO, UI primitives, форматирование денег
+    main.tsx             точка входа
+  e2e/                   Playwright: сценарии, размеры экрана, клавиатура, axe
+  config/eslint/         проверка границ FSD и её тесты
+  public/                статические файлы
+  Dockerfile             production-сборка frontend
+  nginx.conf             SPA-маршруты и прокси API
+  package.json           зависимости и команды frontend
+  *config*               Vite, TypeScript, ESLint, Playwright
 backend/
-  app/models.py     модели и ограничения БД
-  app/schemas.py    серверная валидация
-  app/services.py   транзакционная бизнес-логика и seed
-  app/main.py       REST API и сессии
-  app/content.py    демонстрационные задания и материалы
-  migrations/      версионированная схема Alembic
-  tests/            API, изоляция, инварианты, конкурентные операции
-e2e/                Playwright: сценарии, размеры экрана, клавиатура, axe
-infra/              Docker-сборка frontend и Nginx: SPA-маршруты и прокси API
-artifacts/qa/       скриншоты визуальной проверки
+  app/models.py          модели и ограничения БД
+  app/schemas.py         серверная валидация
+  app/services.py        транзакционная бизнес-логика и seed
+  app/main.py            REST API и сессии
+  app/content.py         демонстрационные задания и материалы
+  migrations/            версионированная схема Alembic
+  tests/                 API, изоляция, инварианты, конкурентные операции
+  .env.example           пример настроек локального API
+compose.yaml             frontend + API + PostgreSQL
+Makefile                 общие команды
+package.json             npm workspace и команды из корня
+package-lock.json        единый lock frontend workspace
+artifacts/qa/            скриншоты визуальной проверки
 ```
+
+Frontend организован по [Feature-Sliced Design](https://feature-sliced.design/docs/reference/layers): `app → pages → widgets → features → entities → shared`. Слайсы импортируют нижние слои через публичные `index.ts`; исключения между сущностями явно оформлены через `@x`. ESLint проверяет направление зависимостей, изоляцию слайсов и публичные API, включая относительные импорты. Подробности и примеры: [frontend/README.md](frontend/README.md).
+
+Зависимости фронтенда и его конфигурация находятся в `frontend`. Установка остаётся из корня: `npm ci`. Команды `npm run dev`, `npm run build`, `npm run preview`, `npm run lint`, `npm run typecheck`, `npm test` и `npm run test:e2e` делегируются workspace; они также работают из `frontend`. Сборка создаётся в `frontend/dist`.
 
 Деньги хранятся целыми копейками в `BIGINT`. Лимит операции/цели — 1 000 000 ₽, отсека — 10 000 000 ₽. Семейная блокировка сериализует изменения и сброс. Условное списание и `CHECK` в БД не допускают отрицательного баланса. Перенос, обновление остатков и запись истории коммитятся вместе. Клиент не передаёт идентификатор семьи: область доступа определяется серверной сессией.
 
 ## Тестирование
 
-Frontend из корня:
+Frontend из корня (unit-тесты и 14 проверок архитектурных границ):
 
 ```sh
 npm run lint
@@ -150,11 +167,11 @@ TEST_DATABASE_URL=postgresql+psycopg://kopilka:local-demo-only@127.0.0.1:54329/k
 Браузерные тесты, при работающих frontend и backend:
 
 ```sh
-npx playwright install chromium
+npm exec --workspace frontend -- playwright install chromium
 npm run test:e2e
 ```
 
-Playwright создаёт отдельные демо-сессии. Скриншоты ключевых страниц 390/1440 px сохраняются в `artifacts/qa`; отчёт — `playwright-report/index.html`. В сценариях проверяются все семь страниц на 360/390/430/768/1024/1440 px, операции, формы, reload, ошибки API, пустые состояния и клавиатура. Axe проверяет основные страницы и диалог на 390/1440 px. Это автоматическая проверка доступности, не сертификат WCAG и не тест на физических устройствах.
+Playwright создаёт отдельные демо-сессии. Для записи скриншотов в другую папку задайте абсолютный путь в `PLAYWRIGHT_ARTIFACTS_DIR`. Скриншоты ключевых страниц 390/1440 px сохраняются в `artifacts/qa`; отчёт — `frontend/playwright-report/index.html`. В сценариях проверяются все семь страниц на 360/390/430/768/1024/1440 px, операции, формы, reload, ошибки API, пустые состояния и клавиатура. Axe проверяет основные страницы и диалог на 390/1440 px. Это автоматическая проверка доступности, не сертификат WCAG и не тест на физических устройствах.
 
 ## Миграции и сборка
 
