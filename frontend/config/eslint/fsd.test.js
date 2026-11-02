@@ -1,7 +1,7 @@
 import { RuleTester } from 'eslint'
 import { fsdBoundaries } from './fsd.js'
 
-const filename = '/project/frontend/src/pages/home/ui/home-page.tsx'
+const filename = '/project/frontend/src/views/home/ui/home-page.tsx'
 new RuleTester().run('fsd/boundaries', fsdBoundaries, {
   valid: [
     { filename, code: "import { GoalCard } from '@/entities/goal'" },
@@ -14,13 +14,13 @@ new RuleTester().run('fsd/boundaries', fsdBoundaries, {
     },
     {
       filename: '/project/frontend/src/app/app.tsx',
-      code: "import { HomePage } from '@/pages/home'",
+      code: "import { HomePage } from '@/views/home'",
     },
   ],
   invalid: [
     {
       filename,
-      code: "import { Other } from '@/pages/settings'",
+      code: "import { Other } from '@/views/settings'",
       errors: [{ messageId: 'slice' }],
     },
     { filename, code: "import { Other } from '../../settings'", errors: [{ messageId: 'slice' }] },

@@ -7,7 +7,7 @@
 - API: https://kopilka.170.168.10.196.sslip.io/api/health
 - Swagger: https://kopilka.170.168.10.196.sslip.io/api/docs
 
-Frontend использует `/api` на своём домене. `vercel.json` проксирует запросы на API по HTTPS и возвращает `index.html` для маршрутов приложения. Cookie — Secure, HttpOnly, SameSite=Strict. API разрешает изменения только с явно перечисленных источников.
+Frontend использует `/api` на своём домене. `vercel.json` проксирует `/api` на backend по HTTPS; страницы обслуживает Next.js App Router. SPA fallback на `index.html` удалён. Cookie — Secure, HttpOnly, SameSite=Strict. API разрешает изменения только с явно перечисленных источников.
 
 Технический домен sslip.io зависит от внешнего DNS-сервиса. Для собственного домена измените nginx, сертификат, `ALLOWED_ORIGINS` и адрес прокси в `vercel.json`.
 
@@ -56,6 +56,6 @@ curl --fail https://kopilka.170.168.10.196.sslip.io/api/health
 
 Для первоначальной установки есть `setup-server.sh`. Повторный запуск перезаписывает nginx-конфигурацию; для обычного обновления используйте команды выше.
 
-Публикация frontend из корня: `vercel deploy --prod`. Автоматическое размещение из GitHub отключено; текущий деплой загружен из локальной рабочей копии. Секреты и файлы бэкенда исключены из загрузки через `.vercelignore`. Production API разрешает основной адрес Vercel; новые домены нужно добавить в `/etc/kopilka/api.env` и перезапустить службу.
+Публикация frontend из корня: `vercel deploy --prod`. `vercel.json` задаёт framework `nextjs`, сборку workspace и output `frontend/.next`; `/api` остаётся same-origin прокси к FastAPI. Для локальной проверки Vercel-сборки без публикации: `vercel build --prod`. Автоматическое размещение из GitHub отключено; текущий деплой загружен из локальной рабочей копии. Секреты и файлы бэкенда исключены из загрузки через `.vercelignore`. Production API разрешает основной адрес Vercel; новые домены нужно добавить в `/etc/kopilka/api.env` и перезапустить службу.
 
 Приложение опубликовано в существующем режиме изолированного демо. Полноценная регистрация семей и реальная банковская интеграция в проекте отсутствуют.

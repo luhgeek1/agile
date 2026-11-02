@@ -1,3 +1,5 @@
+'use client'
+
 import { useAppState } from '@/entities/demo-session'
 import { ActivityAction } from '@/features/complete-activity'
 import { GoalDialog } from '@/features/edit-goal'
@@ -15,10 +17,11 @@ import {
   Users,
   X,
 } from 'lucide-react'
-import { useEffect, useState } from 'react'
-import { Link, Navigate, NavLink, Outlet, useLocation } from 'react-router-dom'
+import { useEffect, useState, type PropsWithChildren } from 'react'
+import Link from 'next/link'
+import { usePathname, useRouter } from 'next/navigation'
 
-import type { ProductContext } from '../model/context'
+import { ProductStateContext, type ProductContext } from '../model/context'
 
 const navItems = [
   { to: '/app', icon: HomeIcon, text: 'Моя копилка', short: 'Копилка', end: true },
@@ -26,19 +29,21 @@ const navItems = [
   { to: '/app/activities', icon: Sparkles, text: 'Задания', short: 'Задания' },
   { to: '/app/transactions', icon: History, text: 'История', short: 'История' },
 ]
-export function ProductLayout() {
+export function ProductLayout({ children }: PropsWithChildren) {
   const query = useAppState()
-  const location = useLocation()
+  const pathname = usePathname()
+  const router = useRouter()
   const [operation, setOperation] = useState<OperationOptions | null>(null)
   const [goalOpen, setGoalOpen] = useState(false)
   const [activity, setActivity] = useState<Activity | null>(null)
-  const [demoNoticeHidden, setDemoNoticeHidden] = useState(() => {
+  const [demoNoticeHidden, setDemoNoticeHidden] = useState(false)
+  useEffect(() => {
     try {
-      return localStorage.getItem('kopilka:demo-notice-dismissed') === '1'
+      setDemoNoticeHidden(localStorage.getItem('kopilka:demo-notice-dismissed') === '1')
     } catch {
-      return false
+      // Keep the notice visible when browser storage is unavailable.
     }
-  })
+  }, [])
   const dismissDemoNotice = () => {
     setDemoNoticeHidden(true)
     document.getElementById('main')?.focus({ preventScroll: true })
@@ -51,10 +56,13 @@ export function ProductLayout() {
   useEffect(() => {
     window.scrollTo(0, 0)
     document.getElementById('main')?.focus({ preventScroll: true })
-  }, [location.pathname])
+  }, [pathname, query.isPending])
+  const sessionExpired = query.error instanceof ApiError && query.error.status === 401
+  useEffect(() => {
+    if (sessionExpired) router.replace('/')
+  }, [sessionExpired, router])
   if (query.isPending) return <Loading />
-  if (query.error instanceof ApiError && query.error.status === 401)
-    return <Navigate to="/" replace />
+  if (sessionExpired) return <Loading />
   if (query.isError || !query.data)
     return (
       <div className="standalone-error">
@@ -65,7 +73,7 @@ export function ProductLayout() {
             void query.refetch()
           }}
         />
-        <Link to="/">На главную</Link>
+        <Link href="/">На главную</Link>
       </div>
     )
   const state = query.data
@@ -76,24 +84,35 @@ export function ProductLayout() {
       </a>
       <header className="app-header">
         <div className="header-inner">
-          <Link to="/app" aria-label="Коплю — Трачу — Помогаю, главная">
+          <Link href="/app" aria-label="Коплю — Трачу — Помогаю, главная">
             <Logo />
           </Link>
           <nav className="desktop-nav" aria-label="Основная навигация">
             {navItems.map(({ to, text, end }) => (
-              <NavLink key={to} to={to} end={end}>
+              <Link
+                key={to}
+                href={to}
+                className={(end ? pathname === to : pathname.startsWith(to)) ? 'active' : undefined}
+                aria-current={
+                  (end ? pathname === to : pathname.startsWith(to)) ? 'page' : undefined
+                }
+              >
                 {text}
-              </NavLink>
+              </Link>
             ))}
           </nav>
           <div className="header-actions">
-            <NavLink to="/app/parent" className="parent-link">
+            <Link
+              href="/app/parent"
+              className={`parent-link${pathname.startsWith('/app/parent') ? ' active' : ''}`}
+              aria-current={pathname === '/app/parent' ? 'page' : undefined}
+            >
               <Users size={20} />
               <span>Родителям</span>
-            </NavLink>
+            </Link>
             <Link
               className="icon-button settings-link"
-              to="/app/settings"
+              href="/app/settings"
               aria-label="Настройки и справка"
             >
               <Settings size={21} />
@@ -108,7 +127,7 @@ export function ProductLayout() {
         <div className="demo-strip">
           <div>
             <span className="demo-dot" />
-            <Link to="/app/settings">Демо-пространство</Link>
+            <Link href="/app/settings">Демо-пространство</Link>
             <span className="demo-strip-description">
               Можно пробовать. Все изменения сохраняются.
             </span>
@@ -125,8 +144,8 @@ export function ProductLayout() {
         </div>
       )}
       <main id="main" tabIndex={-1} className="app-main">
-        <Outlet
-          context={
+        <ProductStateContext.Provider
+          value={
             {
               state,
               add: (options = {}) => setOperation(options),
@@ -134,13 +153,15 @@ export function ProductLayout() {
               openActivity: setActivity,
             } satisfies ProductContext
           }
-        />
+        >
+          {children}
+        </ProductStateContext.Provider>
       </main>
       <footer className="app-footer">
         <span>
           <span className="footer-mark">к·т·п</span> Маленькие шаги имеют значение.
         </span>
-        <Link to="/app/settings">
+        <Link href="/app/settings">
           <CircleHelp size={17} />
           Как это работает
         </Link>
@@ -148,10 +169,15 @@ export function ProductLayout() {
       </footer>
       <nav className="mobile-nav" aria-label="Навигация на телефоне">
         {navItems.map(({ to, icon: Icon, short, end }) => (
-          <NavLink key={to} to={to} end={end}>
+          <Link
+            key={to}
+            href={to}
+            className={(end ? pathname === to : pathname.startsWith(to)) ? 'active' : undefined}
+            aria-current={(end ? pathname === to : pathname.startsWith(to)) ? 'page' : undefined}
+          >
             <Icon size={23} strokeWidth={1.8} />
             <span>{short}</span>
-          </NavLink>
+          </Link>
         ))}
       </nav>
       <OperationDialog

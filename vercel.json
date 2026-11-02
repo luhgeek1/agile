@@ -1,13 +1,12 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": "vite",
+  "framework": "nextjs",
   "buildCommand": "npm run build",
-  "outputDirectory": "frontend/dist",
+  "outputDirectory": "frontend/.next",
   "rewrites": [
     {
       "source": "/api/:path*",
       "destination": "https://kopilka.170.168.10.196.sslip.io/api/:path*"
-    },
-    { "source": "/((?!api(?:/|$)).*)", "destination": "/index.html" }
+    }
   ]
 }

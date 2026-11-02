@@ -2,7 +2,7 @@ import { type Category } from '@/shared/api/contracts'
 import { money } from '@/shared/lib/money'
 import { Card } from '@/shared/ui'
 import { ArrowUpRight as Arrow } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import Link from 'next/link'
 
 import { categories } from '../model/categories'
 import { Jar } from './jar'
@@ -35,7 +35,7 @@ export function SectionCard({
           <span className="pocket-add-label">Добавить</span>
         </button>
       </div>
-      <Link to={`/app/transactions?category=${category}`} className="category-history">
+      <Link href={`/app/transactions?category=${category}`} className="category-history">
         История отсека <Arrow size={15} />
       </Link>
     </Card>

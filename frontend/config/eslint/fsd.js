@@ -1,7 +1,7 @@
 import path from 'node:path'
 
-const layers = ['shared', 'entities', 'features', 'widgets', 'pages', 'app']
-const slicedLayers = new Set(['entities', 'features', 'widgets', 'pages'])
+const layers = ['shared', 'entities', 'features', 'widgets', 'views', 'app']
+const slicedLayers = new Set(['entities', 'features', 'widgets', 'views'])
 
 export const fsdBoundaries = {
   meta: {

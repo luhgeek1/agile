@@ -10,3 +10,4 @@ backend
 .env
 **/*.tsbuildinfo
 .DS_Store
+**/.next

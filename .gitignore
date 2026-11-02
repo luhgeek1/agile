@@ -15,3 +15,5 @@ test-results/
 *.egg-info/
 build/
 .vercel/
+.next/
+next-env.d.ts

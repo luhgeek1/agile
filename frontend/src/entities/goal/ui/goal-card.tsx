@@ -2,7 +2,7 @@ import { type Goal } from '@/shared/api/contracts'
 import { money } from '@/shared/lib/money'
 import { Button, Card, Progress } from '@/shared/ui'
 import { ArrowUpRight as Arrow, Pencil, Target, Trophy } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import Link from 'next/link'
 
 import { GoalArt } from './goal-art'
 
@@ -70,7 +70,7 @@ export function GoalCard({
             </Button>
           </div>
         ) : (
-          <Link className="text-link" to="/app/goals">
+          <Link className="text-link" href="/app/goals">
             К моей мечте <Arrow size={17} />
           </Link>
         )}

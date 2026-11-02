@@ -1,3 +1,5 @@
+'use client'
+
 import * as Alert from '@radix-ui/react-alert-dialog'
 import * as DialogPrimitive from '@radix-ui/react-dialog'
 import * as ProgressPrimitive from '@radix-ui/react-progress'
@@ -57,11 +59,10 @@ export function Card({ className, ...props }: ComponentProps<'section'>) {
   return <section data-slot="card" className={cn('card', className)} {...props} />
 }
 export function Page({ children, className }: PropsWithChildren<{ className?: string }>) {
-  const reduced = useReducedMotion()
   return (
     <motion.div
       className={cn('page', className)}
-      initial={reduced ? false : { opacity: 0, y: 8 }}
+      initial={false}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.22 }}
     >

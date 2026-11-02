@@ -180,7 +180,7 @@ Kanban-доска: `Backlog → To Do → In Progress → Review → Done`; от
 
 **Предпочтительный вариант для существующих навыков команды:**
 
-- Frontend: **React + TypeScript + Vite**, Tailwind CSS, **shadcn/ui**, **Radix UI** (примитивы), **Motion** (`motion/react`), Lucide, React Router, TanStack Query, React Hook Form + Zod.
+- Frontend: **Next.js 16 (App Router) + React + TypeScript**, Tailwind CSS, **shadcn/ui**, **Radix UI** (примитивы), **Motion** (`motion/react`), Lucide, TanStack Query, React Hook Form + Zod.
 - Backend: **Python FastAPI**, Pydantic, SQLAlchemy 2, Alembic, REST/OpenAPI.
 - Data: **PostgreSQL** (через Docker Compose); для тестов — отдельная тестовая БД/изолированная среда.
 - Контейнеры: `docker compose` для backend/DB, ясные команды запуска frontend.

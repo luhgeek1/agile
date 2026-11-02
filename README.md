@@ -21,11 +21,11 @@ docker compose up -d --build --wait
 - OpenAPI / Swagger: `http://127.0.0.1:8017/api/docs`
 - PostgreSQL: `127.0.0.1:54329`, база и пользователь `kopilka`, локальный пароль `local-demo-only`.
 
-Compose автоматически применяет Alembic-миграции перед запуском API. Nginx раздаёт собранный frontend, направляет `/api/` в backend и поддерживает прямое открытие маршрутов `/app/...`. Начальные данные создаются при входе в новую демо-сессию. Порты контейнеров опубликованы только на loopback. Не смешивайте `localhost` и `127.0.0.1` при демонстрации: cookie привязана к адресу браузера.
+Compose автоматически применяет Alembic-миграции перед запуском API. Next.js раздаёт frontend, направляет `/api/` в backend и обслуживает маршруты `/app/...` через App Router. Начальные данные создаются при входе в новую демо-сессию. Порты контейнеров опубликованы только на loopback. Не смешивайте `localhost` и `127.0.0.1` при демонстрации: cookie привязана к адресу браузера.
 
 Чтобы остановить: `docker compose stop`. Данные остаются в томе `kopilka_pgdata`. Не удаляйте этот том для обычного сброса демо.
 
-Для разработки с горячим обновлением нужны Node.js 22.12+ и локальные зависимости: `npm ci`, затем `make dev`. Эта команда останавливает контейнер `web`, освобождает порт 5173 и запускает Vite в терминале. После завершения разработки вернуться к фоновому режиму можно командой `make start`.
+Для разработки с горячим обновлением нужны Node.js 22.12+ и локальные зависимости: `npm ci`, затем `make dev`. Эта команда останавливает контейнер `web`, освобождает порт 5173 и запускает Next.js в терминале. После завершения разработки вернуться к фоновому режиму можно командой `make start`.
 
 ## Запуск без Docker
 
@@ -91,7 +91,7 @@ uv run uvicorn app.main:app --reload --host 127.0.0.1 --port 8017
 
 ## Стек и структура
 
-Frontend: React 19, TypeScript, Vite, Tailwind CSS 4, компоненты по подходу shadcn/ui на Radix UI, Motion, Lucide, React Router, TanStack Query, React Hook Form, Zod, Sonner. Nunito и Nunito Sans поставляются локально через Fontsource, внешние шрифтовые сервисы не нужны.
+Frontend: Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 4, компоненты по подходу shadcn/ui на Radix UI, Motion, Lucide, TanStack Query, React Hook Form, Zod, Sonner. Nunito и Nunito Sans поставляются локально через Fontsource, внешние шрифтовые сервисы не нужны.
 
 Backend: FastAPI, Pydantic 2, SQLAlchemy 2, Alembic, PostgreSQL 17; дополнительная поддержка SQLite. Версии зафиксированы в `package-lock.json`, `backend/uv.lock` и экспортированном `backend/requirements.lock` с хешами для контейнера.
 
@@ -99,19 +99,18 @@ Backend: FastAPI, Pydantic 2, SQLAlchemy 2, Alembic, PostgreSQL 17; дополн
 frontend/
   src/
     app/                 маршруты, провайдеры, глобальные стили, обработка ошибок
-    pages/               welcome, home, goals, history, activities, parent, feedback, settings
+    views/               welcome, home, goals, history, activities, parent, feedback, settings
     widgets/             общий каркас продукта, карусель, методическая заметка
     features/            запись операции, редактирование цели, выполнение задания
     entities/            wallet, goal, transaction, activity, demo-session
     shared/              HTTP-клиент и DTO, UI primitives, форматирование денег
-    main.tsx             точка входа
   e2e/                   Playwright: сценарии, размеры экрана, клавиатура, axe
   config/eslint/         проверка границ FSD и её тесты
   public/                статические файлы
   Dockerfile             production-сборка frontend
-  nginx.conf             SPA-маршруты и прокси API
+  next.config.ts         standalone-сборка и прокси API
   package.json           зависимости и команды frontend
-  *config*               Vite, TypeScript, ESLint, Playwright
+  *config*               Next.js, PostCSS, TypeScript, ESLint, Vitest, Playwright
 backend/
   app/models.py          модели и ограничения БД
   app/schemas.py         серверная валидация
@@ -128,9 +127,9 @@ package-lock.json        единый lock frontend workspace
 artifacts/qa/            скриншоты визуальной проверки
 ```
 
-Frontend организован по [Feature-Sliced Design](https://feature-sliced.design/docs/reference/layers): `app → pages → widgets → features → entities → shared`. Слайсы импортируют нижние слои через публичные `index.ts`; исключения между сущностями явно оформлены через `@x`. ESLint проверяет направление зависимостей, изоляцию слайсов и публичные API, включая относительные импорты. Подробности и примеры: [frontend/README.md](frontend/README.md).
+Frontend организован по [Feature-Sliced Design](https://feature-sliced.design/docs/reference/layers): `app → views → widgets → features → entities → shared`. Слайсы импортируют нижние слои через публичные `index.ts`; исключения между сущностями явно оформлены через `@x`. ESLint проверяет направление зависимостей, изоляцию слайсов и публичные API, включая относительные импорты. Подробности и примеры: [frontend/README.md](frontend/README.md).
 
-Зависимости фронтенда и его конфигурация находятся в `frontend`. Установка остаётся из корня: `npm ci`. Команды `npm run dev`, `npm run build`, `npm run preview`, `npm run lint`, `npm run typecheck`, `npm test` и `npm run test:e2e` делегируются workspace; они также работают из `frontend`. Сборка создаётся в `frontend/dist`.
+Зависимости фронтенда и его конфигурация находятся в `frontend`. Установка остаётся из корня: `npm ci`. Команды `npm run dev`, `npm run build`, `npm run preview`, `npm run lint`, `npm run typecheck`, `npm test` и `npm run test:e2e` делегируются workspace; они также работают из `frontend`. Сборка создаётся в `frontend/.next`; `npm run start` запускает production-сервер на 5173, `npm run preview` — на 4173. Это серверное Next.js-приложение, отдельного `dist/index.html` больше нет.
 
 Деньги хранятся целыми копейками в `BIGINT`. Лимит операции/цели — 1 000 000 ₽, отсека — 10 000 000 ₽. Семейная блокировка сериализует изменения и сброс. Условное списание и `CHECK` в БД не допускают отрицательного баланса. Перенос, обновление остатков и запись истории коммитятся вместе. Клиент не передаёт идентификатор семьи: область доступа определяется серверной сессией.
 

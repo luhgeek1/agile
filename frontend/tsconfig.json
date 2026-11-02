@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "lib": [
-      "ES2022",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "moduleResolution": "bundler",
     "jsx": "react-jsx",
@@ -16,21 +12,29 @@
     "isolatedModules": true,
     "noEmit": true,
     "allowImportingTsExtensions": true,
-    "types": [
-      "vite/client",
-      "vitest/globals"
-    ],
+    "types": ["node", "vitest/globals"],
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    }
+      "@/*": ["./src/*"]
+    },
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "allowJs": true
   },
   "include": [
-    "src",
-    "vite.config.ts",
+    "next-env.d.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts",
+    "next.config.ts",
+    "vitest.config.ts",
     "playwright.config.ts",
     "e2e"
-  ]
+  ],
+  "exclude": ["node_modules", ".next/standalone"]
 }

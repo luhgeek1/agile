@@ -1,7 +1,9 @@
+'use client'
+
 import type { Activity } from '@/entities/activity'
 import type { AppState } from '@/entities/demo-session'
 import type { OperationOptions } from '@/features/record-operation'
-import { useOutletContext } from 'react-router-dom'
+import { createContext, useContext } from 'react'
 
 export interface ProductContext {
   state: AppState
@@ -9,4 +11,10 @@ export interface ProductContext {
   editGoal: () => void
   openActivity: (activity: Activity) => void
 }
-export const useProduct = () => useOutletContext<ProductContext>()
+export const ProductStateContext = createContext<ProductContext | null>(null)
+
+export function useProduct() {
+  const context = useContext(ProductStateContext)
+  if (!context) throw new Error('useProduct must be used inside ProductLayout')
+  return context
+}

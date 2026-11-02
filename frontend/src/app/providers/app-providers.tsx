@@ -1,24 +1,27 @@
+'use client'
+
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { MotionConfig } from 'motion/react'
-import type { PropsWithChildren } from 'react'
-import { BrowserRouter } from 'react-router-dom'
+import { useState, type PropsWithChildren } from 'react'
 import { Toaster } from 'sonner'
 
 import { ErrorBoundary } from './error-boundary'
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: { refetchOnWindowFocus: true, retry: 1 },
-    mutations: { retry: false },
-  },
-})
-
 export function AppProviders({ children }: PropsWithChildren) {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: { refetchOnWindowFocus: true, retry: 1 },
+          mutations: { retry: false },
+        },
+      }),
+  )
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <MotionConfig reducedMotion="user" transition={{ duration: 0.22 }}>
-          <BrowserRouter>{children}</BrowserRouter>
+          {children}
           <Toaster
             position="top-center"
             richColors

@@ -6,3 +6,5 @@ frontend/e2e/
 frontend/playwright-report/
 frontend/test-results/
 deploy/
+frontend/.next/
+frontend/dist/

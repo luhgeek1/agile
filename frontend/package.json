@@ -4,13 +4,14 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host 127.0.0.1",
-    "build": "tsc -b && vite build",
-    "typecheck": "tsc -b",
+    "dev": "next dev --hostname 127.0.0.1 --port 5173",
+    "build": "next build",
+    "typecheck": "next typegen && tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run && node config/eslint/fsd.test.js",
     "test:e2e": "playwright test",
-    "preview": "vite preview --host 127.0.0.1"
+    "preview": "next start --hostname 127.0.0.1 --port 4173",
+    "start": "next start --hostname 127.0.0.1 --port 5173"
   },
   "dependencies": {
     "@fontsource-variable/nunito": "^5.2.7",
@@ -21,7 +22,6 @@
     "@radix-ui/react-progress": "^1.1.7",
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tabs": "^1.1.13",
-    "@tailwindcss/vite": "^4.1.14",
     "@tanstack/react-query": "^5.90.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -31,11 +31,11 @@
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-hook-form": "^7.65.0",
-    "react-router-dom": "^7.9.4",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.14",
-    "zod": "^4.1.12"
+    "zod": "^4.1.12",
+    "next": "16.4.4"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",
@@ -56,7 +56,9 @@
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.1",
     "vite": "^7.1.10",
-    "vitest": "^4.1.12"
+    "vitest": "^4.1.12",
+    "@tailwindcss/postcss": "^4.1.14",
+    "@next/eslint-plugin-next": "16.4.4"
   },
   "engines": {
     "node": ">=22.12.0"

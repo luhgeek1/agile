@@ -1,3 +1,5 @@
+'use client'
+
 import { Button, Logo } from '@/shared/ui'
 import { Component, type ErrorInfo, type PropsWithChildren } from 'react'
 
