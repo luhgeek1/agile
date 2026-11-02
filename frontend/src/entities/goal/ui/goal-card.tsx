@@ -34,13 +34,15 @@ export function GoalCard({
       <div className="goal-card-heading">
         <span className="eyebrow">
           <Target size={16} />
-          Моя большая маленькая мечта
+          Коплю на мечту
         </span>
         <button className="icon-button" aria-label="Редактировать цель" onClick={onEdit}>
           <Pencil size={18} />
         </button>
       </div>
-      <GoalArt kind={goal.illustration} />
+      <div className="goal-art-stage">
+        <GoalArt kind={goal.illustration} />
+      </div>
       <div className="goal-copy">
         <h2>{goal.title}</h2>
         <div className="goal-amount">

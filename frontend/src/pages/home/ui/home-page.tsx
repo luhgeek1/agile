@@ -6,7 +6,7 @@ import { money } from '@/shared/lib/money'
 import { Button, Card, EmptyState, Page } from '@/shared/ui'
 import { ActivityCarousel } from '@/widgets/activity-carousel'
 import { useProduct } from '@/widgets/product-shell'
-import { ArrowRight, ArrowUpRight, Heart, History, Info, Sparkles } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Heart, History, Info, Sparkles, Sun } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 export function HomePage() {
@@ -17,32 +17,13 @@ export function HomePage() {
       <div className="home-hero">
         <div>
           <div className="greeting">
-            <span className="greeting-sun" aria-hidden="true">
-              ✳
-            </span>
+            <Sun className="greeting-sun" size={22} aria-hidden="true" />
             Привет, {state.nickname}!
           </div>
-          <h1>
-            У каждой мечты
-            <br />
-            есть <span>своя копилка.</span>
-          </h1>
-          <p>Копи, выбирай, помогай. Что сделаем сегодня?</p>
+          <h1>Что сделаем сегодня?</h1>
+          <p>Каждая монетка — маленький шаг к большой мечте.</p>
         </div>
         <div className="home-hero-side">
-          <span className="handwritten">
-            Большое начинается
-            <br />с маленького!
-          </span>
-          <svg viewBox="0 0 110 52" aria-hidden="true">
-            <path
-              d="M8 4q-4 28 77 25m-15-11 16 11-14 12"
-              stroke="currentColor"
-              strokeWidth="2"
-              fill="none"
-              strokeLinecap="round"
-            />
-          </svg>
           <AddButton onClick={() => add()} />
         </div>
       </div>
@@ -70,6 +51,9 @@ export function HomePage() {
           </p>
         </div>
         <div className="home-goal">
+          <div className="section-heading">
+            <h2>Моя цель</h2>
+          </div>
           <GoalCard goal={state.goal} onEdit={editGoal} />
         </div>
       </div>

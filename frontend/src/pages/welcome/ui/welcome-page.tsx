@@ -30,11 +30,7 @@ export function WelcomePage() {
               <Leaf size={17} />
               Растём вместе, шаг за шагом
             </span>
-            <h1>
-              Маленькие привычки.
-              <br />
-              <span>Большое будущее.</span>
-            </h1>
+            <h1>У мечты есть своя копилка.</h1>
             <p>
               Копить на мечту, выбирать с умом и делать добро.
               <br className="desktop-only" /> Три отсека — целый мир открытий.
@@ -43,7 +39,6 @@ export function WelcomePage() {
           <div className="welcome-jars">
             {(['save', 'spend', 'help'] as const).map((category, i) => (
               <div className={`welcome-jar ${category}`} key={category}>
-                <span className="welcome-number">0{i + 1}</span>
                 <Jar category={category} />
                 <h2>{['Коплю', 'Трачу', 'Помогаю'][i]}</h2>
                 <p>{['Приближаю свою мечту', 'Учусь выбирать', 'Делюсь добром'][i]}</p>

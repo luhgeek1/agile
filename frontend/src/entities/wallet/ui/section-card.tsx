@@ -5,7 +5,6 @@ import { ArrowUpRight as Arrow } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 import { categories } from '../model/categories'
-import { CategoryIcon } from './category-icon'
 import { Jar } from './jar'
 
 export function SectionCard({
@@ -18,13 +17,7 @@ export function SectionCard({
   onAdd: () => void
 }) {
   return (
-    <Card className={`section-card ${category}`}>
-      <div className="section-topline">
-        <span className="section-icon">
-          <CategoryIcon category={category} />
-        </span>
-        <span className="section-kicker">{categories[category].short}</span>
-      </div>
+    <Card className={`section-card pocket-card ${category}`}>
       <Jar category={category} />
       <h2>{categories[category].title}</h2>
       <p className="section-description">
@@ -39,6 +32,7 @@ export function SectionCard({
           onClick={onAdd}
         >
           <span aria-hidden="true">+</span>
+          <span className="pocket-add-label">Добавить</span>
         </button>
       </div>
       <Link to={`/app/transactions?category=${category}`} className="category-history">

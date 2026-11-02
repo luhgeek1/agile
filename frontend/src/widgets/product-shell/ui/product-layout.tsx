@@ -99,7 +99,7 @@ export function ProductLayout() {
               <Settings size={21} />
             </Link>
             <span className="avatar" aria-label={`Демо-профиль ${state.nickname}`}>
-              С
+              {state.nickname.slice(0, 1).toLocaleUpperCase('ru-RU')}
             </span>
           </div>
         </div>
