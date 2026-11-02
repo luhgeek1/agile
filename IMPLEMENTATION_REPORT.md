@@ -126,3 +126,11 @@ Frontend перенесён с Vite SPA на **Next.js 16.4.4 App Router**. Вс
 Все пути `/api`, методы, operationIds, параметры, requestBody, статусы и входные Pydantic-схемы проверены на совместимость с прежним OpenAPI. Таблицы, ограничения, идентификаторы и история миграций сохранены: Alembic не обнаружил новых DDL-операций. Защита денежных операций, семейные блокировки и идемпотентность сохранены.
 
 Проверки: Ruff lint/format, **51 тест на SQLite**, **51 тест на PostgreSQL**, **22 Playwright-сценария** через обновлённый API в Docker. Добавлены проверки границ слоёв, Unit of Work и фабрики. API и frontend оставлены работающими в healthy Compose на `http://127.0.0.1:5173`. Отчёт: `artifacts/backend-architecture/verification.md`.
+
+## Production deployment · 2 ноября 2026
+
+Изменения commit `f1f4745d6655631b7aa8b9d7ef38d16af2a442f3` опубликованы: Next.js frontend на https://kopilka-demo-rust.vercel.app, API новой архитектуры на существующем сервере. Vercel deployment `dpl_GAdmBb33Rb88jAY9vriBkhwYypD2` имеет статус Ready.
+
+API подготовлен отдельным релизом `/opt/kopilka/releases/f1f4745d6655/backend`. До переключения выполнены PostgreSQL backup, проверка фабрики и `alembic check` с production-настройками от пользователя службы. Активная ссылка `/opt/kopilka/backend` переключена на релиз, systemd unit обновлён на `app.main:create_app --factory`. Предыдущий backend и unit сохранены для rollback. Число записей в таблицах при активации не изменилось.
+
+Через основной production-домен прошли шесть Playwright-проверок: SSR, навигация и URL-фильтры, гидратация, health/404, пополнение и редактирование цели с reload, валидация, защита от перерасхода и перенос денег. Health доступен напрямую и через Vercel; OpenAPI подтверждает новую типизированную схему. Отчёт — `artifacts/production-deployment/verification.md`.
