@@ -14,3 +14,4 @@ test-results/
 *.tsbuildinfo
 *.egg-info/
 build/
+.vercel/

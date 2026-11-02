@@ -1,0 +1,8 @@
+backend/
+doki/
+artifacts/
+.git/
+frontend/e2e/
+frontend/playwright-report/
+frontend/test-results/
+deploy/
