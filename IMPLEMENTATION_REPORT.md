@@ -116,3 +116,13 @@ Frontend перенесён с Vite SPA на **Next.js 16.4.4 App Router**. Вс
 Сборка находится в `frontend/.next`. Старые `main.tsx`, `index.html`, React Router, конфигурация приложения Vite и Nginx frontend удалены. Docker использует standalone Node.js-сервер; API и PostgreSQL сохранены. Конфигурация Vercel переведена на native Next.js без SPA fallback, локальная `vercel build --prod --yes` успешно создала serverless-функции и статические файлы. Публикация на Vercel не выполнялась.
 
 Проверки: lint, typecheck, production build, 19 unit-тестов, 14 проверок FSD и **22 Playwright-сценария** прошли. Четыре новых сценария проверяют серверный HTML без JavaScript, переходы без замены document, metadata и URL-фильтры с back/reload, сохранённое скрытие демо-сообщения без ошибок гидратации, health endpoint и HTTP 404. Дополнительно шесть сценариев навигации и денежных операций прошли через новый Docker-контейнер на 5173. Dev-сервер проверен на 5174. Визуально просмотрены главная на 390/1440 px: оформление сохранено. Артефакты — `artifacts/next-migration/`.
+
+## Архитектура backend из RoboMera · 2 ноября 2026
+
+Архитектура адаптирована из `luhgeek1/RoboMera`, commit `4ed6737c1a66115d308ba80db83357779f9d5b52`: фабрика приложения и lifespan, core, api/v1 и API-схемы, прикладные сервисы, независимый domain, ORM-модели, репозитории, Unit of Work и seeds. Синхронный SQLAlchemy сохранён для существующих PostgreSQL/SQLite. Описание, источник и правила — `backend/README.md`.
+
+`main.py` сокращён до сборки приложения. SQL находится в репозиториях, сценарии — в service, доменные команды — dataclass. API преобразует Pydantic-входы в команды и задаёт типизированные ответы. Ошибки сервисов централизованно преобразуются в совместимый JSON `detail`. Commit выполняется единым Unit of Work до отправки HTTP-ответа; ошибка commit приводит к rollback и 503 без cookie для несохранённой сессии. Ресурсы БД создаются в lifespan; глобального приложения и engine при импорте нет. Запуск: `uvicorn app.main:create_app --factory`; Docker, systemd unit и команды README обновлены.
+
+Все пути `/api`, методы, operationIds, параметры, requestBody, статусы и входные Pydantic-схемы проверены на совместимость с прежним OpenAPI. Таблицы, ограничения, идентификаторы и история миграций сохранены: Alembic не обнаружил новых DDL-операций. Защита денежных операций, семейные блокировки и идемпотентность сохранены.
+
+Проверки: Ruff lint/format, **51 тест на SQLite**, **51 тест на PostgreSQL**, **22 Playwright-сценария** через обновлённый API в Docker. Добавлены проверки границ слоёв, Unit of Work и фабрики. API и frontend оставлены работающими в healthy Compose на `http://127.0.0.1:5173`. Отчёт: `artifacts/backend-architecture/verification.md`.

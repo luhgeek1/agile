@@ -9,7 +9,7 @@ Group=kopilka
 WorkingDirectory=/opt/kopilka/backend
 EnvironmentFile=/etc/kopilka/api.env
 ExecStartPre=/opt/kopilka/venv/bin/alembic upgrade head
-ExecStart=/opt/kopilka/venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8017 --proxy-headers --forwarded-allow-ips=127.0.0.1
+ExecStart=/opt/kopilka/venv/bin/uvicorn app.main:create_app --factory --host 127.0.0.1 --port 8017 --proxy-headers --forwarded-allow-ips=127.0.0.1
 Restart=on-failure
 RestartSec=5
 NoNewPrivileges=true

@@ -6,8 +6,10 @@ from fastapi.testclient import TestClient
 from sqlalchemy import text
 from sqlalchemy.orm import sessionmaker
 
-from app.database import Base, get_db, make_engine
-from app.main import app
+from app.core.config import Settings
+from app.db.base import Base
+from app.db.session import Database, make_engine
+from app.main import create_app
 
 
 @pytest.fixture
@@ -24,13 +26,7 @@ def database(tmp_path):
     Base.metadata.create_all(engine)
     sessions = sessionmaker(engine, expire_on_commit=False)
 
-    def test_db():
-        with sessions() as db:
-            yield db
-
-    app.dependency_overrides[get_db] = test_db
     yield sessions
-    app.dependency_overrides.clear()
     if url:
         with base_engine.begin() as conn:
             conn.execute(text(f'DROP SCHEMA "{schema}" CASCADE'))
@@ -40,7 +36,13 @@ def database(tmp_path):
 
 
 @pytest.fixture
-def client(database):
+def app(database):
+    settings = Settings()
+    return create_app(settings, database=Database(settings, engine=database.kw["bind"]))
+
+
+@pytest.fixture
+def client(app):
     with TestClient(app) as client:
         yield client
 

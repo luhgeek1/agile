@@ -1,20 +1,18 @@
 from datetime import date, datetime, timedelta, timezone
-from typing import Annotated, Literal
+from typing import Annotated
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic import Field, field_validator, model_validator
 
-Category = Literal["save", "spend", "help"]
-Money = Annotated[int, Field(strict=True, gt=0, le=100_000_000)]
+from app.api.schemas.base import ApiModel, StrictModel
+from app.domain.wallet.models import MAX_OPERATION, Category, Kind, TransactionDraft
 
-
-class StrictModel(BaseModel):
-    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
+Money = Annotated[int, Field(strict=True, gt=0, le=MAX_OPERATION)]
 
 
 class TransactionIn(StrictModel):
     request_id: UUID
-    kind: Literal["deposit", "withdraw", "transfer"]
+    kind: Kind
     category: Category
     destination: Category | None = None
     amount: Money
@@ -38,19 +36,21 @@ class TransactionIn(StrictModel):
             raise ValueError("Отсек назначения нужен только для переноса")
         return self
 
-
-class GoalIn(StrictModel):
-    title: str = Field(min_length=2, max_length=60)
-    target: Money
-    illustration: Literal["bike", "book", "skates", "star"] = "bike"
+    def to_domain(self) -> TransactionDraft:
+        return TransactionDraft(**self.model_dump(exclude={"request_id"}), request_id=str(self.request_id))
 
 
-class FeedbackIn(StrictModel):
-    usefulness: Annotated[int, Field(strict=True, ge=1, le=5)]
-    difficulty: Literal["easy", "okay", "hard"]
-    comment: str = Field(default="", max_length=1000)
-    adult_confirmed: Literal[True]
+class TransactionOut(ApiModel):
+    id: str
+    kind: Kind
+    category: Category
+    destination: Category | None
+    amount: int
+    occurred_on: date
+    note: str
+    created_at: datetime
 
 
-class ResetIn(StrictModel):
-    seeded: bool = True
+class HistoryOut(ApiModel):
+    items: list[TransactionOut]
+    has_more: bool

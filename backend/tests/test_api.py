@@ -7,8 +7,9 @@ from fastapi.testclient import TestClient
 from sqlalchemy import select, update
 from sqlalchemy.exc import IntegrityError
 
-from app.main import COOKIE, app
-from app.models import DemoSession, Transaction, Wallet, now
+from app.api.cookies import COOKIE
+from app.db.models import DemoSession, Transaction, Wallet
+from app.domain.common.clock import now
 
 
 def payload(**overrides):
@@ -44,7 +45,7 @@ def test_anonymous_denied(client, path):
     assert client.get(f"/api{path}").status_code == 401
 
 
-def test_seed_and_exact_persistence(demo):
+def test_seed_and_exact_persistence(demo, app):
     before = state(demo)
     assert before["balances"] == {"save": 125000, "spend": 25000, "help": 20000}
     response = demo.post("/api/transactions", json=payload())
@@ -160,7 +161,7 @@ def test_feedback_validation_persistence_and_safe_export(demo):
     assert "family_id" not in str(export) and "token" not in str(export)
 
 
-def test_family_isolation_and_reset_scope(demo):
+def test_family_isolation_and_reset_scope(demo, app):
     first_state = state(demo)
     with TestClient(app) as other:
         other.post("/api/demo")
@@ -209,7 +210,7 @@ def test_history_filter_and_pagination(demo):
     assert demo.get("/api/transactions?kind=invalid").status_code == 422
 
 
-def test_concurrent_withdrawals_cannot_overdraw(demo, database):
+def test_concurrent_withdrawals_cannot_overdraw(demo, database, app):
     token = demo.cookies.get(COOKIE)
 
     def withdraw(_):
@@ -230,7 +231,7 @@ def test_concurrent_withdrawals_cannot_overdraw(demo, database):
         assert len(withdrawals) == 1
 
 
-def test_concurrent_same_request_is_recorded_once(demo):
+def test_concurrent_same_request_is_recorded_once(demo, app):
     token = demo.cookies.get(COOKIE)
     data = payload(amount=1)
 

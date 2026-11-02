@@ -7,6 +7,7 @@ from app.db.repositories.education import ActivityRepository
 from app.db.repositories.families import FamilyRepository, SessionRepository
 from app.db.repositories.feedback import FeedbackRepository
 from app.db.repositories.goals import GoalRepository
+from app.db.repositories.system import SystemRepository
 from app.db.repositories.transactions import TransactionRepository
 from app.db.repositories.wallets import WalletRepository
 
@@ -16,6 +17,7 @@ class UnitOfWork:
 
     def __init__(self, session: Session):
         self.session = session
+        self.system = SystemRepository(session)
         self.families = FamilyRepository(session)
         self.sessions = SessionRepository(session)
         self.wallets = WalletRepository(session)

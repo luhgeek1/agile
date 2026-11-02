@@ -35,7 +35,7 @@ Compose автоматически применяет Alembic-миграции �
 cd backend
 uv sync --frozen
 DATABASE_URL=sqlite:///./kopilka.db uv run alembic upgrade head
-DATABASE_URL=sqlite:///./kopilka.db uv run uvicorn app.main:app --host 127.0.0.1 --port 8017
+DATABASE_URL=sqlite:///./kopilka.db uv run uvicorn app.main:create_app --factory --host 127.0.0.1 --port 8017
 ```
 
 В терминале 2 из корня:
@@ -55,7 +55,7 @@ cp backend/.env.example backend/.env
 cd backend
 uv sync --frozen
 uv run alembic upgrade head
-uv run uvicorn app.main:app --reload --host 127.0.0.1 --port 8017
+uv run uvicorn app.main:create_app --factory --reload --host 127.0.0.1 --port 8017
 ```
 
 Не запускайте API в контейнере и на компьютере одновременно на одном порту.
@@ -93,7 +93,7 @@ uv run uvicorn app.main:app --reload --host 127.0.0.1 --port 8017
 
 Frontend: Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS 4, компоненты по подходу shadcn/ui на Radix UI, Motion, Lucide, TanStack Query, React Hook Form, Zod, Sonner. Nunito и Nunito Sans поставляются локально через Fontsource, внешние шрифтовые сервисы не нужны.
 
-Backend: FastAPI, Pydantic 2, SQLAlchemy 2, Alembic, PostgreSQL 17; дополнительная поддержка SQLite. Версии зафиксированы в `package-lock.json`, `backend/uv.lock` и экспортированном `backend/requirements.lock` с хешами для контейнера.
+Backend: FastAPI (фабрика приложения), Pydantic 2, SQLAlchemy 2, Alembic, PostgreSQL 17; дополнительная поддержка SQLite. Версии зафиксированы в `package-lock.json`, `backend/uv.lock` и экспортированном `backend/requirements.lock` с хешами для контейнера.
 
 ```text
 frontend/
@@ -112,11 +112,14 @@ frontend/
   package.json           зависимости и команды frontend
   *config*               Next.js, PostCSS, TypeScript, ESLint, Vitest, Playwright
 backend/
-  app/models.py          модели и ограничения БД
-  app/schemas.py         серверная валидация
-  app/services.py        транзакционная бизнес-логика и seed
-  app/main.py            REST API и сессии
-  app/content.py         демонстрационные задания и материалы
+  app/main.py            фабрика FastAPI и жизненный цикл ресурсов
+  app/core/              настройки, ошибки, middleware
+  app/api/v1/            тонкие HTTP-роутеры, контракт /api
+  app/api/schemas/       Pydantic-входы и типизированные ответы
+  app/service/           прикладные сценарии через Unit of Work
+  app/domain/            независимые типы, команды, расчёты и учебный контент
+  app/db/                ORM-модели, репозитории, сессии и Unit of Work
+  app/seeds/             стартовые данные демо
   migrations/            версионированная схема Alembic
   tests/                 API, изоляция, инварианты, конкурентные операции
   .env.example           пример настроек локального API
@@ -132,6 +135,8 @@ Frontend организован по [Feature-Sliced Design](https://feature-sli
 Зависимости фронтенда и его конфигурация находятся в `frontend`. Установка остаётся из корня: `npm ci`. Команды `npm run dev`, `npm run build`, `npm run preview`, `npm run lint`, `npm run typecheck`, `npm test` и `npm run test:e2e` делегируются workspace; они также работают из `frontend`. Сборка создаётся в `frontend/.next`; `npm run start` запускает production-сервер на 5173, `npm run preview` — на 4173. Это серверное Next.js-приложение, отдельного `dist/index.html` больше нет.
 
 Деньги хранятся целыми копейками в `BIGINT`. Лимит операции/цели — 1 000 000 ₽, отсека — 10 000 000 ₽. Семейная блокировка сериализует изменения и сброс. Условное списание и `CHECK` в БД не допускают отрицательного баланса. Перенос, обновление остатков и запись истории коммитятся вместе. Клиент не передаёт идентификатор семьи: область доступа определяется серверной сессией.
+
+Архитектура backend адаптирована из RoboMera: `api → service → domain`, SQL в репозиториях, единая транзакция на запрос через Unit of Work. Подробности и правила зависимостей: [backend/README.md](backend/README.md).
 
 ## Тестирование
 

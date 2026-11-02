@@ -10,3 +10,7 @@
 ## Дизайн
 
 Визуальная система описана в `DESIGN.md`, решения по доработкам — в `design/decisions.md`.
+
+## Backend
+
+Архитектура backend и источник RoboMera описаны в `backend/README.md`. Соблюдать границы `api/service/domain/db`; SQL держать в репозиториях, commit и rollback — в Unit of Work.

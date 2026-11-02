@@ -1,11 +1,12 @@
 from alembic import context
 from sqlalchemy import create_engine
 
-from app import models  # noqa: F401
-from app.config import settings
-from app.database import Base
+from app.core.config import get_settings
+from app.db import models  # noqa: F401
+from app.db.base import Base
 
 target_metadata = Base.metadata
+settings = get_settings()
 
 if context.is_offline_mode():
     context.configure(url=settings.database_url, target_metadata=target_metadata, literal_binds=True)
