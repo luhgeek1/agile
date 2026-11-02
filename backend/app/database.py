@@ -1,33 +1,16 @@
-from sqlalchemy import create_engine, event
-from sqlalchemy.orm import DeclarativeBase, sessionmaker
+from sqlalchemy.orm import sessionmaker
 
-from .config import settings
+from app.core.config import get_settings
+from app.db.base import Base
+from app.db.session import make_engine
 
-
-class Base(DeclarativeBase):
-    pass
-
-
-def make_engine(url: str):
-    engine = create_engine(
-        url,
-        connect_args={"check_same_thread": False, "timeout": 30} if url.startswith("sqlite") else {},
-        pool_pre_ping=True,
-    )
-    if url.startswith("sqlite"):
-
-        @event.listens_for(engine, "connect")
-        def configure_sqlite(connection, _):
-            connection.execute("PRAGMA foreign_keys=ON")
-            connection.execute("PRAGMA journal_mode=WAL")
-
-    return engine
-
-
-engine = make_engine(settings.database_url)
+engine = make_engine(get_settings().database_url)
 SessionLocal = sessionmaker(engine, expire_on_commit=False)
 
 
 def get_db():
     with SessionLocal() as db:
         yield db
+
+
+__all__ = ["Base", "SessionLocal", "engine", "get_db", "make_engine"]
