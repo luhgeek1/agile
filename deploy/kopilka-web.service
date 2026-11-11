@@ -1,0 +1,24 @@
+[Unit]
+Description=Kopilka Next.js
+After=network.target kopilka-api.service
+Wants=kopilka-api.service
+
+[Service]
+User=kopilka
+Group=kopilka
+WorkingDirectory=/opt/kopilka/web/frontend
+Environment=NODE_ENV=production
+Environment=NEXT_TELEMETRY_DISABLED=1
+Environment=HOSTNAME=127.0.0.1
+Environment=PORT=3000
+ExecStart=/opt/kopilka/node/bin/node /opt/kopilka/web/frontend/server.js
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/kopilka/web/frontend/.next/cache
+
+[Install]
+WantedBy=multi-user.target

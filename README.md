@@ -205,7 +205,7 @@ npm run build
 npm run preview
 ```
 
-Открыть `http://127.0.0.1:4173`. API по-прежнему должен работать на 8017. Публичное демо: https://kopilka-demo-rust.vercel.app. Настройки Vercel, HTTPS API, службы и резервных копий описаны в [deploy/README.md](deploy/README.md). Для реальных семей требуется отдельное проектирование авторизации/согласий. Значения локального Compose не являются production-секретами.
+Открыть `http://127.0.0.1:4173`. API по-прежнему должен работать на 8017. Публичное демо доступно на сервере: https://kopilka.170.168.10.196.sslip.io (или через http://170.168.10.196 с перенаправлением на HTTPS), а также на Vercel: https://kopilka-demo-rust.vercel.app. Оба адреса используют один backend, но cookie и демо-сессии у доменов отдельные. Настройки nginx, Vercel, HTTPS API, служб и резервных копий описаны в [deploy/README.md](deploy/README.md). Для реальных семей требуется отдельное проектирование авторизации/согласий. Значения локального Compose не являются production-секретами.
 
 Браузерные тесты можно прогнать и на собранном frontend: `PLAYWRIGHT_BASE_URL=http://127.0.0.1:4173 npm run test:e2e`.
 

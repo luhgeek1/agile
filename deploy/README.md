@@ -3,11 +3,13 @@
 ## Адреса
 
 - Локальная версия: http://127.0.0.1:5173
-- Frontend (Vercel): https://kopilka-demo-rust.vercel.app
+- Frontend на сервере: https://kopilka.170.168.10.196.sslip.io
+- Вход по IP: http://170.168.10.196 (перенаправление на HTTPS-адрес выше)
+- Frontend (Vercel, параллельный вход): https://kopilka-demo-rust.vercel.app
 - API: https://kopilka.170.168.10.196.sslip.io/api/health
 - Swagger: https://kopilka.170.168.10.196.sslip.io/api/docs
 
-Frontend использует `/api` на своём домене. `vercel.json` проксирует `/api` на backend по HTTPS; страницы обслуживает Next.js App Router. SPA fallback на `index.html` удалён. Cookie — Secure, HttpOnly, SameSite=Strict. API разрешает изменения только с явно перечисленных источников.
+Оба frontend используют один backend через `/api` на своём домене. На Vercel `vercel.json` проксирует `/api` на backend по HTTPS, на сервере это делает nginx; страницы обслуживает Next.js App Router. Cookie — Secure, HttpOnly, SameSite=Strict. API разрешает изменения только с явно перечисленных источников. Демо-сессии привязаны к домену: открытие другого адреса создаёт отдельную копилку.
 
 Технический домен sslip.io зависит от внешнего DNS-сервиса. Для собственного домена измените nginx, сертификат, `ALLOWED_ORIGINS` и адрес прокси в `vercel.json`.
 
@@ -54,6 +56,45 @@ scp -i "$DEPLOY_SSH_KEY" "/tmp/kopilka-${revision}.tar.gz" root@170.168.10.196:/
 
 Служба запускается командой `uvicorn app.main:create_app --factory`. При ошибке запуска восстановите предыдущую ссылку и сохранённый unit, затем выполните daemon-reload и restart. Секреты остаются в `/etc/kopilka/api.env`, PostgreSQL — вне папок релизов.
 
+## Frontend на сервере
+
+Next.js работает отдельной службой `kopilka-web` от пользователя `kopilka`,
+слушает `127.0.0.1:3000` и запускается после перезагрузки. nginx направляет
+`/api/` на FastAPI (`8017`), остальные запросы — на Next.js (`3000`).
+Конфигурация TLS, созданная Certbot, сохраняется при обновлении nginx.
+
+Используется standalone-сборка с `API_ORIGIN=http://127.0.0.1:8017`:
+
+```sh
+NEXT_STANDALONE=1 API_ORIGIN=http://127.0.0.1:8017 npm run build
+cp -R frontend/.next/static frontend/.next/standalone/frontend/.next/static
+cp -R frontend/public frontend/.next/standalone/frontend/public
+tar -czf /tmp/kopilka-web.tar.gz -C frontend/.next/standalone .
+```
+
+Собирать и упаковывать следует на доверенной машине, затем передавать архив
+на сервер по SSH и распаковывать в отдельный каталог релиза. Для Linux нужны
+совместимые runtime-зависимости; текущие страницы не используют `next/image`.
+Ссылка `/opt/kopilka/web` указывает на корень распакованной standalone-сборки.
+Внутри нужны `frontend/server.js`, `frontend/.next/static`, `frontend/public`
+и доступный пользователю `kopilka` каталог `frontend/.next/cache`.
+Исходники приложения и секреты в публичный каталог nginx не помещаются.
+
+Node.js 22.23.4 установлен из официального Linux x64 архива с проверкой SHA-256
+в `/opt/kopilka/node-v22.23.4-linux-x64`; `/opt/kopilka/node` — ссылка на него.
+Unit находится в `deploy/kopilka-web.service`. После переключения релиза:
+
+```sh
+systemctl restart kopilka-web
+systemctl is-active kopilka-web kopilka-api nginx
+curl --fail http://127.0.0.1:3000/healthz
+curl --fail https://kopilka.170.168.10.196.sslip.io/api/health
+```
+
+Перед переключением сохраняйте старую ссылку и конфигурацию nginx.
+При ошибке возвращайте их, проверяйте `nginx -t` и перезапускайте службу.
+Публикация на Vercel остаётся независимой и не отключает frontend на сервере.
+
 Для первоначальной установки есть `setup-server.sh`. Повторный запуск перезаписывает nginx-конфигурацию; для обычного обновления используйте команды выше.
 
 Публикация frontend из корня: `vercel deploy --prod`. `vercel.json` задаёт framework `nextjs`, сборку workspace и output `frontend/.next`; `/api` остаётся same-origin прокси к FastAPI. Для локальной проверки Vercel-сборки без публикации: `vercel build --prod`. Автоматическое размещение из GitHub отключено; текущий деплой загружен из локальной рабочей копии. Секреты и файлы бэкенда исключены из загрузки через `.vercelignore`. Production API разрешает основной адрес Vercel; новые домены нужно добавить в `/etc/kopilka/api.env` и перезапустить службу.
@@ -67,3 +108,16 @@ scp -i "$DEPLOY_SSH_KEY" "/tmp/kopilka-${revision}.tar.gz" root@170.168.10.196:/
 - API release: `/opt/kopilka/releases/f1f4745d6655/backend`; активная ссылка — `/opt/kopilka/backend`.
 - Предыдущий backend: `/opt/kopilka/backend-before-f1f4745d6655`; предыдущий unit сохранён в `releases/f1f4745d6655/previous-api.service`.
 - Перед обновлением создан PostgreSQL backup. Alembic не обнаружил изменений схемы, количество записей при переключении не изменилось.
+
+## Frontend на VDS · 11 ноября 2026
+
+- Исходники frontend: `4fd62ff`; сборка Next.js и TypeScript прошли локально.
+- Новый frontend: `/opt/kopilka/releases/4fd62ff-web-20261111/web`;
+  активная ссылка — `/opt/kopilka/web`. Backend остался на существующем релизе.
+- Установлена и включена служба `kopilka-web`; nginx проксирует страницы на неё.
+  Прежняя конфигурация сохранена в `4fd62ff-web-20261111/nginx.previous.conf`.
+- Перед изменением выполнен backup PostgreSQL (`Result=success`).
+- HTTP-проверки обоих доменов прошли: восемь страниц, JS/CSS, health,
+  Secure/HttpOnly cookie, запись и повторное чтение операции, идемпотентность,
+  восстановление созданного проверкой демо. Проверен переход по IP на HTTPS.
+- Frontend на Vercel продолжает работать без перепубликации.
