@@ -1,7 +1,8 @@
 import type { Activity } from '@/shared/api/contracts'
-import { categories, categoryKeys, CategoryIcon, Jar } from '@/entities/wallet'
+import { categories, categoryKeys, CategoryIcon } from '@/entities/wallet'
 import { Button, Card, Progress } from '@/shared/ui'
 import { ArrowUpRight, Check } from 'lucide-react'
+import { ParkScene } from './park-scene'
 
 export function DiscoveryHub({ activities, onOpen }: {
   activities: Activity[]
@@ -10,14 +11,14 @@ export function DiscoveryHub({ activities, onOpen }: {
   return (
     <div className="discovery-hub">
       <Card className="park-invitation">
-        <Jar category="save" />
-        <div>
+        <div className="park-invitation-copy">
           <span className="eyebrow">Приключение на 3–5 минут</span>
           <h2>Парк маленьких открытий</h2>
           <p>Построй план мечты, собери пикник и помоги саду. Открывай значки и тренируйся выбирать.</p>
           <Button asChild><a href="/game/index.html">Отправиться в парк <ArrowUpRight size={18} /></a></Button>
           <small>Игровые монеты не меняют копилку. Прогресс игры хранится в этом браузере.</small>
         </div>
+        <ParkScene />
       </Card>
       <section className="habit-collection" aria-labelledby="habit-collection-title">
         <h2 id="habit-collection-title">Открытия с настоящей копилкой</h2>

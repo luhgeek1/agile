@@ -1,0 +1,41 @@
+.park-invitation { grid-template-columns: 1.1fr .9fr; gap: 28px; padding: 36px 40px; background: #eaf1e5; border-color: #dce7d6; overflow: hidden; }
+.park-invitation-copy { min-width: 0; }
+.park-invitation h2 { font-size: clamp(28px, 3vw, 38px); line-height: 1.1; letter-spacing: -.025em; max-width: 18ch; margin: 14px 0; text-wrap: balance; }
+.park-invitation p { font-size: 15px; max-width: 47ch; line-height: 1.65; margin-bottom: 22px; }
+.park-invitation small { font-size: 12px; max-width: 53ch; line-height: 1.6; margin-top: 16px; }
+.park-scene { position: relative; width: 100%; aspect-ratio: 480 / 300; align-self: center; }
+.park-path { position: absolute; width: 100%; inset: 0; }
+.park-scene .jar { position: absolute; width: 40%; height: auto; margin: 0; }
+.park-scene .park-guide-save { left: 2%; top: 23%; rotate: -7deg; }
+.park-scene .park-guide-spend { left: 30%; top: 0; rotate: 5deg; }
+.park-scene .park-guide-help { right: 0; top: 28%; rotate: 7deg; }
+.park-scene-caption { position: absolute; inset: auto 0 0; text-align: center; color: #47633e; font-size: 12px; font-weight: 700; letter-spacing: .02em; }
+.habit-collection { margin-top: 34px; }
+.habit-collection > h2 { font-size: 24px; letter-spacing: -.02em; }
+.habit-collection > p { font-size: 14px; max-width: 70ch; margin-bottom: 22px; }
+.habit-trails { gap: 0; border-block: 1px solid var(--line); }
+.habit-trail { border: 0; border-radius: 0; padding: 22px 24px; background: transparent; }
+.habit-trail + .habit-trail { border-left: 1px solid var(--line); }
+.habit-trail:hover { background: #edf3ee; }
+.habit-trail-title { margin-bottom: 14px; }
+.habit-trail-title strong { font-size: 18px; }
+.habit-trail .progress { height: 5px; }
+.habit-trail-next { font-size: 12px; margin-top: 12px; }
+@media (max-width: 1023px) {
+  .park-invitation { padding: 28px; gap: 10px; grid-template-columns: 1.2fr .8fr; }
+  .habit-trail { padding: 18px 16px; }
+}
+@media (max-width: 639px) {
+  .park-invitation { grid-template-columns: minmax(0, 1fr); padding: 24px; gap: 22px; }
+  .park-invitation h2 { font-size: 30px; }
+  .park-invitation .eyebrow { font-size: 10px; }
+  .park-scene { max-width: 290px; justify-self: center; }
+  .park-invitation .button { width: 100%; }
+  .habit-collection > h2 { font-size: 23px; line-height: 1.2; }
+  .habit-trails { grid-template-columns: minmax(0, 1fr); }
+  .habit-trail { padding: 18px 4px; }
+  .habit-trail + .habit-trail { border-left: 0; border-top: 1px solid var(--line); }
+}
+@media (min-width: 640px) and (max-width: 767px) {
+  .habit-trails { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
