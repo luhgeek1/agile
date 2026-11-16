@@ -1,6 +1,7 @@
 'use strict';
 import { practiceView, handlePractice } from './practice-view.js';
 import { practiceProgress, resetPractice } from './practice-state.js';
+import { collectionView, badgeDetails, earnedTitle } from './collection.js';
 const STORAGE_KEY = 'kopilka-park-v1';
 const names = ['Коплю', 'Трачу', 'Помогаю'];
 let jarSerial = 0;
@@ -103,6 +104,12 @@ function render(focus=true){
  document.querySelectorAll('[data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===page));
  main.innerHTML=(!storageAvailable?'<div class="storage-note">Браузер не разрешает сохранять прогресс. Игра работает, но после закрытия страницы путь может начаться заново.</div>':'')+(page==='practice'?practiceView(icon):page==='parents'?parentView():page==='game'&&state.active?gameView():mapView());
  document.title=(page==='game'?missions[state.active.id].title:page==='parents'?'Родителям':'Парк маленьких открытий')+' · Коплю — Трачу — Помогаю';
+ if(page==='map' || page==='parents') main.insertAdjacentHTML('beforeend',collectionView(state.completed,icon,art));
+ if(page==='practice') document.title='Мастерская решений · Коплю — Трачу — Помогаю';
+ if(page==='game' && state.active.phase==='result') {
+   main.querySelector('.badge').textContent='Значок получен · '+earnedTitle(state.active.id);
+   main.querySelector('.family-task').insertAdjacentHTML('beforeend','<a class="back" href="/app/activities">Выбрать дело с настоящей копилкой →</a>');
+ }
  if(focus)focusMain();
 }
 function mapView(){
@@ -148,6 +155,7 @@ function openModal(title,body){document.querySelector('#modal-content').innerHTM
 function showHelp(){openModal('Как играть?',`<p>Копик приглашает тебя в парк. Здесь три истории, и в каждой можно сделать своё открытие.</p><ol><li><b>Составь план.</b> Разложи монеты кнопками + и −. Один шаг — 10 монет.</li><li><b>Сделай выбор.</b> Сравни цену и свой бюджет. Можно вернуться и изменить план.</li><li><b>Разберись.</b> Ответь на вопрос, прочитай объяснение и обсуди открытие со взрослым.</li></ol><p>Можно остановиться в любой момент. Прогресс остаётся в этом браузере. Монеты игровые, настоящие деньги не нужны.</p><button class="primary full" data-action="close">Всё понятно!</button>`);}
 document.addEventListener('click',e=>{
  const b=e.target.closest('button,a.brand');if(!b)return;
+ if(b.dataset.badge !== undefined){badgeDetails(Number(b.dataset.badge),state.completed,openModal,icon);return;}
  if(b.dataset.practice || b.dataset.practiceAnswer !== undefined){handlePractice(b,render,announce);return;}
  if(b.matches('a.brand')){e.preventDefault();page='map';render();return;}
  if(b.classList.contains('close-modal')){modal.close();return;}
