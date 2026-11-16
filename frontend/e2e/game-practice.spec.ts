@@ -76,6 +76,7 @@ test('malformed storage and unavailable storage keep the game playable', async (
 test('real habit progress persists after completing a task', async ({ page }) => {
   await page.goto('/')
   await page.getByRole('button', { name: 'Посмотреть демо' }).click()
+  await expect(page.getByRole('heading', { name: 'Мои три отсека' })).toBeVisible()
   await page.goto('/app/activities')
   await page.getByRole('button', { name: 'Коплю: 1 из 2. Продолжить' }).click()
   await page.getByRole('dialog').getByRole('button', { name: 'Я попробовал!' }).click()

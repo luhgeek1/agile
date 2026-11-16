@@ -7,6 +7,7 @@
 .header { height: auto; min-height: 100px; gap: 20px; flex-wrap: wrap; padding-block: 16px; }
 .header nav { flex-wrap: wrap; }
 .help-button { min-width: 44px; min-height: 44px; }
+.skip:not(:focus) { clip-path: inset(50%); width: 1px; height: 1px; overflow: hidden; padding: 0; white-space: nowrap; }
 .nav-button.active { background: #dff3ee; color: #245f55; }
 .nav-button { min-height: 44px; }
 .practice-layout { display: grid; grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr); gap: 24px; }
@@ -25,6 +26,8 @@
 .quiz-option:disabled, .choice:disabled, .shop-item:disabled { opacity: 1; }
 .quiz-option:disabled:not(.correct), .choice:disabled:not(.selected), .shop-item:disabled:not(.selected) { opacity: .65; }
 .footer a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 900; color: #245f55; }
+.footer, .guide-card .tiny { color: var(--muted); font-size: 13px; }
+.small-note { color: var(--muted); }
 .method-note { max-width: 1200px; margin: 16px auto; padding: 0 24px; font-size: 13px; color: var(--muted); }
 .practice-board .feedback { scroll-margin-bottom: 30px; }
 .practice-board .action-row { align-items: flex-start; }
@@ -38,6 +41,7 @@
 .badge-shelf { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
 .discovery-badge { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 16px 10px; border: 1px solid var(--line); border-radius: 20px; }
 .discovery-badge strong { font-size: 16px; line-height: 1.3; }
+.discovery-badge strong { overflow-wrap: anywhere; }
 .discovery-badge.waiting { background: #f5f7f5; }
 .waiting .badge-art { filter: grayscale(1); opacity: .6; }
 .badge-art { width: 82px; height: 76px; display: grid; place-items: center; }
@@ -83,4 +87,10 @@
 @media (prefers-reduced-motion: no-preference) {
   .earned-seal { animation: seal-arrives 320ms ease-out; }
   @keyframes seal-arrives { from { transform: scale(.85) rotate(-8deg); } to { transform: scale(1) rotate(0); } }
+}
+@media (max-width: 360px) {
+  .badge-shelf { grid-template-columns: minmax(0, 1fr); }
+  .discovery-badge, .discovery-badge:last-child { display: grid; grid-template-columns: 60px minmax(0, 1fr); min-height: 100px; text-align: left; gap: 6px 14px; }
+  .badge-art { grid-row: 1 / 3; width: 60px; height: 60px; }
+  .badge-status { margin: 0; }
 }

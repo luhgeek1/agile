@@ -72,8 +72,9 @@ test('arrows stay vertically centered and reachable on every supported width; ke
       )
       expect(bounds!.x).toBeGreaterThanOrEqual(0)
       expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(width)
-      expect(bounds!.width).toBeGreaterThanOrEqual(44)
-      expect(bounds!.height).toBeGreaterThanOrEqual(44)
+      // Firefox can report a 44px target as 43.99997px after transforms.
+      expect(bounds!.width).toBeGreaterThanOrEqual(44 - 0.01)
+      expect(bounds!.height).toBeGreaterThanOrEqual(44 - 0.01)
     }
     const initial = await carousel.getByRole('status').innerText()
     await carousel.getByRole('button', { name: 'Следующее задание' }).focus()
@@ -100,7 +101,9 @@ test('arrows stay vertically centered and reachable on every supported width; ke
 
 test('mobile touch swipes navigate without changing money or completion state', async ({
   browser,
+  browserName,
 }) => {
+  test.skip(browserName !== 'chromium', 'CDP touch injection is specific to Chromium')
   const context = await browser.newContext({
     baseURL: process.env.PLAYWRIGHT_BASE_URL ?? 'http://127.0.0.1:5173',
     viewport: { width: 390, height: 1000 },

@@ -98,6 +98,10 @@ let page = ['practice', 'parents', 'game'].includes(location.hash.slice(1)) ? lo
 if (page === 'game' && !state.active) page = 'map';
 const main=document.querySelector('main');
 const modal=document.querySelector('#modal');
+let modalTrigger = null;
+modal.addEventListener('close', () => {
+ (modalTrigger?.isConnected ? modalTrigger : main).focus({ preventScroll: true });
+});
 function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch{storageAvailable=false;}}
 function announce(t){document.querySelector('#announce').textContent=t;}
 function focusMain(){main.focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});}
@@ -157,6 +161,7 @@ function openModal(title,body){document.querySelector('#modal-content').innerHTM
 function showHelp(){openModal('Как играть?',`<p>Копик приглашает тебя в парк. Здесь три истории, и в каждой можно сделать своё открытие.</p><ol><li><b>Составь план.</b> Разложи монеты кнопками + и −. Один шаг — 10 монет.</li><li><b>Сделай выбор.</b> Сравни цену и свой бюджет. Можно вернуться и изменить план.</li><li><b>Разберись.</b> Ответь на вопрос, прочитай объяснение и обсуди открытие со взрослым.</li></ol><p>Можно остановиться в любой момент. Прогресс остаётся в этом браузере. Монеты игровые, настоящие деньги не нужны.</p><button class="primary full" data-action="close">Всё понятно!</button>`);}
 document.addEventListener('click',e=>{
  const b=e.target.closest('button,a.brand');if(!b)return;
+ if (!modal.open) modalTrigger = b;
  if(b.dataset.badge !== undefined){badgeDetails(Number(b.dataset.badge),state.completed,openModal,icon);return;}
  if(b.dataset.practice || b.dataset.practiceAnswer !== undefined){handlePractice(b,render,announce);return;}
  if(b.matches('a.brand')){e.preventDefault();page='map';render();return;}

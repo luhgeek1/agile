@@ -7,10 +7,13 @@ async function enter(page: Page) {
   await page.goto('/')
   await page.getByRole('button', { name: 'Посмотреть демо' }).click()
   await expect(page.getByRole('heading', { name: 'Мои три отсека' })).toBeVisible()
+  await page.waitForLoadState('networkidle')
 }
 async function finishAnimation(page: Page) {
   await page.evaluate(() => document.fonts.ready)
   await expect(page.locator('.page')).toHaveCSS('opacity', '1')
+  // Finish Next prefetches before replacing the document: WebKit reports aborted ones as errors.
+  await page.waitForLoadState('networkidle')
 }
 test('whole journey: deposit, reload, edit goal, and history filters', async ({ page }) => {
   const errors: string[] = []
@@ -25,6 +28,7 @@ test('whole journey: deposit, reload, edit goal, and history filters', async ({ 
   await expect(page.getByTestId('balance-save')).toHaveText(/1\s400\s₽/)
   await page.reload()
   await expect(page.getByTestId('balance-save')).toHaveText(/1\s400\s₽/)
+  await page.waitForLoadState('networkidle')
   await page.goto('/app/goals')
   await page.getByRole('button', { name: 'Редактировать цель' }).click()
   await page
@@ -40,6 +44,7 @@ test('whole journey: deposit, reload, edit goal, and history filters', async ({ 
   ).toHaveAttribute('aria-valuenow', '70')
   await page.reload()
   await expect(page.getByRole('heading', { name: 'Новый набор для рисования' })).toBeVisible()
+  await page.waitForLoadState('networkidle')
   await page.goto('/app/transactions')
   await page.getByRole('button', { name: 'Коплю', exact: true }).click()
   await page.getByLabel('Тип операции').selectOption('deposit')
@@ -160,7 +165,7 @@ test('API outage, error retry, expired session, unknown route', async ({ page })
   await expect(page.getByRole('button', { name: 'Посмотреть демо' })).toBeVisible()
 })
 
-for (const width of [360, 390, 430, 768, 1024, 1440]) {
+for (const width of [320, 360, 390, 430, 768, 820, 1024, 1366, 1440, 1920]) {
   test(`responsive ${width}: all routes, dialog, navigation, reduced motion`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 })
     await page.emulateMedia({ reducedMotion: 'reduce' })
