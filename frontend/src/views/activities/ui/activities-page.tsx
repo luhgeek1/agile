@@ -1,10 +1,10 @@
 'use client'
 
 import { ActivityCard } from '@/entities/activity'
-import { Button, Card, EmptyState, Page, PageHeading, Progress } from '@/shared/ui'
+import { Button, EmptyState, Page, PageHeading } from '@/shared/ui'
+import { DiscoveryHub } from '@/widgets/discovery-hub'
 import { MethodNote } from '@/widgets/method-note'
 import { useProduct } from '@/widgets/product-shell'
-import { Sparkles } from 'lucide-react'
 import { useState } from 'react'
 
 export function ActivitiesPage() {
@@ -18,23 +18,7 @@ export function ActivitiesPage() {
         title="Полезные привычки — играючи"
         description="Немного любопытства, несколько минут и кто-то рядом."
       />
-      <Card className="discovery-banner">
-        <span className="discovery-icon">
-          <Sparkles size={35} />
-        </span>
-        <div>
-          <h2>Твоя коллекция открытий</h2>
-          <p>Здесь нет гонки. Выбирай задание по настроению.</p>
-          <Progress
-            value={(completed / state.activities.length) * 100}
-            label="Выполненные задания"
-          />
-        </div>
-        <strong>
-          {completed}
-          <span>из {state.activities.length}</span>
-        </strong>
-      </Card>
+      <DiscoveryHub activities={state.activities} onOpen={openActivity} />
       <div className="filter-chips activity-filters" role="group" aria-label="Фильтр заданий">
         {[
           ['all', 'Все открытия'],

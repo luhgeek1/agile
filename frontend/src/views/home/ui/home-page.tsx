@@ -72,6 +72,9 @@ export function HomePage() {
             </Link>
           </div>
           <ActivityCarousel activities={state.activities} onOpen={openActivity} />
+          <a className="home-park-link" href="/game/index.html">
+            <Sparkles size={18} /> Играть в парке открытий <ArrowUpRight size={17} />
+          </a>
         </section>
         <section className="home-recent">
           <div className="section-heading">
