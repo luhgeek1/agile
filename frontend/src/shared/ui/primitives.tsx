@@ -95,11 +95,13 @@ export function Modal({
   title,
   description,
   children,
+  fallbackFocus,
 }: PropsWithChildren<{
   open: boolean
   onOpenChange: (open: boolean) => void
   title: string
   description: string
+  fallbackFocus?: HTMLElement | null
 }>) {
   const returnFocus = useRef<HTMLElement | null>(null)
   return (
@@ -114,6 +116,7 @@ export function Modal({
           onCloseAutoFocus={(event) => {
             event.preventDefault()
             if (returnFocus.current?.isConnected) returnFocus.current.focus()
+            else if (fallbackFocus?.isConnected) fallbackFocus.focus()
           }}
         >
           <div className="dialog-heading">

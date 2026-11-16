@@ -36,6 +36,7 @@ export function ProductLayout({ children }: PropsWithChildren) {
   const [operation, setOperation] = useState<OperationOptions | null>(null)
   const [goalOpen, setGoalOpen] = useState(false)
   const [activity, setActivity] = useState<Activity | null>(null)
+  const [activityFocus, setActivityFocus] = useState<HTMLElement | null>(null)
   const [demoNoticeHidden, setDemoNoticeHidden] = useState(false)
   useEffect(() => {
     try {
@@ -150,7 +151,10 @@ export function ProductLayout({ children }: PropsWithChildren) {
               state,
               add: (options = {}) => setOperation(options),
               editGoal: () => setGoalOpen(true),
-              openActivity: setActivity,
+              openActivity: (nextActivity, fallbackFocus) => {
+                setActivityFocus(fallbackFocus ?? null)
+                setActivity(nextActivity)
+              },
             } satisfies ProductContext
           }
         >
@@ -193,6 +197,7 @@ export function ProductLayout({ children }: PropsWithChildren) {
           if (!v) setActivity(null)
         }}
         title={activity?.title ?? 'Задание'}
+        fallbackFocus={activityFocus}
         description="Маленькое открытие для тебя и твоей семьи."
       >
         {activity && (

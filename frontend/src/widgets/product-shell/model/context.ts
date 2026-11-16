@@ -9,7 +9,7 @@ export interface ProductContext {
   state: AppState
   add: (options?: OperationOptions) => void
   editGoal: () => void
-  openActivity: (activity: Activity) => void
+  openActivity: (activity: Activity, fallbackFocus?: HTMLElement | null) => void
 }
 export const ProductStateContext = createContext<ProductContext | null>(null)
 

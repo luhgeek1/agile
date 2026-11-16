@@ -1,3 +1,4 @@
+.goals-page { container-type: inline-size; }
 .goals-page .goals-layout { grid-template-columns: minmax(0, 1fr); gap: 34px; }
 .goals-page .goal-large { display: grid; grid-template-columns: .9fr 1fr; padding: 0; overflow: hidden; border-radius: 28px; }
 .goals-page .goal-card-heading { grid-column: 1 / -1; padding: 14px 26px; margin: 0; border-bottom: 1px solid var(--line); }
@@ -36,7 +37,7 @@
   .goals-page .goal-copy .button-row { flex-direction: column; align-items: stretch; }
   .goals-page .steps { gap: 18px; }
 }
-@media (max-width: 639px) {
+@container (max-width: 639px) {
   .goals-page .goal-large { grid-template-columns: minmax(0, 1fr); border-radius: 23px; }
   .goals-page .goal-card-heading { padding: 10px 20px; }
   .goals-page .goal-large .goal-art-stage { padding: 18px 22px; }

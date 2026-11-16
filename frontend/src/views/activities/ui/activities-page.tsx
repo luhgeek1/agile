@@ -5,12 +5,13 @@ import { Button, EmptyState, Page, PageHeading, SegmentedControl } from '@/share
 import { DiscoveryHub } from '@/widgets/discovery-hub'
 import { MethodNote } from '@/widgets/method-note'
 import { useProduct } from '@/widgets/product-shell'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { motion } from 'motion/react'
 
 export function ActivitiesPage() {
   const { state, openActivity } = useProduct()
   const [filter, setFilter] = useState('all')
+  const filters = useRef<HTMLDivElement>(null)
   const completed = state.activities.filter((a) => a.completed_at).length
   return (
     <Page className="activities-page">
@@ -26,7 +27,7 @@ export function ActivitiesPage() {
           Открыто {completed} из {state.activities.length}
         </span>
       </div>
-      <div className="activity-filters">
+      <div className="activity-filters" ref={filters}>
         <SegmentedControl
           label="Фильтр заданий"
           value={filter}
@@ -50,7 +51,15 @@ export function ActivitiesPage() {
               initial={false}
               transition={{ type: 'spring', bounce: 0, duration: 0.3 }}
             >
-              <ActivityCard activity={a} onOpen={openActivity} />
+              <ActivityCard
+                activity={a}
+                onOpen={(activity) =>
+                  openActivity(
+                    activity,
+                    filters.current?.querySelector<HTMLButtonElement>('[aria-pressed=true]'),
+                  )
+                }
+              />
             </motion.div>
           ))}
       </div>
