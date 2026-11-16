@@ -36,4 +36,5 @@ export default tseslint.config(
     rules: { 'fsd/boundaries': 'error' },
   },
   { files: ['**/*.js'], languageOptions: { globals: globals.node } },
+  { files: ['public/game/*.js'], languageOptions: { globals: globals.browser } },
 )

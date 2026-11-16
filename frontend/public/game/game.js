@@ -72,7 +72,24 @@ function tree(x,y,s=1,color='#91b69b'){return `<g transform="translate(${x} ${y}
 function park(){return `<svg class="park" viewBox="0 0 820 480" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="820" height="480" fill="#edf2e4"/><path d="M-30 115C89 32 135 122 212 74S349 16 441 56s171-4 222-2 140-6 191 35v-110H-20Z" fill="#e3ebd9"/><path d="M-15 344C55 326 134 400 232 368s177 54 266 3 213 2 323-66v190H-15Z" fill="#dfead6"/><path d="M111 382C65 269 213 327 253 237s85-57 132-48 166-34 155 62 69 108 168 103" stroke="#d6cba5" stroke-width="58" fill="none" stroke-linecap="round"/><path d="M111 382C65 269 213 327 253 237s85-57 132-48 166-34 155 62 69 108 168 103" stroke="#fff8df" stroke-width="46" fill="none" stroke-linecap="round"/><path d="M129 337c16-19 43-22 68-43m95-95c19-15 42-13 62-11m187 99c2 22 18 41 33 51" stroke="#dfd2ae" stroke-width="3" stroke-dasharray="3 10" fill="none" stroke-linecap="round"/><ellipse cx="664" cy="167" rx="102" ry="47" fill="#c2dfd8"/><ellipse cx="664" cy="165" rx="82" ry="31" fill="#b2d6d0"/><path d="M625 154h30m18 20h34m-61 8h20" stroke="#e9f5e9" stroke-width="3" stroke-linecap="round"/><g transform="translate(670 143)"><ellipse cx="0" cy="9" rx="12" ry="5" fill="#f7e4a6"/><path d="M-5 7V0c0-10 12-10 12-3v6l7 1-7 4" fill="#f7e4a6"/><circle cx="3" cy="-3" r="1.5" fill="#5c6b4e"/></g>${tree(62,110,1.04)}${tree(111,79,.7,'#abc393')}${tree(756,90,.85)}${tree(784,314,1.1,'#93b39b')}${tree(47,379,.85)}${tree(347,362,.8,'#abc393')}${tree(586,76,.6,'#abc393')}${tree(469,91,.63)}<g transform="translate(151 174)"><ellipse cy="74" rx="61" ry="11" fill="#96ad8220"/><path d="M-45 15h90v57h-90Z" fill="#f6e9c9"/><path d="M-55 16 0-22 55 16Z" fill="#80ada3"/><path d="M-45 19h90" stroke="#5f9186" stroke-width="4"/><path d="M-13 72V32h26v40" fill="#b89e7c"/><rect x="-36" y="30" width="16" height="20" rx="2" fill="#b8d8cd"/><rect x="21" y="30" width="16" height="20" rx="2" fill="#b8d8cd"/><path d="M-33 40h11m6-8v15m43-8h10" stroke="#e8f1de" stroke-width="2"/><path d="m8-22 11-48 14 12-19 20" stroke="#8a9c7f" stroke-width="1.5" fill="#e7b4c4"/><path d="m19-70 14 12-19 20" fill="#efd27e"/></g><g transform="translate(407 100)"><ellipse cy="39" rx="66" ry="9" fill="#96ad8220"/><rect x="-50" y="-8" width="100" height="50" rx="4" fill="#edcf9b"/><path d="M-58-8h116l-9-28h-98Z" fill="#f2b6c6"/><path d="M-34-36v28m23-28v28m23-28v28m23-28v28" stroke="#fff0e8" stroke-width="14"/><path d="M-58-8q12 15 23 0 12 15 23 0 12 15 23 0 12 15 23 0 12 15 24 0" fill="#e39bb1"/><rect x="-41" y="10" width="82" height="18" rx="4" fill="#fff7e1"/><circle cx="-24" cy="17" r="8" fill="#b1c38e"/><circle cx="-10" cy="17" r="8" fill="#d58e88"/><circle cx="6" cy="17" r="8" fill="#e8bd66"/><path d="M-47 42v7m94-7v7" stroke="#9d8561" stroke-width="4"/></g><g transform="translate(677 288)"><path d="M-50-9h90v49h-90Z" fill="#c5b38a"/><path d="M-56-11h102" stroke="#a6936d" stroke-width="6" stroke-linecap="round"/><path d="M-30 30V-6m24 36V-6m24 36V-6" stroke="#e8d4a6" stroke-width="13"/><path d="M-27-8v-24m21 24v-38m25 38v-24" stroke="#79a07d" stroke-width="3"/><g fill="#dc9daf"><circle cx="-27" cy="-36" r="10"/><circle cx="-5" cy="-50" r="11"/></g><circle cx="20" cy="-36" r="10" fill="#edcc78"/><g fill="#fff0ad"><circle cx="-27" cy="-36" r="4"/><circle cx="-5" cy="-50" r="4"/></g><circle cx="20" cy="-36" r="4" fill="#b18d3e"/></g><g transform="translate(389 280)"><path d="M-32 0h64v8h-64Zm-24 15h48v7h-48Z" fill="#c6a77a"/><path d="M-24 8v17M24 8v17M-17 22v23m34-23v23" stroke="#a9926d" stroke-width="4"/><path d="M-17 27h34" stroke="#a9926d" stroke-width="3"/></g><g fill="#b9cda5"><ellipse cx="213" cy="111" rx="24" ry="13"/><ellipse cx="249" cy="406" rx="36" ry="13"/><ellipse cx="529" cy="393" rx="31" ry="16"/><ellipse cx="728" cy="423" rx="37" ry="13"/></g><g fill="#dfb4bf"><circle cx="226" cy="105" r="4"/><circle cx="246" cy="399" r="4"/><circle cx="518" cy="388" r="4"/></g><g stroke="#93ae83" stroke-width="2" stroke-linecap="round"><path d="m72 240 3-7 3 7m232-133 3-7 3 7m217 48 3-7 3 7m-40 213 3-7 3 7M97 438l3-7 3 7m641-205 3-7 3 7"/></g><g transform="translate(309 64) rotate(10)"><path d="M0 0q7-10 12 0Q4 3 0 0m12 0q7-8 10-2" stroke="#7f9582" stroke-width="2" fill="none"/></g><g transform="translate(567 197)"><path d="M0 0v26m-11-18h22" stroke="#ad9470" stroke-width="3"/><path d="M-17-4h30l8 7-8 7h-30Z" fill="#f5db9c"/></g></svg>`}
 let storageAvailable=true;
 let state={version:1,completed:[],active:null};
-function validRun(a){return a&&Number.isInteger(a.id)&&a.id>=0&&a.id<3&&['allocate','event','quiz','result'].includes(a.phase)&&Array.isArray(a.alloc)&&a.alloc.length===3&&a.alloc.every(n=>Number.isInteger(n)&&n>=0&&n%10===0)&&a.alloc.reduce((s,n)=>s+n,0)<=missions[a.id].budget&&Array.isArray(a.items)&&a.items.every(n=>[0,1,2].includes(n))&&new Set(a.items).size===a.items.length&&(a.choice===null||[0,1,2].includes(a.choice))&&typeof a.confirmed==='boolean'&&typeof a.quizPassed==='boolean'&&(!a.confirmed||canResolve(a));}
+function validRun(a) {
+ if (!a || !Number.isInteger(a.id) || !missions[a.id]) return false;
+ if (!['allocate','event','quiz','result'].includes(a.phase)) return false;
+ if (!Array.isArray(a.alloc) || a.alloc.length !== 3 ||
+     !a.alloc.every(n => Number.isInteger(n) && n >= 0 && n % 10 === 0)) return false;
+ const total = a.alloc.reduce((sum, n) => sum + n, 0);
+ if (total > missions[a.id].budget || (a.phase !== 'allocate' && total !== missions[a.id].budget)) return false;
+ if (!Array.isArray(a.items) || !a.items.every(n => [0,1,2].includes(n)) ||
+     new Set(a.items).size !== a.items.length) return false;
+ if (a.choice !== null && ![0,1,2].includes(a.choice)) return false;
+ if (typeof a.confirmed !== 'boolean' || typeof a.quizPassed !== 'boolean') return false;
+ if (a.confirmed && !canResolve(a)) return false;
+ if (a.phase === 'allocate' && (a.confirmed || a.quizPassed)) return false;
+ if (['quiz','result'].includes(a.phase) && !a.confirmed) return false;
+ if (a.quizPassed && !['quiz','result'].includes(a.phase)) return false;
+ return a.phase !== 'result' || (a.quizPassed && typeof a.finishedAt === 'string' &&
+   Number.isFinite(Date.parse(a.finishedAt)));
+}
 try{const raw=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');if(raw&&raw.version===1&&Array.isArray(raw.completed)&&raw.completed.length<=3&&raw.completed.every((r,i)=>r.id===i&&validRun(r)&&r.phase==='result'&&r.quizPassed)&&(!raw.active||validRun(raw.active)&&raw.active.id<=raw.completed.length)){state=raw;}}catch{storageAvailable=false;}
 let page='map';
 const main=document.querySelector('main');
@@ -157,3 +174,10 @@ document.addEventListener('click',e=>{
 });
 modal.addEventListener('click',e=>{if(e.target===modal){const r=modal.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)modal.close();}});
 render(false);
+window.render_game_to_text = () => JSON.stringify({
+ page, active: state.active, completed: state.completed.map(run => run.id),
+ balances: state.active ? cats.map((_, index) => balance(state.active, index)) : [],
+ storageAvailable, coordinates: 'DOM interface; origin top-left, x right, y down',
+});
+// Turn-based game: time never changes a decision or a balance.
+window.advanceTime = () => Promise.resolve();
