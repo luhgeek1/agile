@@ -1,0 +1,14 @@
+[
+  {
+    "device": "Pixel 7",
+    "touch": "passed",
+    "landscape": "844x390 passed",
+    "errors": []
+  },
+  {
+    "device": "iPhone 13",
+    "touch": "passed",
+    "landscape": "844x390 passed",
+    "errors": []
+  }
+]

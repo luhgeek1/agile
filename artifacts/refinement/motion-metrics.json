@@ -1,0 +1,29 @@
+[
+  {
+    "width": 1440,
+    "errors": [],
+    "longTasks": [],
+    "layoutShifts": [],
+    "rendererTasks": 1916,
+    "maxRendererTaskMs": 25.5,
+    "rendererTasksOver50ms": 0
+  },
+  {
+    "width": 390,
+    "errors": [],
+    "longTasks": [],
+    "layoutShifts": [],
+    "rendererTasks": 1771,
+    "maxRendererTaskMs": 30.93,
+    "rendererTasksOver50ms": 0
+  },
+  {
+    "width": 1366,
+    "errors": [],
+    "longTasks": [],
+    "layoutShifts": [],
+    "rendererTasks": 2005,
+    "maxRendererTaskMs": 33.92,
+    "rendererTasksOver50ms": 0
+  }
+]
