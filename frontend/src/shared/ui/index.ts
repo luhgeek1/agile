@@ -1,5 +1,6 @@
 export { Logo } from './logo'
 export { PageHeading } from './page-heading'
+export { SegmentedControl } from './segmented-control'
 export {
   Button,
   Card,

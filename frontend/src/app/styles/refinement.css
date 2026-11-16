@@ -1,0 +1,29 @@
+/* Quiet, interruptible motion; CSS entrances also work before hydration. */
+.page { animation: page-arrive 320ms cubic-bezier(.2, .8, .2, 1) both; }
+@keyframes page-arrive { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.button, .icon-button, .habit-trail { transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 240ms cubic-bezier(.2, .8, .2, 1); }
+.button:active:not(:disabled), .icon-button:active:not(:disabled), .habit-trail:active:not(:disabled) { transform: scale(.97); transition-duration: 70ms; }
+.progress-fill { transition: none; }
+.segmented-control { display: inline-flex; gap: 2px; padding: 4px; border: 1px solid var(--line); border-radius: 17px; background: #edf1ee; isolation: isolate; max-width: 100%; }
+.segmented-control button { position: relative; min-height: 44px; padding: 10px 17px; border: 0; background: transparent; border-radius: 13px; color: var(--ink-muted); font-size: 14px; font-weight: 800; transition: color 180ms ease; }
+.segmented-control button[aria-pressed=true] { color: var(--ink); }
+.segmented-control button:hover { color: var(--ink); }
+.segment-selection { position: absolute; inset: 0; border-radius: inherit; background: white; box-shadow: 0 1px 4px #263e3b12, 0 0 0 1px #263e3b06; }
+.segment-label { position: relative; }
+.dialog-overlay[data-state=open] { animation: veil-in 200ms ease-out both; }
+.dialog-overlay[data-state=closed] { animation: veil-in 160ms ease-in reverse both; }
+.dialog-content[data-state=open] { animation: dialog-in 300ms cubic-bezier(.2, .8, .2, 1) both; }
+.dialog-content[data-state=closed] { animation: dialog-in 160ms ease-in reverse both; }
+@keyframes veil-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes dialog-in { from { opacity: 0; transform: translate(-50%, -48%) scale(.97); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
+@keyframes sheet-in { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 767px) {
+  .segmented-control { display: flex; width: 100%; }
+  .segmented-control button { flex: 1; padding: 9px 7px; font-size: 12px; }
+  .dialog-content[data-state] { animation-name: sheet-in; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .page, .dialog-content[data-state], .dialog-overlay[data-state] { animation: none; }
+  .button, .icon-button, .habit-trail { transition: none; }
+  .button:active:not(:disabled), .icon-button:active:not(:disabled), .habit-trail:active:not(:disabled) { transform: none; }
+}

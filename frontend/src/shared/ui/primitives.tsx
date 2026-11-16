@@ -60,14 +60,9 @@ export function Card({ className, ...props }: ComponentProps<'section'>) {
 }
 export function Page({ children, className }: PropsWithChildren<{ className?: string }>) {
   return (
-    <motion.div
-      className={cn('page', className)}
-      initial={false}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.22 }}
-    >
+    <div className={cn('page', className)}>
       {children}
-    </motion.div>
+    </div>
   )
 }
 export function Progress({
@@ -86,8 +81,9 @@ export function Progress({
         <motion.div
           className="progress-fill"
           initial={false}
-          animate={{ width: `${Math.max(0, Math.min(100, value))}%` }}
-          transition={{ duration: reduced ? 0 : 0.45 }}
+          style={{ width: '100%', transformOrigin: 'left' }}
+          animate={{ scaleX: Math.max(0, Math.min(100, value)) / 100 }}
+          transition={{ type: 'spring', bounce: 0, duration: reduced ? 0 : 0.45 }}
         />
       </ProgressPrimitive.Indicator>
     </ProgressPrimitive.Root>

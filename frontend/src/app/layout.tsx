@@ -4,6 +4,7 @@ import { AppProviders } from './providers/app-providers'
 import './styles/index.css'
 import './styles/child-experience.css'
 import './styles/gamification.css'
+import './styles/refinement.css'
 import '@fontsource-variable/nunito-sans/wght.css'
 import '@fontsource-variable/nunito/wght.css'
 
