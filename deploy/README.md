@@ -121,3 +121,18 @@ curl --fail https://kopilka.170.168.10.196.sslip.io/api/health
   Secure/HttpOnly cookie, запись и повторное чтение операции, идемпотентность,
   восстановление созданного проверкой демо. Проверен переход по IP на HTTPS.
 - Frontend на Vercel продолжает работать без перепубликации.
+
+## Vercel · 16 ноября 2026
+
+- Опубликован frontend из commit `5cca749a0f4b21a686c9d6635774ecf3b23deadd`:
+  геймификация, новые экраны цели, заданий и истории, анимации и адаптив.
+- Deployment: `dpl_FCBoWnhBZmmZpwZMqHDnwdZGXpJX`, статус `Ready`, target `production`.
+- Основной адрес: https://kopilka-demo-rust.vercel.app.
+- Неизменяемый адрес релиза: https://kopilka-demo-i1vg0ez44-luhgeek1s-projects.vercel.app.
+- На опубликованном сайте проверены три обновлённых экрана, мастерская решений,
+  фильтры, запись пополнения и чтение после reload, мобильная ширина 390px.
+  Ошибок страницы и HTTP-ответов 4xx/5xx в проверяемом сценарии нет.
+  Созданное проверкой изолированное демо восстановлено; cookie сохраняет
+  атрибуты Secure, HttpOnly и SameSite=Strict.
+- Backend и frontend на VDS в этой операции не менялись. Доступ стандартным
+  SSH-ключом отклонён; для обновления VDS требуется его отдельный deploy-ключ.
