@@ -1,0 +1,55 @@
+.goals-page .goals-layout { grid-template-columns: minmax(0, 1fr); gap: 34px; }
+.goals-page .goal-large { display: grid; grid-template-columns: .9fr 1fr; padding: 0; overflow: hidden; border-radius: 28px; }
+.goals-page .goal-card-heading { grid-column: 1 / -1; padding: 14px 26px; margin: 0; border-bottom: 1px solid var(--line); }
+.goals-page .goal-large .goal-art-stage { display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 0; padding: 36px 24px; border-radius: 0; background: #eaf3ec; }
+.goals-page .goal-large .goal-art { width: 100%; height: auto; max-height: 280px; margin: 0; }
+.goal-art-note { color: #47685c; text-align: center; margin-top: 28px; font-size: 15px; line-height: 1.6; }
+.goals-page .goal-copy { padding: 32px 36px; min-width: 0; }
+.goals-page .goal-copy h2 { font-size: clamp(26px, 2.5vw, 34px); line-height: 1.2; letter-spacing: -.025em; text-wrap: balance; overflow-wrap: anywhere; }
+.goals-page .goal-amount { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; margin: 24px 0 16px; font-variant-numeric: tabular-nums; }
+.goals-page .goal-amount strong { font-size: clamp(32px, 3vw, 44px); line-height: 1.15; letter-spacing: -.04em; }
+.goals-page .goal-amount span { font-size: 15px; }
+.goals-page .progress { height: 8px; }
+.goals-page .progress-caption { margin-top: 10px; font-size: 13px; }
+.goal-milestones { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 26px 0 20px; gap: 12px; }
+.goal-milestones li { display: flex; align-items: flex-start; flex-direction: column; gap: 6px; color: var(--ink-muted); font-size: 12px; line-height: 1.4; }
+.milestone-mark { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: #f0f3f0; border: 1px solid var(--line); margin-bottom: 2px; }
+.goal-milestones [data-reached=true] .milestone-mark { color: #176454; background: #dff1e8; border-color: #c8e3d7; }
+.goal-milestones [aria-current=step] > span:nth-child(2) { color: var(--ink); font-weight: 800; }
+.goal-milestones small { font-size: 10px; }
+.goals-page .goal-encouragement, .goals-page .goal-success { margin: 20px 0 0; font-size: 13px; }
+.goals-page .goal-copy .button-row { margin-top: 22px; gap: 10px; }
+.goals-page .goal-copy .button { font-size: 13px; padding-inline: 16px; }
+.goals-page .goal-aside > .card { padding: 0; border: 0; background: transparent; box-shadow: none; }
+.goals-page .goal-aside .tip-icon { display: none; }
+.goals-page .goal-aside h2 { font-size: 22px; }
+.goals-page .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 30px; margin-top: 22px; }
+.goals-page .steps li { margin: 0; padding-top: 18px; border-top: 1px solid #d5e1da; }
+.goals-page .steps li > span { background: #e4ede6; }
+.goals-page .steps strong { font-size: 15px; }
+.goals-page .steps p { font-size: 13px; max-width: 28ch; }
+.goals-page .goal-aside .soft-note { padding: 24px 0 0; font-size: 13px; align-items: center; }
+.goals-page .goal-aside .soft-note svg { flex-shrink: 0; width: 17px; margin: 0; }
+.goals-page .no-goal { min-height: 420px; background: #edf5ef; }
+@media (max-width: 1023px) {
+  .goals-page .goal-copy { padding: 26px; }
+  .goals-page .goal-copy .button-row { flex-direction: column; align-items: stretch; }
+  .goals-page .steps { gap: 18px; }
+}
+@media (max-width: 639px) {
+  .goals-page .goal-large { grid-template-columns: minmax(0, 1fr); border-radius: 23px; }
+  .goals-page .goal-card-heading { padding: 10px 20px; }
+  .goals-page .goal-large .goal-art-stage { padding: 18px 22px; }
+  .goals-page .goal-large .goal-art { height: 155px; }
+  .goal-art-note { margin-top: 6px; font-size: 12px; }
+  .goal-art-note br { display: none; }
+  .goals-page .goal-copy { padding: 24px 22px; }
+  .goals-page .goal-copy h2 { font-size: 26px; }
+  .goals-page .goal-amount { margin-top: 18px; }
+  .goal-milestones { gap: 6px; margin-block: 22px 18px; }
+  .goal-milestones li { font-size: 11px; }
+  .goals-page .steps { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .goals-page .steps p { max-width: none; }
+  .goals-page .goal-aside .soft-note { align-items: flex-start; }
+  .goals-page .goal-aside .soft-note svg { margin-top: 3px; }
+}

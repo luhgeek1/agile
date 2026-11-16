@@ -5,6 +5,7 @@ import { ArrowUpRight as Arrow, Pencil, Target, Trophy } from 'lucide-react'
 import Link from 'next/link'
 
 import { GoalArt } from './goal-art'
+import { GoalMilestones } from './goal-milestones'
 
 export function GoalCard({
   goal,
@@ -42,6 +43,12 @@ export function GoalCard({
       </div>
       <div className="goal-art-stage">
         <GoalArt kind={goal.illustration} />
+        {large && (
+          <p className="goal-art-note">
+            Сначала — мечта.
+            <br /> Потом — маленькие шаги к ней.
+          </p>
+        )}
       </div>
       <div className="goal-copy">
         <h2>{goal.title}</h2>
@@ -54,6 +61,7 @@ export function GoalCard({
           <span>{goal.achieved ? 'Мечта стала ближе!' : `Осталось ${money(goal.remaining)}`}</span>
           <strong>{goal.progress}%</strong>
         </div>
+        {large && <GoalMilestones progress={goal.progress} />}
         {goal.achieved ? (
           <p className="goal-success">
             <Trophy size={20} />

@@ -8,7 +8,7 @@ import { Heart, Sprout } from 'lucide-react'
 export function GoalsPage() {
   const { state, add, editGoal } = useProduct()
   return (
-    <Page>
+    <Page className="goals-page">
       <PageHeading
         eyebrow="Шаг за шагом"
         title="У меня есть мечта"
