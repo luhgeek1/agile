@@ -5,9 +5,18 @@ import { TransactionJournal } from '@/entities/transaction'
 import { categories, categoryKeys, type Category } from '@/entities/wallet'
 import { AddButton } from '@/features/record-operation'
 import { api } from '@/shared/api'
-import { Button, Card, EmptyState, ErrorState, Loading, Page, PageHeading } from '@/shared/ui'
+import {
+  Button,
+  Card,
+  EmptyState,
+  ErrorState,
+  Loading,
+  Page,
+  PageHeading,
+  SegmentedControl,
+} from '@/shared/ui'
 import { useProduct } from '@/widgets/product-shell'
-import { useInfiniteQuery } from '@tanstack/react-query'
+import { keepPreviousData, useInfiniteQuery } from '@tanstack/react-query'
 import { Plus, ShieldCheck } from 'lucide-react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
@@ -25,6 +34,7 @@ export function HistoryPage() {
   const query = useInfiniteQuery({
     queryKey: ['transactions', category, kind],
     initialPageParam: 0,
+    placeholderData: keepPreviousData,
     queryFn: ({ pageParam }) =>
       api<{ items: Transaction[]; has_more: boolean }>(
         `/transactions?offset=${pageParam}&limit=30${category ? `&category=${category}` : ''}${kind ? `&kind=${kind}` : ''}`,
@@ -49,21 +59,15 @@ export function HistoryPage() {
       />
       <Card className="history-card">
         <div className="history-filters">
-          <div className="filter-chips" role="group" aria-label="Отсек">
-            <button aria-pressed={!category} onClick={() => changeFilter('category', '')}>
-              Все отсеки
-            </button>
-            {categoryKeys.map((c) => (
-              <button
-                key={c}
-                className={c}
-                aria-pressed={category === c}
-                onClick={() => changeFilter('category', c)}
-              >
-                {categories[c].title}
-              </button>
-            ))}
-          </div>
+          <SegmentedControl
+            label="Отсек"
+            value={category}
+            onChange={(value) => changeFilter('category', value)}
+            options={[
+              { value: '', label: 'Все отсеки' },
+              ...categoryKeys.map((value) => ({ value, label: categories[value].title })),
+            ]}
+          />
           <label className="type-filter">
             <span>Действие</span>
             <select
@@ -78,6 +82,18 @@ export function HistoryPage() {
             </select>
           </label>
         </div>
+        <p className="history-caption">
+          <span role="status">
+            {query.isPending
+              ? 'Загружаем записи…'
+              : query.isError
+                ? 'Записи пока недоступны'
+                : query.isPlaceholderData
+                  ? 'Обновляем записи…'
+                  : `Показано записей: ${items.length}`}
+          </span>
+          <span>Сначала новые</span>
+        </p>
         {query.isPending ? (
           <Loading />
         ) : query.isError ? (
@@ -89,12 +105,15 @@ export function HistoryPage() {
           />
         ) : items.length ? (
           <>
-            <TransactionJournal items={items} />
+            <div className="history-results" aria-busy={query.isPlaceholderData}>
+              <TransactionJournal items={items} />
+            </div>
             {query.hasNextPage && (
               <div className="load-more">
                 <Button
                   variant="secondary"
                   busy={query.isFetchingNextPage}
+                  disabled={query.isPlaceholderData}
                   onClick={() => {
                     void query.fetchNextPage()
                   }}
