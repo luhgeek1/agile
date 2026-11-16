@@ -7,13 +7,14 @@
   <title>Парк маленьких открытий · Коплю — Трачу — Помогаю</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css">
-  <script src="game.js" defer></script>
+  <link rel="stylesheet" href="discoveries.css">
+  <script src="game.js" type="module"></script>
 </head>
 <body>
   <a class="skip" href="#main">Перейти к игре</a>
   <header class="header">
     <a class="brand" href="#" aria-label="Коплю, Трачу, Помогаю — на карту"><span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span><span>Коплю · Трачу<br><b>Помогаю</b></span></a>
-    <nav aria-label="Основная навигация"><button class="nav-button active" data-nav="map">Приключения</button><button class="nav-button" data-nav="parents">Родителям</button></nav>
+    <nav aria-label="Основная навигация"><button class="nav-button active" data-nav="map">Приключения</button><button class="nav-button" data-nav="practice">Тренировка</button><button class="nav-button" data-nav="parents">Родителям</button></nav>
     <button class="help-button" data-nav="help" aria-label="Как играть">?</button>
   </header>
   <main id="main" tabindex="-1"></main>

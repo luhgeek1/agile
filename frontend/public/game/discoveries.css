@@ -1,0 +1,54 @@
+:root {
+  --canvas: #f6f8f6;
+  --ink: #263e3b;
+  --muted: #53675f;
+  --line: #dfe7e2;
+}
+.header { height: auto; min-height: 100px; gap: 20px; flex-wrap: wrap; padding-block: 16px; }
+.header nav { flex-wrap: wrap; }
+.help-button { min-width: 44px; min-height: 44px; }
+.nav-button.active { background: #dff3ee; color: #245f55; }
+.nav-button { min-height: 44px; }
+.practice-layout { display: grid; grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr); gap: 24px; }
+.practice-position { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; font-weight: 800; }
+.practice-board .meter { margin: 14px 0 28px; }
+.practice-board h2 { font-size: clamp(24px, 3vw, 32px); }
+.situation-illustration { width: 84px; height: 84px; display: grid; place-items: center; border-radius: 25px; margin-bottom: 22px; }
+.situation-illustration svg { width: 44px; height: 44px; }
+.situation-prompt { margin: 16px 0 24px; font-size: 19px; max-width: 58ch; }
+.practice-guide { align-self: start; background: #edf2ef; }
+.practice-guide h2 { font-size: 23px; }
+.earned-seal { display: grid; place-items: center; width: 96px; height: 96px; margin: 0 auto 20px; border-radius: 50%; background: #fff1c9; border: 3px double #a78a35; color: #735a13; }
+.earned-seal svg { width: 48px; height: 48px; }
+.practice-result .badge { margin-bottom: 16px; }
+.practice-board .quiz-option { min-height: 60px; font-size: 17px; }
+.quiz-option:disabled, .choice:disabled, .shop-item:disabled { opacity: 1; }
+.quiz-option:disabled:not(.correct), .choice:disabled:not(.selected), .shop-item:disabled:not(.selected) { opacity: .65; }
+.footer a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 900; color: #245f55; }
+.method-note { max-width: 1200px; margin: 16px auto; padding: 0 24px; font-size: 13px; color: var(--muted); }
+.practice-board .feedback { scroll-margin-bottom: 30px; }
+.practice-board .action-row { align-items: flex-start; }
+.practice-board .action-hint { flex: 1; min-width: 150px; }
+@media (max-width: 800px) {
+  .practice-layout { grid-template-columns: minmax(0, 1fr); }
+  .practice-guide { display: block; }
+  .practice-guide .small-note { font-size: 14px; }
+  .header { gap: 10px; }
+}
+@media (max-width: 540px) {
+  .header { display: grid; grid-template-columns: 1fr 44px; padding: 12px 17px; }
+  .header .brand { font-size: 14px; }
+  .header nav { grid-row: 2; grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+  .header .help-button { grid-column: 2; grid-row: 1; }
+  .nav-button { padding: 8px 5px; font-size: 13px; }
+  .practice-position { font-size: 12px; flex-wrap: wrap; }
+  .situation-prompt { font-size: 17px; }
+  .practice-board .quiz-option { font-size: 16px; }
+  .practice-board .action-row .primary { width: 100%; }
+  .practice-board .meter { margin-bottom: 22px; }
+  .practice-guide p { font-size: 15px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .earned-seal { animation: seal-arrives 320ms ease-out; }
+  @keyframes seal-arrives { from { transform: scale(.85) rotate(-8deg); } to { transform: scale(1) rotate(0); } }
+}
