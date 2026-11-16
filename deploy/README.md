@@ -134,5 +134,27 @@ curl --fail https://kopilka.170.168.10.196.sslip.io/api/health
   Ошибок страницы и HTTP-ответов 4xx/5xx в проверяемом сценарии нет.
   Созданное проверкой изолированное демо восстановлено; cookie сохраняет
   атрибуты Secure, HttpOnly и SameSite=Strict.
-- Backend и frontend на VDS в этой операции не менялись. Доступ стандартным
-  SSH-ключом отклонён; для обновления VDS требуется его отдельный deploy-ключ.
+- При публикации Vercel backend и frontend на VDS не менялись.
+  Последующее обновление VDS описано ниже.
+
+## Frontend на VDS · 16 ноября 2026
+
+- Исходный commit: `ec85364783937f4a41f19fef5044fe99ea842e65`.
+- Сборка выполнена локально в Docker для Linux x86_64, Node.js 22.23.4,
+  с `NEXT_STANDALONE=1` и `API_ORIGIN=http://127.0.0.1:8017`.
+- Активный frontend: `/opt/kopilka/releases/ec85364-web-20261116/web`;
+  build ID: `byObc71JEd8hxQrYP0uNQ`.
+- Предыдущий frontend: `/opt/kopilka/releases/4fd62ff-web-20261111/web`.
+  Его путь, systemd unit и архив конфигурации nginx сохранены в новом релизе.
+- Перед обновлением PostgreSQL backup завершился с `Result=success`.
+  Кандидат проверен на `127.0.0.1:3001`: health, API, страницы и 20 static assets.
+  Затем ссылка `/opt/kopilka/web` переключена атомарно и перезапущен `kopilka-web`.
+- Backend не перезапускался; его PID и ссылка релиза остались прежними.
+  Конфигурация nginx и настройки API не менялись.
+- На https://kopilka.170.168.10.196.sslip.io проверены пополнение и выполнение
+  задания с сохранением после reload, история, мастерская решений и три
+  обновлённых экрана при 390px. Ошибок страницы и HTTP 4xx/5xx нет.
+  Созданное проверкой изолированное демо восстановлено.
+- `kopilka-web`, `kopilka-api` и nginx активны; у нового frontend `NRestarts=0`.
+  Для отката можно вернуть `/opt/kopilka/web` на предыдущий frontend через
+  временную ссылку и `mv -Tf`, затем перезапустить `kopilka-web`.
