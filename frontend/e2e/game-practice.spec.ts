@@ -1,0 +1,97 @@
+import { test, expect } from '@playwright/test'
+import { readFile } from 'node:fs/promises'
+
+test('practice persists, awards one badge, preserves money and resets only game data', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Посмотреть демо' }).click()
+  await expect(page.getByRole('heading', { name: 'Мои три отсека' })).toBeVisible()
+  const before = await (await page.request.get('/api/state')).json()
+  await page.getByRole('link', { name: 'Играть в парке открытий' }).click()
+  await page.locator('[data-nav="practice"]').first().click()
+  await page.locator('[data-practice-answer="2"]').click()
+  await expect(page.locator('#practice-feedback')).toContainText('Давай разберёмся')
+  await expect(page.locator('[data-practice="next"]')).toBeDisabled()
+  for (const [index, answer] of [0, 1, 2, 1, 2, 0].entries()) {
+    await page.locator(`[data-practice-answer="${answer}"]`).click()
+    if (index === 2) {
+      await page.reload()
+      await page.locator('[data-nav="practice"]').first().click()
+      await expect(page.locator('[data-practice="next"]')).toBeEnabled()
+    }
+    await page.locator('[data-practice="next"]').click()
+  }
+  await expect(page.getByRole('heading', { name: 'Знаток трёх отсеков' })).toBeVisible()
+  await page.locator('[data-nav="map"]').first().click()
+  await expect(page.locator('.passport-count')).toHaveText('1 из 5')
+  await page.locator('[data-badge="4"]').click()
+  await expect(page.getByRole('dialog')).toContainText('уже в твоей коллекции')
+  await page.keyboard.press('Escape')
+  await expect(page.locator('[data-badge="4"]')).toBeFocused()
+  await page.reload()
+  await expect(page.locator('.passport-count')).toHaveText('1 из 5')
+  await page.locator('[data-nav="practice"]').first().click()
+  await page.locator('[data-practice="restart"]').click()
+  await page.locator('[data-nav="map"]').first().click()
+  await expect(page.locator('.passport-count')).toHaveText('1 из 5')
+  const after = await (await page.request.get('/api/state')).json()
+  expect(after).toEqual(before)
+  await page.locator('[data-nav="parents"]').click()
+  const download = page.waitForEvent('download')
+  await page.locator('[data-action="export"]').click()
+  const exported = JSON.parse(await readFile((await (await download).path())!, 'utf8'))
+  expect(exported.practice.mastered).toHaveLength(6)
+  expect(exported.practice.topics).toContain('Добро без покупки')
+  await page.locator('[data-action="reset"]').click()
+  await page.locator('[data-action="close"]').click()
+  await expect(page.locator('.passport-count')).toHaveText('1 из 5')
+  await page.locator('[data-action="reset"]').click()
+  await page.locator('[data-action="confirm-reset"]').click()
+  await expect(page.locator('.passport-count')).toHaveText('0 из 5')
+  expect(await (await page.request.get('/api/state')).json()).toEqual(before)
+})
+
+test('malformed storage and unavailable storage keep the game playable', async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem('kopilka-park-v1', JSON.stringify({ version: 1, completed: [null] }))
+    localStorage.setItem('kopilka-practice-v1', JSON.stringify({ cursor: 999, round: [], mastered: [99] }))
+  })
+  await page.goto('/game/index.html')
+  await expect(page.locator('.map-chip')).toHaveText('0 из 3 открытий')
+  await page.locator('[data-nav="practice"]').first().click()
+  await expect(page.locator('.practice-position')).toContainText('Ситуация 1 из 6')
+  await page.locator('[data-practice-answer="0"]').click()
+  await expect(page.locator('[data-practice="next"]')).toBeEnabled()
+  await page.addInitScript(() => {
+    Storage.prototype.setItem = () => { throw new Error('Storage denied') }
+    Storage.prototype.getItem = () => { throw new Error('Storage denied') }
+  })
+  await page.reload()
+  await page.locator('[data-nav="practice"]').first().click()
+  await expect(page.getByText('Тренировка работает, но браузер', { exact: false })).toBeVisible()
+  await page.locator('[data-practice-answer="0"]').click()
+  await page.locator('[data-practice="next"]').click()
+  await expect(page.locator('.practice-position')).toContainText('Ситуация 2 из 6')
+})
+
+test('real habit progress persists after completing a task', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Посмотреть демо' }).click()
+  await page.goto('/app/activities')
+  await page.getByRole('button', { name: 'Коплю: 1 из 2. Продолжить' }).click()
+  await page.getByRole('dialog').getByRole('button', { name: 'Я попробовал!' }).click()
+  await expect(page.getByRole('dialog')).not.toBeVisible()
+  await expect(page.getByRole('button', { name: 'Коплю: 2 из 2. Вспомнить задание' })).toBeVisible()
+  await page.reload()
+  await expect(page.getByRole('button', { name: 'Коплю: 2 из 2. Вспомнить задание' })).toBeVisible()
+})
+
+test('game navigation supports direct links, browser history and reload', async ({ page }) => {
+  await page.goto('/game/index.html#practice')
+  await expect(page.getByRole('heading', { name: 'Мастерская решений' })).toBeVisible()
+  await page.locator('[data-nav="parents"]').click()
+  await page.goBack()
+  await expect(page.getByRole('heading', { name: 'Мастерская решений' })).toBeVisible()
+  await page.goForward()
+  await page.reload()
+  await expect(page.getByRole('heading', { name: 'Открытия, которые можно обсудить' })).toBeVisible()
+})

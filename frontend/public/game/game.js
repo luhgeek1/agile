@@ -1,6 +1,6 @@
 'use strict';
 import { practiceView, handlePractice } from './practice-view.js';
-import { practiceProgress, resetPractice } from './practice-state.js';
+import { practiceProgress, resetPractice, situations } from './practice-state.js';
 import { collectionView, badgeDetails, earnedTitle } from './collection.js';
 const STORAGE_KEY = 'kopilka-park-v1';
 const names = ['Коплю', 'Трачу', 'Помогаю'];
@@ -94,13 +94,15 @@ function validRun(a) {
    Number.isFinite(Date.parse(a.finishedAt)));
 }
 try{const raw=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');if(raw&&raw.version===1&&Array.isArray(raw.completed)&&raw.completed.length<=3&&raw.completed.every((r,i)=>r.id===i&&validRun(r)&&r.phase==='result'&&r.quizPassed)&&(!raw.active||validRun(raw.active)&&raw.active.id<=raw.completed.length)){state=raw;}}catch{storageAvailable=false;}
-let page='map';
+let page = ['practice', 'parents', 'game'].includes(location.hash.slice(1)) ? location.hash.slice(1) : 'map';
+if (page === 'game' && !state.active) page = 'map';
 const main=document.querySelector('main');
 const modal=document.querySelector('#modal');
 function persist(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch{storageAvailable=false;}}
 function announce(t){document.querySelector('#announce').textContent=t;}
 function focusMain(){main.focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});}
 function render(focus=true){
+ if (focus && location.hash !== `#${page}`) history.pushState(null, '', `#${page}`);
  document.querySelectorAll('[data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===page));
  main.innerHTML=(!storageAvailable?'<div class="storage-note">Браузер не разрешает сохранять прогресс. Игра работает, но после закрытия страницы путь может начаться заново.</div>':'')+(page==='practice'?practiceView(icon):page==='parents'?parentView():page==='game'&&state.active?gameView():mapView());
  document.title=(page==='game'?missions[state.active.id].title:page==='parents'?'Родителям':'Парк маленьких открытий')+' · Коплю — Трачу — Помогаю';
@@ -171,9 +173,9 @@ document.addEventListener('click',e=>{
  if(action==='start'){start(Number(b.dataset.id));return;}
  if(action==='resume'){page='game';render();return;}
  if(action==='replace'){modal.close();newRun(Number(b.dataset.id));return;}
- if(action==='reset'){openModal('Сбросить прогресс?',`<p>Пройденные истории и текущие решения будут удалены из этого браузера. Это действие нельзя отменить.</p><div class="dialog-actions"><button class="secondary" data-action="close">Сохранить прогресс</button><button class="primary" data-action="confirm-reset">Сбросить</button></div>`);return;}
+ if(action==='reset'){openModal('Сбросить прогресс?',`<p>Истории, тренировка и значки будут удалены из этого браузера. Записи семьи в копилке сохранятся. Это действие нельзя отменить.</p><div class="dialog-actions"><button class="secondary" data-action="close">Сохранить прогресс</button><button class="primary" data-action="confirm-reset">Сбросить</button></div>`);return;}
  if(action==='confirm-reset'){state={version:1,completed:[],active:null};resetPractice();persist();modal.close();page='map';render();return;}
- if(action==='export'){const report={game:'Парк маленьких открытий',version:1,exportedAt:new Date().toISOString(),note:'Результаты игры не являются оценкой финансовой грамотности.',stories:state.completed.map(run=>({title:missions[run.id].title,allocated:Object.fromEntries(names.map((n,i)=>[n,run.alloc[i]])),remaining:Object.fromEntries(names.map((n,i)=>[n,balance(run,i)])),choice:run.id===1?run.items.map(i=>shopItems[i].name):run.id===0?['Мороженое','Наклейки','Без покупки'][run.choice]:['Семена','Полив со взрослым','Рисунок таблички'][run.choice],finishedAt:run.finishedAt}))};const url=URL.createObjectURL(new Blob([JSON.stringify(report,null,2)],{type:'application/json'}));const link=document.createElement('a');link.href=url;link.download='moi-otkrytiya.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);return;}
+ if(action==='export'){const report={game:'Парк маленьких открытий',version:2,practice:{...practiceProgress(),topics:practiceProgress().mastered.map(id=>situations[id].title)},exportedAt:new Date().toISOString(),note:'Результаты игры не являются оценкой финансовой грамотности.',stories:state.completed.map(run=>({title:missions[run.id].title,allocated:Object.fromEntries(names.map((n,i)=>[n,run.alloc[i]])),remaining:Object.fromEntries(names.map((n,i)=>[n,balance(run,i)])),choice:run.id===1?run.items.map(i=>shopItems[i].name):run.id===0?['Мороженое','Наклейки','Без покупки'][run.choice]:['Семена','Полив со взрослым','Рисунок таблички'][run.choice],finishedAt:run.finishedAt}))};const url=URL.createObjectURL(new Blob([JSON.stringify(report,null,2)],{type:'application/json'}));const link=document.createElement('a');link.href=url;link.download='moi-otkrytiya.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);return;}
  if(!a)return;
  if(action==='allocation-next'&&a.phase==='allocate'&&a.alloc.reduce((s,n)=>s+n,0)===missions[a.id].budget){a.phase='event';persist();render();}
  else if(action==='replan'&&a.phase==='event'&&!a.confirmed){a.phase='allocate';a.choice=null;a.items=[];persist();render();}
@@ -184,6 +186,13 @@ document.addEventListener('click',e=>{
  else if(action==='next-mission'&&a.phase==='result'){newRun(Number(b.dataset.id));}
 });
 modal.addEventListener('click',e=>{if(e.target===modal){const r=modal.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)modal.close();}});
+window.addEventListener('popstate', () => {
+ page = ['practice', 'parents', 'game'].includes(location.hash.slice(1)) ? location.hash.slice(1) : 'map';
+ if (page === 'game' && !state.active) page = 'map';
+ if (modal.open) modal.close();
+ render(false);
+ focusMain();
+});
 render(false);
 window.render_game_to_text = () => JSON.stringify({
  page, active: state.active, completed: state.completed.map(run => run.id), practice: practiceProgress(),

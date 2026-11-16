@@ -23,7 +23,6 @@ test('three stories: choices, insufficient funds, reload, rewards and replay', a
   await page.locator('[data-action="confirm-event"]').click()
   for (let mission = 0; mission < 3; mission++) {
     await page.reload()
-    await page.locator('[data-action="resume"]').click()
     await page.locator('[data-action="to-quiz"]').click()
     await page.locator(`[data-answer="${(mission + 1) % 3}"]`).click()
     await expect(page.locator('[data-action="finish"]')).toBeDisabled()
@@ -43,6 +42,7 @@ test('three stories: choices, insufficient funds, reload, rewards and replay', a
     }
   }
   await page.reload()
+  await page.locator('[data-nav="map"]').first().click()
   await expect(page.locator('.map-chip')).toHaveText('3 из 3 открытий')
   await page.locator('[data-mission="0"]').click()
   await allocate(page, [100, 0, 0])
