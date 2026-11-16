@@ -4,7 +4,13 @@ import { ArrowDownLeft, ArrowLeftRight, ArrowUpRight } from 'lucide-react'
 
 import { categories } from '@/entities/wallet/@x/transaction'
 
-export function TransactionItem({ item }: { item: Transaction }) {
+export function TransactionItem({
+  item,
+  showDate = true,
+}: {
+  item: Transaction
+  showDate?: boolean
+}) {
   const Icon =
     item.kind === 'deposit'
       ? ArrowDownLeft
@@ -28,8 +34,8 @@ export function TransactionItem({ item }: { item: Transaction }) {
         <strong>{item.note || title}</strong>
         <span>
           {categories[item.category].title}
-          {item.destination ? ` → ${categories[item.destination].title}` : ` · ${title}`} ·{' '}
-          {dateLabel(item.occurred_on)}
+          {item.destination ? ` → ${categories[item.destination].title}` : ` · ${title}`}
+          {showDate && ` · ${dateLabel(item.occurred_on)}`}
         </span>
       </div>
       <strong className={`transaction-amount ${item.kind === 'deposit' ? 'positive' : ''}`}>

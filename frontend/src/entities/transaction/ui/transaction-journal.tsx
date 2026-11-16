@@ -1,0 +1,48 @@
+import type { Transaction } from '@/shared/api/contracts'
+import { TransactionItem } from './transaction-item'
+
+const dateFormat = new Intl.DateTimeFormat('ru-RU', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+  timeZone: 'Europe/Moscow',
+})
+
+export function TransactionJournal({ items }: { items: Transaction[] }) {
+  const days = new Map<string, Transaction[]>()
+  for (const item of items) {
+    const records = days.get(item.occurred_on) ?? []
+    records.push(item)
+    days.set(item.occurred_on, records)
+  }
+  return (
+    <div className="transaction-journal">
+      {Array.from(days, ([date, records]) => {
+        const parts = dateFormat.formatToParts(new Date(`${date}T12:00:00+03:00`))
+        const part = (type: Intl.DateTimeFormatPartTypes) =>
+          parts.find((p) => p.type === type)?.value
+        return (
+          <section
+            className="history-day"
+            key={date}
+            aria-label={dateFormat.format(new Date(`${date}T12:00:00+03:00`))}
+          >
+            <h2>
+              <time dateTime={date}>
+                <strong>{part('day')}</strong>
+                <span>
+                  {part('month')} {part('year')}
+                </span>
+              </time>
+            </h2>
+            <ul className="history-list">
+              {records.map((item) => (
+                <TransactionItem key={item.id} item={item} showDate={false} />
+              ))}
+            </ul>
+          </section>
+        )
+      })}
+    </div>
+  )
+}

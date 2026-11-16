@@ -1,7 +1,7 @@
 'use client'
 
 import type { Kind, Transaction } from '@/entities/transaction'
-import { TransactionItem } from '@/entities/transaction'
+import { TransactionJournal } from '@/entities/transaction'
 import { categories, categoryKeys, type Category } from '@/entities/wallet'
 import { AddButton } from '@/features/record-operation'
 import { api } from '@/shared/api'
@@ -40,7 +40,7 @@ export function HistoryPage() {
   }
   const items = query.data?.pages.flatMap((p) => p.items) ?? []
   return (
-    <Page>
+    <Page className="history-page">
       <PageHeading
         eyebrow="Мои маленькие шаги"
         title="История копилки"
@@ -89,11 +89,7 @@ export function HistoryPage() {
           />
         ) : items.length ? (
           <>
-            <ul className="history-list">
-              {items.map((t) => (
-                <TransactionItem key={t.id} item={t} />
-              ))}
-            </ul>
+            <TransactionJournal items={items} />
             {query.hasNextPage && (
               <div className="load-more">
                 <Button

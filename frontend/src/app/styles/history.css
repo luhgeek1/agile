@@ -1,0 +1,36 @@
+.history-page .history-card { padding: 0; background: transparent; border: 0; box-shadow: none; }
+.history-page .history-filters { border: 1px solid var(--line); border-radius: 21px; padding: 12px; background: white; margin-bottom: 22px; }
+.history-page .type-filter { margin-right: 6px; color: var(--ink-muted); }
+.history-page .type-filter select { border-color: transparent; background-color: #f3f6f3; font-weight: 700; }
+.transaction-journal { padding: 0 28px; border: 1px solid var(--line); border-radius: 24px; background: white; }
+.history-day { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 20px; align-items: start; border-bottom: 1px solid var(--line); animation: journal-appear 240ms ease-out both; }
+.history-day:last-child { border: 0; }
+.history-day h2 { padding-top: 22px; }
+.history-day time { display: flex; flex-direction: column; gap: 2px; }
+.history-day time strong { font-size: 28px; line-height: 1.1; font-weight: 800; letter-spacing: -.03em; }
+.history-day time > span { color: var(--ink-muted); font-family: 'Nunito Sans Variable', sans-serif; font-size: 12px; font-weight: 600; }
+.history-day .history-list { min-width: 0; }
+.history-day .transaction-item { padding: 24px 0; }
+.history-day .transaction-copy { min-width: 0; }
+.history-day .transaction-copy strong { overflow-wrap: anywhere; }
+.history-day .transaction-copy span { margin-top: 4px; font-size: 12px; }
+.history-day .transaction-amount { font-variant-numeric: tabular-nums; font-size: 19px; letter-spacing: -.025em; overflow-wrap: anywhere; }
+.history-page .load-more { padding: 22px 0 0; }
+@keyframes journal-appear { from { opacity: 0; } to { opacity: 1; } }
+@media (max-width: 767px) {
+  .history-page .history-filters { padding: 10px; gap: 12px; border-radius: 19px; }
+  .history-page .type-filter { margin: 0; padding-inline: 4px; font-size: 12px; }
+  .transaction-journal { padding: 0 20px; border-radius: 22px; }
+  .history-day { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .history-day h2 { padding-top: 20px; }
+  .history-day time { flex-direction: row; align-items: baseline; gap: 5px; }
+  .history-day time strong { font-size: 13px; letter-spacing: 0; }
+  .history-day time > span { font-size: 12px; }
+  .history-day .transaction-item { display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 5px 12px; padding: 16px 0 20px; }
+  .history-day .transaction-icon { grid-row: 1 / 3; width: 38px; height: 40px; }
+  .history-day .transaction-copy strong { font-size: 15px; line-height: 1.4; }
+  .history-day .transaction-amount { grid-column: 2; font-size: 17px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .history-day { animation: none; }
+}

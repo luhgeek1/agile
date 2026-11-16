@@ -7,6 +7,7 @@ import './styles/gamification.css'
 import './styles/refinement.css'
 import './styles/goals.css'
 import './styles/activities.css'
+import './styles/history.css'
 import '@fontsource-variable/nunito-sans/wght.css'
 import '@fontsource-variable/nunito/wght.css'
 
