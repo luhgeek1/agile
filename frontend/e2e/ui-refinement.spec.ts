@@ -112,3 +112,34 @@ test('long goals, reduced motion and 200% CSS zoom remain readable on a narrow s
   await page.keyboard.press('Escape')
   await expect(page.getByRole('button', { name: 'Изменить цель', exact: true })).toBeFocused()
 })
+
+for (const width of [390, 640, 1440]) {
+  test(`notifications leave navigation usable and dismissible at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 })
+    await enter(page, '/app/goals')
+    await page.getByRole('button', { name: 'Добавить в «Коплю»', exact: true }).click()
+    await page.getByRole('dialog').getByLabel('Сколько рублей?', { exact: false }).fill('1')
+    await page.getByRole('button', { name: 'Сохранить действие' }).click()
+    const toast = page.locator('[data-sonner-toast][data-type=success]')
+    await expect(toast).toBeVisible()
+    await expect(toast).toHaveCSS('background-color', 'rgb(255, 255, 255)')
+    const nav = page.getByRole('navigation', {
+      name: width < 768 ? 'Навигация на телефоне' : 'Основная навигация',
+    })
+    const navBounds = await nav.boundingBox()
+    await expect
+      .poll(async () => {
+        const bounds = await toast.boundingBox()
+        return bounds ? bounds.y + bounds.height : Infinity
+      })
+      .toBeLessThanOrEqual(width < 768 ? navBounds!.y - 8 : 888)
+    await nav.getByRole('link', { name: 'История', exact: true }).click()
+    await expect(page.getByRole('heading', { name: 'История копилки' })).toBeVisible()
+    const close = page.getByRole('button', { name: 'Закрыть уведомление' })
+    const closeBounds = await close.boundingBox()
+    expect(closeBounds!.width).toBeGreaterThanOrEqual(43.99)
+    expect(closeBounds!.height).toBeGreaterThanOrEqual(43.99)
+    await close.click()
+    await expect(toast).not.toBeVisible()
+  })
+}

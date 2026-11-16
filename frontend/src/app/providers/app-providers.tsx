@@ -23,11 +23,12 @@ export function AppProviders({ children }: PropsWithChildren) {
         <MotionConfig reducedMotion="user" transition={{ duration: 0.22 }}>
           {children}
           <Toaster
-            position="top-center"
-            richColors
+            position="bottom-right"
+            offset={{ bottom: 'var(--toast-bottom, 24px)', right: 24 }}
+            mobileOffset={{ bottom: 'var(--toast-bottom, 24px)', left: 16, right: 16 }}
             closeButton
             containerAriaLabel="Уведомления"
-            toastOptions={{ className: 'app-toast' }}
+            toastOptions={{ className: 'app-toast', closeButtonAriaLabel: 'Закрыть уведомление' }}
           />
         </MotionConfig>
       </QueryClientProvider>

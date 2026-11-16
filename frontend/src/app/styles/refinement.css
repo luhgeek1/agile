@@ -1,6 +1,6 @@
 /* Quiet, interruptible motion; CSS entrances also work before hydration. */
 .page { animation: page-arrive 320ms cubic-bezier(.2, .8, .2, 1) both; }
-@keyframes page-arrive { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes page-arrive { from { opacity: .8; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 .button, .icon-button, .habit-trail { transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 240ms cubic-bezier(.2, .8, .2, 1); }
 .button:active:not(:disabled), .icon-button:active:not(:disabled), .habit-trail:active:not(:disabled) { transform: scale(.97); transition-duration: 70ms; }
 .progress-fill { transition: none; }
@@ -10,6 +10,11 @@
 .segmented-control button:hover { color: var(--ink); }
 .segment-selection { position: absolute; inset: 0; border-radius: inherit; background: white; box-shadow: 0 1px 4px #263e3b12, 0 0 0 1px #263e3b06; }
 .segment-label { position: relative; }
+[data-sonner-toaster] [data-sonner-toast].app-toast { font-family: var(--font-body); color: var(--ink); background: white; border: 1px solid var(--line); border-radius: 18px; padding: 16px 58px 16px 18px; box-shadow: 0 6px 24px #263e3b14; }
+[data-sonner-toaster] [data-sonner-toast].app-toast[data-type=success] [data-icon] { color: #19705c; }
+[data-sonner-toaster] [data-sonner-toast].app-toast[data-type=error] [data-icon] { color: #b42545; }
+[data-sonner-toaster] [data-sonner-toast].app-toast [data-close-button] { left: auto; right: 5px; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border: 0; background: transparent; border-radius: 12px; }
+[data-sonner-toaster] [data-sonner-toast].app-toast [data-close-button]:hover { background: #edf3ee; }
 .dialog-overlay[data-state=open] { animation: veil-in 200ms ease-out both; }
 .dialog-overlay[data-state=closed] { animation: veil-in 160ms ease-in reverse both; }
 .dialog-content[data-state=open] { animation: dialog-in 300ms cubic-bezier(.2, .8, .2, 1) both; }
@@ -18,6 +23,7 @@
 @keyframes dialog-in { from { opacity: 0; transform: translate(-50%, -48%) scale(.97); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); } }
 @keyframes sheet-in { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
 @media (max-width: 767px) {
+  :root { --toast-bottom: calc(88px + env(safe-area-inset-bottom)); }
   .segmented-control { display: flex; width: 100%; }
   .segmented-control button { flex: 1; padding: 9px 7px; font-size: 12px; }
   .dialog-content[data-state] { animation-name: sheet-in; }
