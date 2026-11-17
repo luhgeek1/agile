@@ -38,7 +38,7 @@
 .passport-heading p { margin-top: 8px; color: var(--muted); font-size: 15px; max-width: 60ch; }
 .passport-count { font-size: 36px; white-space: nowrap; color: #245f55; }
 .passport-count span { font-size: 16px; color: var(--muted); }
-.badge-shelf { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+.badge-shelf { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 12px; }
 .discovery-badge { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 16px 10px; border: 1px solid var(--line); border-radius: 20px; }
 .discovery-badge strong { font-size: 16px; line-height: 1.3; }
 .discovery-badge strong { overflow-wrap: anywhere; }
@@ -70,7 +70,6 @@
   .passport-count { font-size: 28px; }
   .badge-shelf { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .discovery-badge { min-height: 180px; }
-  .discovery-badge:last-child { grid-column: 1 / -1; min-height: 0; }
   .practice-invitation .primary { width: 100%; }
   .header { display: grid; grid-template-columns: 1fr 44px; padding: 12px 17px; }
   .header .brand { font-size: 14px; }
@@ -83,6 +82,80 @@
   .practice-board .action-row .primary { width: 100%; }
   .practice-board .meter { margin-bottom: 22px; }
   .practice-guide p { font-size: 15px; }
+}
+
+.route-picker {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-bottom: 14px;
+}
+.route-picker label { color: var(--muted); font-size: 14px; font-weight: 800; }
+.route-picker select {
+  min-height: 44px;
+  max-width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #c4d5cc;
+  border-radius: 12px;
+  background: white;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+.map-stops { position: absolute; inset: 0; pointer-events: none; }
+.map-stops .landmark {
+  max-width: min(225px, 42%);
+  min-height: 44px;
+  pointer-events: auto;
+}
+.map-stops .landmark strong { overflow-wrap: anywhere; }
+.map-stops .landmark:active { transform: translateY(1px); }
+.map-stops .landmark[aria-current="step"] { border-color: #70a691; }
+.map-stops .landmark:not(.locked) .num { background: var(--save-soft); color: #11656c; }
+.map-stops .landmark.spend:not(.locked) .num { background: var(--spend-soft); color: #9e2d5c; }
+.map-stops .landmark.help:not(.locked) .num { background: var(--help-soft); color: #6d5311; }
+.journey-progress progress {
+  appearance: none;
+  flex: 1;
+  min-width: 2rem;
+  height: 6px;
+  border: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #e3eae4;
+}
+.journey-progress progress::-webkit-progress-bar { background: #e3eae4; }
+.journey-progress progress::-webkit-progress-value { background: #287c5c; }
+.journey-progress progress::-moz-progress-bar { background: #287c5c; }
+.guide-card .journey-progress { margin-top: auto; padding-top: 18px; }
+.history-row summary { min-height: 44px; padding-block: 10px; font-weight: 800; cursor: pointer; }
+.history-row:has(summary) { padding-block: 0; }
+.history-row[open] { padding-bottom: 14px; }
+@media (max-width: 800px) {
+  .map-stops .landmark { max-width: min(190px, 45%); }
+}
+@media (max-width: 540px) {
+  .route-picker select { flex: 1 1 100%; }
+  .map-stops {
+    inset: 54px 12px 42px;
+    display: grid;
+    grid-auto-rows: 1fr;
+    align-items: center;
+  }
+  .map-stops .landmark {
+    position: relative;
+    inset: auto;
+    width: fit-content;
+    max-width: 85%;
+    justify-self: start;
+  }
+  .map-stops .landmark:nth-child(even) { justify-self: end; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .map-stops { animation: route-appear 180ms ease-out; }
+  @keyframes route-appear { from { opacity: .65; } to { opacity: 1; } }
 }
 @media (prefers-reduced-motion: no-preference) {
   .earned-seal { animation: seal-arrives 320ms ease-out; }
