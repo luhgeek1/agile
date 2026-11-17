@@ -17,8 +17,12 @@
 .habit-trail.help .habit-trail-title svg { color: #856715; }
 .habit-trail-next { display: flex; gap: 6px; margin-top: 12px; color: var(--ink-muted); font-size: 14px; }
 .habit-trail-next svg { flex-shrink: 0; }
-.home-park-link { display: flex; align-items: center; gap: 8px; min-height: 48px; margin-top: 12px; font-weight: 800; color: #245f55; }
+.home-park-link { display: grid; grid-template-columns: 24px minmax(0, 1fr) 20px; align-items: center; gap: 14px; margin: 16px 14px 0; padding: 16px; border: 1px solid #d4e2d9; border-radius: 18px; background: #edf3ee; color: #245f55; transition: background 160ms ease, border-color 160ms ease; }
+.home-park-link:hover { background: #e3eee5; border-color: #a8c2b4; }
+.home-park-link strong { display: block; font-size: 16px; line-height: 1.35; }
+.home-park-link small { display: block; margin-top: 4px; font-size: 13px; line-height: 1.5; color: var(--ink-muted); }
 @media (max-width: 767px) {
+  .home-park-link { margin-inline: 0; }
   .park-invitation { grid-template-columns: minmax(0, 1fr); padding: 24px; gap: 0; }
   .park-invitation .jar { width: 110px; height: 110px; margin: -12px 0 4px; }
   .park-invitation .button { width: 100%; }

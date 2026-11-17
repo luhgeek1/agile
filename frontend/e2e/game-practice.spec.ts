@@ -6,7 +6,7 @@ test('practice persists, awards one badge, preserves money and resets only game 
   await page.getByRole('button', { name: 'Посмотреть демо' }).click()
   await expect(page.getByRole('heading', { name: 'Мои три отсека' })).toBeVisible()
   const before = await (await page.request.get('/api/state')).json()
-  await page.getByRole('link', { name: 'Играть в парке открытий' }).click()
+  await page.getByRole('link', { name: 'Открыть карту игры', exact: false }).click()
   await page.locator('[data-nav="practice"]').first().click()
   await page.locator('[data-practice-answer="2"]').click()
   await expect(page.locator('#practice-feedback')).toContainText('Давай разберёмся')

@@ -8,7 +8,7 @@ import { money } from '@/shared/lib/money'
 import { Button, Card, EmptyState, Page } from '@/shared/ui'
 import { ActivityCarousel } from '@/widgets/activity-carousel'
 import { useProduct } from '@/widgets/product-shell'
-import { ArrowRight, ArrowUpRight, Heart, History, Info, Sparkles, Sun } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Heart, History, Info, Map, Sparkles, Sun } from 'lucide-react'
 import Link from 'next/link'
 
 export function HomePage() {
@@ -73,7 +73,12 @@ export function HomePage() {
           </div>
           <ActivityCarousel activities={state.activities} onOpen={openActivity} />
           <a className="home-park-link" href="/game/index.html">
-            <Sparkles size={18} /> Играть в парке открытий <ArrowUpRight size={17} />
+            <Map size={24} aria-hidden="true" />
+            <span>
+              <strong>Открыть карту игры</strong>
+              <small>Парк открытий · истории и тренировка</small>
+            </span>
+            <ArrowUpRight size={20} aria-hidden="true" />
           </a>
         </section>
         <section className="home-recent">

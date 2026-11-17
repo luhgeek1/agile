@@ -15,7 +15,7 @@ export function DiscoveryHub({ activities, onOpen }: {
           <span className="eyebrow">Приключение на 3–5 минут</span>
           <h2>Парк маленьких открытий</h2>
           <p>Построй план мечты, собери пикник и помоги саду. Открывай значки и тренируйся выбирать.</p>
-          <Button asChild><a href="/game/index.html">Отправиться в парк <ArrowUpRight size={18} /></a></Button>
+          <Button asChild><a href="/game/index.html">Открыть карту игры <ArrowUpRight size={18} /></a></Button>
           <small>Игровые монеты не меняют копилку. Прогресс игры хранится в этом браузере.</small>
         </div>
         <ParkScene />
