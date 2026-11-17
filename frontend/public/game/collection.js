@@ -4,24 +4,27 @@ const badges = [
   { title: 'Хранитель мечты', art: 'kite', category: 'save', rule: 'Пройди историю «Мечта взлетает».', lesson: 'У мечты есть цена и свой план накоплений.' },
   { title: 'Вдумчивый покупатель', art: 'basket', category: 'spend', rule: 'Пройди историю «Пикник без лишнего».', lesson: 'Список и бюджет помогают выбирать покупки.' },
   { title: 'Друг добрых дел', art: 'plant', category: 'help', rule: 'Пройди историю «Добро по силам».', lesson: 'Время и внимание помогают не меньше денег.' },
-  { title: 'Исследователь парка', icon: 'leaf', category: 'save', rule: 'Сделай открытия во всех трёх историях.', lesson: 'Ты попробовал копить, выбирать и помогать.' },
+  { title: 'Исследователь парка', icon: 'leaf', category: 'save', rule: 'Пройди первые три истории.', lesson: 'Ты попробовал копить, выбирать и помогать.' },
   { title: 'Знаток трёх отсеков', icon: 'star', category: 'help', rule: 'Разберись во всех шести ситуациях в тренировке.', lesson: 'Ты умеешь находить решения в разных ситуациях.' },
+  { title: 'Весь парк открыт', icon: 'check', category: 'save', rule: 'Пройди все истории в парке.', lesson: 'Ты прошёл весь маршрут и разобрался, как использовать три отсека в разных ситуациях.' },
 ];
 
-function earned(index, completed) {
+function earned(index, completed, total) {
   if (index < 3) return completed.some(run => run.id === index);
-  return index === 3 ? completed.length === 3 : practiceProgress().mastered.length === situations.length;
+  if (index === 3) return completed.length >= 3;
+  if (index === 4) return practiceProgress().mastered.length === situations.length;
+  return completed.length === total;
 }
 
-export function collectionView(completed, icon, art) {
-  const count = badges.filter((_, index) => earned(index, completed)).length;
+export function collectionView(completed, total, icon, art) {
+  const count = badges.filter((_, index) => earned(index, completed, total)).length;
   const practice = practiceProgress();
   return `<section class="passport" aria-labelledby="passport-title">
     <div class="passport-heading"><div><h2 id="passport-title">Твоя коллекция открытий</h2>
       <p>Каждый значок — то, в чём ты разобрался. Нажми и узнай, как его получить.</p></div>
       <strong class="passport-count">${count}<span> из ${badges.length}</span></strong></div>
     <div class="badge-shelf">${badges.map((badge, index) => {
-      const unlocked = earned(index, completed);
+      const unlocked = earned(index, completed, total);
       return `<button class="discovery-badge ${badge.category} ${unlocked ? 'earned' : 'waiting'}"
         data-badge="${index}" aria-label="${badge.title}: ${unlocked ? 'получен' : 'как получить'}">
         <span class="badge-art">${badge.art ? art(badge.art) : icon(badge.icon)}</span>
@@ -36,10 +39,10 @@ export function collectionView(completed, icon, art) {
   </section>`;
 }
 
-export function badgeDetails(index, completed, openModal, icon) {
+export function badgeDetails(index, completed, total, openModal, icon) {
   const badge = badges[index];
   if (!badge) return;
-  const unlocked = earned(index, completed);
+  const unlocked = earned(index, completed, total);
   openModal(badge.title, `<div class="earned-seal">${icon(unlocked ? 'check' : 'lock')}</div>
     <p><strong>${unlocked ? 'Значок уже в твоей коллекции!' : 'Твоё следующее открытие'}</strong></p>
     <p>${unlocked ? badge.lesson : badge.rule}</p>
@@ -47,4 +50,7 @@ export function badgeDetails(index, completed, openModal, icon) {
     <button class="primary full" data-action="close">Понятно</button>`);
 }
 
-export function earnedTitle(id) { return badges[id]?.title ?? ''; }
+export function earnedTitle(id, total) {
+  if (id < 3) return badges[id].title;
+  return id === total - 1 ? badges[5].title : '';
+}

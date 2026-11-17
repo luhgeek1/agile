@@ -43,7 +43,9 @@ test('three stories: choices, insufficient funds, reload, rewards and replay', a
   }
   await page.reload()
   await page.locator('[data-nav="map"]').first().click()
-  await expect(page.locator('.map-chip')).toHaveText('3 из 3 открытий')
+  await expect(page.locator('.map-chip')).toHaveText('3 из 20 открытий')
+  await expect(page.locator('#route-select')).toHaveValue('1')
+  await page.getByLabel('Участок парка').selectOption('0')
   await page.locator('[data-mission="0"]').click()
   await allocate(page, [100, 0, 0])
   await page.locator('[data-choice="2"]').click()
@@ -52,6 +54,6 @@ test('three stories: choices, insufficient funds, reload, rewards and replay', a
   await page.locator('[data-answer="0"]').click()
   await page.locator('[data-action="finish"]').click()
   await page.locator('[data-nav="map"]').last().click()
-  await expect(page.locator('.map-chip')).toHaveText('3 из 3 открытий')
+  await expect(page.locator('.map-chip')).toHaveText('3 из 20 открытий')
   expect(errors).toEqual([])
 })

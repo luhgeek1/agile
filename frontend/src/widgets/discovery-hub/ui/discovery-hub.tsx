@@ -12,9 +12,9 @@ export function DiscoveryHub({ activities, onOpen }: {
     <div className="discovery-hub">
       <Card className="park-invitation">
         <div className="park-invitation-copy">
-          <span className="eyebrow">Приключение на 3–5 минут</span>
+          <span className="eyebrow">20 коротких приключений</span>
           <h2>Парк маленьких открытий</h2>
-          <p>Построй план мечты, собери пикник и помоги саду. Открывай значки и тренируйся выбирать.</p>
+          <p>Пройди от мастерской змеев до праздника в парке. Копи на мечту, выбирай покупки и помогай соседям.</p>
           <Button asChild><a href="/game/index.html">Открыть карту игры <ArrowUpRight size={18} /></a></Button>
           <small>Игровые монеты не меняют копилку. Прогресс игры хранится в этом браузере.</small>
         </div>

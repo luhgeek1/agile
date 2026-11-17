@@ -2,11 +2,18 @@
 import { practiceView, handlePractice } from './practice-view.js';
 import { practiceProgress, resetPractice, situations } from './practice-state.js';
 import { collectionView, badgeDetails, earnedTitle } from './collection.js';
+import { mapView, routePanel } from './map-view.js';
+import { plans } from './stories/plans.js';
+import { market } from './stories/market.js';
+import { neighbors } from './stories/neighbors.js';
+import { pond } from './stories/pond.js';
+import { exchange } from './stories/exchange.js';
+import { festival } from './stories/festival.js';
 const STORAGE_KEY = 'kopilka-park-v1';
 const names = ['Коплю', 'Трачу', 'Помогаю'];
 let jarSerial = 0;
 const cats = ['save', 'spend', 'help'];
-const missions = [
+const firstStories = [
   {id:0,from:1,options:[
       ['Мороженое',20,'','ice','Небольшая радость сейчас'],
       ['Наклейки',40,'','star','Украшение для твоих вещей'],
@@ -50,6 +57,10 @@ const missions = [
     talk:'Какой способ помощи тебе ближе? Что можно сделать без денег и с кем это безопасно обсудить?'
   }
 ];
+const routes = [{ title: 'Первые открытия', stories: firstStories }, plans, market, neighbors, pond, exchange, festival];
+const missions = routes.flatMap(route => route.stories);
+let selectedRoute = null;
+
 const icons = {
   arrow:'<path d="M5 12h14m-6-6 6 6-6 6"/>',back:'<path d="M19 12H5m6-6-6 6 6 6"/>',
   clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',leaf:'<path d="M20 4c-10-2-17 3-15 10 2 7 12 6 15-10Z"/><path d="m5 20 9-10"/>',
@@ -120,30 +131,31 @@ function focusMain(){main.focus({preventScroll:true});window.scrollTo({top:0,beh
 function render(focus=true){
  if (focus && location.hash !== `#${page}`) history.pushState(null, '', `#${page}`);
  document.querySelectorAll('[data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===page));
- main.innerHTML=(!storageAvailable?'<div class="storage-note">Браузер не разрешает сохранять прогресс. Игра работает, но после закрытия страницы путь может начаться заново.</div>':'')+(page==='practice'?practiceView(icon):page==='parents'?parentView():page==='game'&&state.active?gameView():mapView());
+ main.innerHTML=(!storageAvailable?'<div class="storage-note">Браузер не разрешает сохранять прогресс. Игра работает, но после закрытия страницы путь может начаться заново.</div>':'')+(page==='practice'?practiceView(icon):page==='parents'?parentView():page==='game'&&state.active?gameView():mapView({missions,routes,state,selectedRoute,icon,park,jar}));
  document.title=(page==='game'?missions[state.active.id].title:page==='parents'?'Родителям':'Парк маленьких открытий')+' · Коплю — Трачу — Помогаю';
- if(page==='map' || page==='parents') main.insertAdjacentHTML('beforeend',collectionView(state.completed,icon,art));
+ if(page==='map' || page==='parents') main.insertAdjacentHTML('beforeend',collectionView(state.completed,missions.length,icon,art));
  if(page==='practice') document.title='Мастерская решений · Коплю — Трачу — Помогаю';
  if(page==='game' && state.active.phase==='result') {
-   main.querySelector('.badge').textContent='Значок получен · '+earnedTitle(state.active.id);
+   const title=earnedTitle(state.active.id, missions.length);
+   if(title) main.querySelector('.badge').textContent='Значок в коллекции · '+title;
    main.querySelector('.family-task').insertAdjacentHTML('beforeend','<a class="back" href="/app/activities">Выбрать дело с настоящей копилкой →</a>');
  }
  if(focus)focusMain();
 }
-function mapView(){
- const count=state.completed.length;const next=Math.min(count,2);const active=state.active&&state.active.phase!=='result'?state.active:null;const target=active?active.id:next;const m=missions[target];
- return `<div class="intro"><div><div class="eyebrow">${icon('sun')} Играем и учимся вместе</div><h1>Парк маленьких открытий</h1><p>Здесь мечты растут, покупки становятся осознанными,<br class="desktop-break"> а добрые дела начинаются с тебя.</p></div><span class="session-pill">${icon('clock')} 3 истории · по 3–5 минут</span></div>
- ${count===3?'<div class="journey-complete"><div><strong>Все три истории пройдены!</strong><p>Можно повторить любую или обсудить открытия со взрослым.</p></div><button class="secondary" data-nav="parents">Мои открытия →</button></div>':''}
- <div class="map-layout"><section class="map-panel" aria-label="Карта приключений">${park()}<div class="map-topline">${icon('leaf')} Твой маршрут</div><div class="map-chip">${count} из 3 открытий</div>${missions.map((item,i)=>`<button class="landmark ${['one','two','three'][i]} ${i<count?'done':i>count?'locked':''}" data-mission="${i}" aria-label="${item.title}${i<count?', пройдено':i>count?', откроется после предыдущей истории':''}"><span class="num">${i<count?'✓':i>count?icon('lock'):i+1}</span><span><small>${['КОПЛЮ','ТРАЧУ','ПОМОГАЮ'][i]}</small><strong>${item.title}</strong></span></button>`).join('')}<div class="map-bottom"><span>${icon('leaf')} Иди в своём темпе</span><span>Каждый выбор — новое открытие</span></div></section>
- <aside class="guide-card">${jar('save','guide-art')}<div class="tiny">${active?'Продолжим историю?':count===3?'Твои открытия':count?'Следующее открытие':'Твой первый шаг'}</div><h2>${active?m.title:count===3?'Открытия остаются с тобой':count===0?'Привет! Я Копик.':m.title}</h2><p>${active?'Мы запомнили, где ты остановился. Твои решения на месте.':count===3?'Копить, выбирать и помогать можно каждый день. Попробуешь ещё раз?':count===0?'Пойдём гулять по парку? Нас ждут три истории. Ты будешь выбирать, а я помогу разобраться.':m.intro}</p><button class="primary full" data-action="${active?'resume':'start'}" data-id="${target}">${active?'Продолжить':count===3?'Пройти ещё раз':'Начать приключение'} ${icon('arrow')}</button><span class="guide-foot">Можно остановиться и продолжить позже</span><div class="journey-progress"><span class="dots">${missions.map((_,i)=>`<i class="${i<count?'done':''}"></i>`).join('')}</span><span>${count} из 3 историй пройдено</span></div></aside></div>
- <div class="bottom-row">${[['save','coin','Приближай мечту','Учись откладывать понемногу.'],['spend','bag','Выбирай с умом','Сравнивай желания и возможности.'],['help','heart','Находи способы помочь','Добрые дела бывают разными.']].map(([c,i,t,d])=>`<div class="habit-card"><span class="habit-icon ${c}">${icon(i)}</span><div><strong>${t}</strong><p>${d}</p></div></div>`).join('')}</div>`;
-}
+main.addEventListener('change', event => {
+ if (event.target.id !== 'route-select') return;
+ const index = Number(event.target.value);
+ if (!routes[index]) return;
+ selectedRoute = index;
+ main.querySelector('#route-map').outerHTML = routePanel(routes[index], state.completed.length, missions.length, icon, park);
+ announce(routes[index].title);
+});
 function start(id){if(!Number.isInteger(id)||id<0||id>Math.min(state.completed.length,missions.length-1))return;
- if(state.active&&state.active.id===id){page='game';render();return;}
+ if(state.active&&state.active.id===id){selectedRoute=null;page='game';render();return;}
  if(state.active&&state.active.phase!=='result'){openModal('Начать другую историю?',`<p>Незавершённые решения в истории «${missions[state.active.id].title}» будут заменены. Пройденные истории сохранятся.</p><div class="dialog-actions"><button class="secondary" data-action="close">Остаться</button><button class="primary" data-action="replace" data-id="${id}">Начать другую</button></div>`);return;}
  newRun(id);
 }
-function newRun(id){state.active={id,phase:'allocate',alloc:[0,0,0],items:[],choice:null,confirmed:false,quizPassed:false};persist();page='game';render();}
+function newRun(id){selectedRoute=null;state.active={id,phase:'allocate',alloc:[0,0,0],items:[],choice:null,confirmed:false,quizPassed:false};persist();page='game';render();}
 function current(){return state.active;}
 function selectionCost(a) {
  const m=missions[a.id];
@@ -157,9 +169,11 @@ function balance(a,index){
  return allocatedBalance(a,index)-(index===missions[a.id].from?spent(a):0);
 }
 function balances(a){return `<div class="balances">${cats.map((c,i)=>`<span class="balance ${c}">${names[i]}: ${balance(a,i)}</span>`).join('')}</div>`}
+function hasSelection(a){
+ return missions[a.id].items ? a.items.length>0 : a.choice!==null;
+}
 function canResolve(a){
- const m=missions[a.id];
- return (m.items ? a.items.length>0 : a.choice!==null) && selectionCost(a)<=allocatedBalance(a,m.from);
+ return hasSelection(a) && selectionCost(a)<=allocatedBalance(a,missions[a.id].from);
 }
 function chosen(a){
  const m=missions[a.id];
@@ -173,10 +187,10 @@ function allocationView(a){const m=missions[a.id],remaining=m.budget-a.alloc.red
 function updateAllocation(index,delta){const a=current();if(!a||a.phase!=='allocate')return;const remain=missions[a.id].budget-a.alloc.reduce((s,n)=>s+n,0);if(a.alloc[index]+delta<0||delta>remain)return;a.alloc[index]+=delta;persist();const next=remain-delta;document.querySelector('#remaining').textContent=next;document.querySelector(`#alloc-${index}`).textContent=a.alloc[index];document.querySelectorAll('[data-adjust]').forEach(b=>{b.disabled=Number(b.dataset.delta)>0?next===0:a.alloc[Number(b.dataset.adjust)]===0;});document.querySelector('[data-action="allocation-next"]').disabled=next!==0;document.querySelector('#alloc-hint').textContent=next?`Осталось распределить ${next} монет. Можно выбрать любые пропорции.`:'Все монеты на своих местах. План готов!';const meter=document.querySelector('.side-note .meter');
  if(meter){const saved=balance(a,0),goal=missions[a.id].goal;document.querySelector('#goal-saved').textContent=saved;meter.setAttribute('aria-valuenow',Math.min(saved,goal));meter.firstElementChild.style.width=Math.min(saved/goal*100,100)+'%';}announce(`${names[index]}: ${a.alloc[index]}. Осталось распределить: ${next}.`);}
 function eventView(a){const m=missions[a.id];let content='';
- if(m.items){content=`<div class="shop-grid">${m.items.map((it,i)=>`<button class="shop-item ${a.items.includes(i)?'selected':''}" data-item="${i}" aria-pressed="${a.items.includes(i)}" ${a.confirmed?'disabled':''}>${icon(it.icon)}<strong>${it.name}</strong><small>${it.desc}</small><span class="price">${it.price} монет</span><span class="item-toggle">${a.items.includes(i)?'✓ В корзине':'+ В корзину'}</span></button>`).join('')}</div><div class="receipt"><span>Корзина: <strong>${selectionCost(a)} монет</strong></span><span>Бюджет: <strong>${a.alloc[1]}</strong></span></div>`;
+ if(m.items){content=`<div class="shop-grid">${m.items.map((it,i)=>`<button class="shop-item ${a.items.includes(i)?'selected':''}" data-item="${i}" aria-pressed="${a.items.includes(i)}" ${a.confirmed?'disabled':''}>${icon(it.icon)}<strong>${it.name}</strong><small>${it.desc}</small><span class="price">${it.price} монет</span><span class="item-toggle">${a.items.includes(i)?'✓ В корзине':'+ В корзину'}</span></button>`).join('')}</div><div class="receipt"><span>Корзина: <strong>${selectionCost(a)} монет</strong></span><span>Бюджет: <strong>${allocatedBalance(a,m.from)}</strong></span></div>`;
  }else {
  content=`<div class="choice-list">${m.options.map(([t,p,,im=m.art,d],i)=>`<button class="choice ${a.choice===i?'selected':''}" data-choice="${i}" aria-pressed="${a.choice===i}" ${a.confirmed?'disabled':''}><span class="choice-art">${im==='kite'?art('kite'):icon(im)}</span><span><strong>${t}</strong>${d?`<small>${d}</small>`:''}</span><span class="price">${p?p+' монет':'0 монет'}</span></button>`).join('')}</div>`;}
- return `<div class="narration">${jar(cats[m.from],'mini-jar')}<div><strong>Твой выбор имеет значение</strong><p>${m.eventText}</p></div></div>${balances(a)}${content}<div id="event-feedback" class="feedback ${a.confirmed?'':'error'}" role="status">${a.confirmed?eventFeedback(a):''}</div><div class="action-row">${!a.confirmed?'<button class="text-button" data-action="replan">← Изменить распределение</button>':'<p class="action-hint">Решение сохранено. Теперь обсудим, что получилось.</p>'}<button class="primary" data-action="${a.confirmed?'to-quiz':'confirm-event'}" ${!a.confirmed&&(a.id===1?!a.items.length:a.choice===null)?'disabled':''}>${a.confirmed?'Что я узнал':'Выбираю так'} ${icon('arrow')}</button></div>`;
+ return `<div class="narration">${jar(cats[m.from],'mini-jar')}<div><strong>Твой выбор имеет значение</strong><p>${m.eventText}</p></div></div>${balances(a)}${content}<div id="event-feedback" class="feedback ${a.confirmed?'':'error'}" role="status">${a.confirmed?eventFeedback(a):''}</div><div class="action-row">${!a.confirmed?'<button class="text-button" data-action="replan">← Изменить распределение</button>':'<p class="action-hint">Решение сохранено. Теперь обсудим, что получилось.</p>'}<button class="primary" data-action="${a.confirmed?'to-quiz':'confirm-event'}" ${!a.confirmed&&!hasSelection(a)?'disabled':''}>${a.confirmed?'Что я узнал':'Выбираю так'} ${icon('arrow')}</button></div>`;
 }
 function eventFeedback(a){
  const m=missions[a.id];
@@ -196,13 +210,13 @@ if(a.id===0){const saved=balance(a,0);return `<strong>${saved>=120?'На воз�
 }
 function quizView(a){const m=missions[a.id];return `${balances(a)}<h2 class="quiz-question">${m.question}</h2><div class="quiz-options">${m.answers.map((t,i)=>`<button class="quiz-option ${a.quizPassed&&i===m.correct?'correct':''}" data-answer="${i}" ${a.quizPassed?'disabled':''}><span>${a.quizPassed&&i===m.correct?'✓':i+1}</span>${t}</button>`).join('')}</div><div class="feedback" id="quiz-feedback" role="status">${a.quizPassed?'<strong>Верно, ты разобрался!</strong>'+m.explanation:''}</div><div class="action-row"><p class="action-hint">Можно подумать и попробовать снова.</p><button class="primary" data-action="finish" ${a.quizPassed?'':'disabled'}>Моё открытие ${icon('arrow')}</button></div>`;}
 function resultView(a){const m=missions[a.id];return `<button class="back" data-nav="map">${icon('back')} Карта приключений</button><section class="result">${art(m.art,'big-art')}<div class="badge">ОТКРЫТИЕ ${a.id+1} ИЗ ${missions.length}</div><h1>${m.result}</h1><p>${m.explanation}</p><div class="result-stats">${cats.map((c,i)=>`<div class="result-stat ${c}"><small>${names[i]} · осталось</small><strong>${balance(a,i)} <span class="micro">монет</span></strong></div>`).join('')}</div><div class="feedback" style="text-align:left">${eventFeedback(a)}</div><div class="family-task"><strong>Попробуйте вместе со взрослым</strong><p>${m.family}</p></div><div class="action-row"><button class="secondary" data-action="replay" data-id="${a.id}">Попробовать иначе</button><button class="primary" ${a.id<missions.length-1?`data-action="next-mission" data-id="${a.id+1}"`:'data-nav="parents"'}>${a.id<missions.length-1?'Следующая история':'Мои открытия'} ${icon('arrow')}</button></div><p class="micro">Остановиться и продолжить позже тоже можно. Мы сохранили твоё открытие.</p></section>`;}
-function parentView(){return `<div class="parent-page"><button class="back" data-nav="map">${icon('back')} К приключениям</button><div class="intro"><div><div class="eyebrow">Для совместной практики</div><h1>Открытия, которые можно обсудить</h1><p>Короткая игра — повод для разговора и небольшого действия в настоящей жизни.</p></div></div><div class="parent-grid"><section class="parent-card"><h2>Путь ребёнка</h2><p>Пройдено ${state.completed.length} из 3 историй. Это факты игры, а не оценка финансовой грамотности.</p>${state.completed.length?state.completed.map(a=>{const m=missions[a.id];return `<div class="history-row"><strong>✓ ${m.title}</strong><small>${new Date(a.finishedAt).toLocaleDateString('ru-RU',{day:'numeric',month:'long',timeZone:'Europe/Moscow'})} · ${m.topic}</small><p>${m.items?`Корзина: ${chosen(a).join(', ')}.`:`Выбор: ${chosen(a)}.`}</p><p><b>Спросите:</b> ${m.talk}</p></div>`}).join(''):'<div class="history-row"><p>Пока нет пройденных историй. Начните с мастерской воздушных змеев.</p><button class="primary" data-action="start" data-id="0" style="margin-top:16px">Начать вместе →</button></div>'}</section><section class="parent-card"><h2>Как поддержать ребёнка</h2><ul><li>Попросите объяснить выбор своими словами. Не подсказывайте ответ сразу.</li><li>Обсудите последствия: что получилось, на что не хватило, что можно изменить.</li><li>Позвольте пройти историю иначе и сравнить два решения.</li><li>Помощь добровольна. Время и забота не менее значимы, чем монеты.</li></ul><p>Предлагаемый возраст — 6–10 лет. Младшим детям взрослый может читать условия вслух.</p></section><section class="parent-card"><h2>Шаг из игры в жизнь</h2><p>${state.completed.length?missions[state.completed[state.completed.length-1].id].family:'Выберите одну небольшую цель ребёнка. Обсудите, сколько она стоит и как можно начать копить.'}</p><p>Возвращайтесь, когда появится новая ситуация для обсуждения. Обязательных ежедневных входов и штрафов за перерыв нет.</p></section><section class="parent-card"><h2>Об этой версии</h2><p>Учебная браузерная игра по мотивам проекта «Коплю — Трачу — Помогаю». Сценарий предложен командой и требует методической проверки НЦФГ.</p><p>Все суммы условные. Связи с банком и балансами прототипа нет. AR и камера в этой версии не используются.</p><p>Прогресс хранится только в этом браузере. Очистка данных сайта удалит его. Персональные данные не запрашиваются.</p><button class="secondary" data-action="export" style="margin-top:16px">Скачать результаты</button></section></div><div class="danger-zone"><div><strong>Начать с чистого листа</strong><p>Удалить только прогресс этой игры в этом браузере.</p></div><button class="secondary" data-action="reset">Сбросить прогресс</button></div></div>`;}
+function parentView(){return `<div class="parent-page"><button class="back" data-nav="map">${icon('back')} К приключениям</button><div class="intro"><div><div class="eyebrow">Для совместной практики</div><h1>Открытия, которые можно обсудить</h1><p>Короткая игра — повод для разговора и небольшого действия в настоящей жизни.</p></div></div><div class="parent-grid"><section class="parent-card"><h2>Путь ребёнка</h2><p>Пройдено ${state.completed.length} из ${missions.length} историй. Это факты игры, а не оценка финансовой грамотности.</p>${state.completed.length?state.completed.map(a=>{const m=missions[a.id];return `<details class="history-row"><summary>${a.id+1}. ${m.title}</summary><small>${new Date(a.finishedAt).toLocaleDateString('ru-RU',{day:'numeric',month:'long',timeZone:'Europe/Moscow'})} · ${m.topic}</small><p>${m.items?`Корзина: ${chosen(a).join(', ')}.`:`Выбор: ${chosen(a)}.`}</p><p><b>Спросите:</b> ${m.talk}</p></details>`}).join(''):'<div class="history-row"><p>Пока нет пройденных историй. Начните с мастерской воздушных змеев.</p><button class="primary" data-action="start" data-id="0" style="margin-top:16px">Начать вместе →</button></div>'}</section><section class="parent-card"><h2>Как поддержать ребёнка</h2><ul><li>Попросите объяснить выбор своими словами. Не подсказывайте ответ сразу.</li><li>Обсудите последствия: что получилось, на что не хватило, что можно изменить.</li><li>Позвольте пройти историю иначе и сравнить два решения.</li><li>Помощь добровольна. Время и забота не менее значимы, чем монеты.</li></ul><p>Предлагаемый возраст — 6–10 лет. Младшим детям взрослый может читать условия вслух.</p></section><section class="parent-card"><h2>Шаг из игры в жизнь</h2><p>${state.completed.length?missions[state.completed[state.completed.length-1].id].family:'Выберите одну небольшую цель ребёнка. Обсудите, сколько она стоит и как можно начать копить.'}</p><p>Возвращайтесь, когда появится новая ситуация для обсуждения. Обязательных ежедневных входов и штрафов за перерыв нет.</p></section><section class="parent-card"><h2>Об этой версии</h2><p>Учебная браузерная игра по мотивам проекта «Коплю — Трачу — Помогаю». Сценарий предложен командой и требует методической проверки НЦФГ.</p><p>Все суммы условные. Связи с банком и балансами прототипа нет. AR и камера в этой версии не используются.</p><p>Прогресс хранится только в этом браузере. Очистка данных сайта удалит его. Персональные данные не запрашиваются.</p><button class="secondary" data-action="export" style="margin-top:16px">Скачать результаты</button></section></div><div class="danger-zone"><div><strong>Начать с чистого листа</strong><p>Удалить только прогресс этой игры в этом браузере.</p></div><button class="secondary" data-action="reset">Сбросить прогресс</button></div></div>`;}
 function openModal(title,body){document.querySelector('#modal-content').innerHTML=`<h2 id="modal-title">${title}</h2>${body}`;modal.showModal();}
-function showHelp(){openModal('Как играть?',`<p>Копик приглашает тебя в парк. Здесь три истории, и в каждой можно сделать своё открытие.</p><ol><li><b>Составь план.</b> Разложи монеты кнопками + и −. Один шаг — 10 монет.</li><li><b>Сделай выбор.</b> Сравни цену и свой бюджет. Можно вернуться и изменить план.</li><li><b>Разберись.</b> Ответь на вопрос, прочитай объяснение и обсуди открытие со взрослым.</li></ol><p>Можно остановиться в любой момент. Прогресс остаётся в этом браузере. Монеты игровые, настоящие деньги не нужны.</p><button class="primary full" data-action="close">Всё понятно!</button>`);}
+function showHelp(){openModal('Как играть?',`<p>Копик приглашает тебя в парк. Здесь ${missions.length} историй. Выбери участок на карте и проходи истории по очереди.</p><ol><li><b>Составь план.</b> Разложи монеты кнопками + и −. Один шаг — 10 монет.</li><li><b>Сделай выбор.</b> Сравни цену и свой бюджет. Можно вернуться и изменить план.</li><li><b>Разберись.</b> Ответь на вопрос, прочитай объяснение и обсуди открытие со взрослым.</li></ol><p>Можно остановиться в любой момент. Прогресс остаётся в этом браузере. Монеты игровые, настоящие деньги не нужны.</p><button class="primary full" data-action="close">Всё понятно!</button>`);}
 document.addEventListener('click',e=>{
  const b=e.target.closest('button,a.brand');if(!b)return;
  if (!modal.open) modalTrigger = b;
- if(b.dataset.badge !== undefined){badgeDetails(Number(b.dataset.badge),state.completed,openModal,icon);return;}
+ if(b.dataset.badge !== undefined){badgeDetails(Number(b.dataset.badge),state.completed,missions.length,openModal,icon);return;}
  if(b.dataset.practice || b.dataset.practiceAnswer !== undefined){handlePractice(b,render,announce);return;}
  if(b.matches('a.brand')){e.preventDefault();page='map';render();return;}
  if(b.classList.contains('close-modal')){modal.close();return;}
@@ -216,10 +230,10 @@ document.addEventListener('click',e=>{
  const action=b.dataset.action;if(!action)return;
  if(action==='close'){modal.close();return;}
  if(action==='start'){start(Number(b.dataset.id));return;}
- if(action==='resume'){page='game';render();return;}
+ if(action==='resume'){selectedRoute=null;page='game';render();return;}
  if(action==='replace'){modal.close();newRun(Number(b.dataset.id));return;}
  if(action==='reset'){openModal('Сбросить прогресс?',`<p>Истории, тренировка и значки будут удалены из этого браузера. Записи семьи в копилке сохранятся. Это действие нельзя отменить.</p><div class="dialog-actions"><button class="secondary" data-action="close">Сохранить прогресс</button><button class="primary" data-action="confirm-reset">Сбросить</button></div>`);return;}
- if(action==='confirm-reset'){state={version:1,completed:[],active:null};resetPractice();persist();modal.close();page='map';render();return;}
+ if(action==='confirm-reset'){selectedRoute=null;state={version:1,completed:[],active:null};resetPractice();persist();modal.close();page='map';render();return;}
  if(action==='export'){const report={game:'Парк маленьких открытий',version:2,practice:{...practiceProgress(),topics:practiceProgress().mastered.map(id=>situations[id].title)},exportedAt:new Date().toISOString(),note:'Результаты игры не являются оценкой финансовой грамотности.',stories:state.completed.map(run=>({title:missions[run.id].title,allocated:Object.fromEntries(names.map((n,i)=>[n,run.alloc[i]])),remaining:Object.fromEntries(names.map((n,i)=>[n,balance(run,i)])),choice:chosen(run),finishedAt:run.finishedAt}))};const url=URL.createObjectURL(new Blob([JSON.stringify(report,null,2)],{type:'application/json'}));const link=document.createElement('a');link.href=url;link.download='moi-otkrytiya.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);return;}
  if(!a)return;
  if(action==='allocation-next'&&a.phase==='allocate'&&a.alloc.reduce((s,n)=>s+n,0)===missions[a.id].budget){a.phase='event';persist();render();}
@@ -246,7 +260,8 @@ window.addEventListener('popstate', () => {
 });
 render(false);
 window.render_game_to_text = () => JSON.stringify({
- page, active: state.active, completed: state.completed.map(run => run.id), practice: practiceProgress(),
+ page, totalStories: missions.length, selectedRoute: page === 'map' ? main.querySelector('#route-select').value : null,
+ active: state.active, completed: state.completed.map(run => run.id), practice: practiceProgress(),
  balances: state.active ? cats.map((_, index) => balance(state.active, index)) : [],
  storageAvailable, coordinates: 'DOM interface; origin top-left, x right, y down',
 });
