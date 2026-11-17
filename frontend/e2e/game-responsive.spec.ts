@@ -34,6 +34,22 @@ for (const [width, height] of viewports) {
       }
     }
     await inspect('map')
+    const route = page.getByLabel('Участок парка')
+    for (const index of ['1', '2', '3', '4', '5', '6']) {
+      await route.selectOption(index)
+      await fits(page)
+      const overlaps = await page.locator('.landmark').evaluateAll(stops =>
+        stops.some((stop, i) => {
+          const a = stop.getBoundingClientRect()
+          return stops.slice(i + 1).some(other => {
+            const b = other.getBoundingClientRect()
+            return a.left < b.right && b.left < a.right && a.top < b.bottom && b.top < a.bottom
+          })
+        }),
+      )
+      expect(overlaps, `separate stops on route ${index}`).toBe(false)
+    }
+    await route.selectOption('0')
     await page.locator('[data-badge="0"]').click()
     const dialog = page.getByRole('dialog')
     await expect(dialog).toBeVisible()
