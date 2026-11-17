@@ -930,6 +930,7 @@ main:focus {
   min-width: 0;
 }
 .activity-carousel-viewport {
+  position: relative;
   display: flex;
   flex: 1;
   min-width: 0;
@@ -938,6 +939,7 @@ main:focus {
   border-radius: 24px;
 }
 .activity-carousel-track {
+  position: relative;
   display: flex;
   width: 100%;
   gap: 16px;

@@ -60,6 +60,10 @@ test('carousel arrows leave all task text unobstructed on narrow screens', async
           () =>
             carousel.evaluate((root) => {
               const card = root.querySelector('[data-active="true"]')!
+            const viewport = root.querySelector('.activity-carousel-viewport')!.getBoundingClientRect()
+            if (Math.abs(card.getBoundingClientRect().left - viewport.left) > 1.5) {
+              return ['active slide is not aligned to the viewport']
+            }
               const arrows = [...root.querySelectorAll('.activity-carousel-arrow')].map((arrow) =>
                 arrow.getBoundingClientRect(),
               )
