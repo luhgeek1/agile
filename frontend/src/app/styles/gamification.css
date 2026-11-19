@@ -1,6 +1,5 @@
 .discovery-hub { margin-bottom: 30px; }
 .park-invitation { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 24px; align-items: center; padding: 28px; background: #eaf1e7; border-color: #dae6d6; }
-.park-invitation .jar { width: 180px; height: 180px; }
 .park-invitation h2 { font-size: clamp(24px, 3vw, 32px); margin-block: 8px 10px; }
 .park-invitation p { max-width: 65ch; color: var(--ink-muted); margin-bottom: 18px; }
 .park-invitation small { display: block; margin-top: 12px; font-size: 13px; color: var(--ink-muted); }
@@ -24,7 +23,6 @@
 @media (max-width: 767px) {
   .home-park-link { margin-inline: 0; }
   .park-invitation { grid-template-columns: minmax(0, 1fr); padding: 24px; gap: 0; }
-  .park-invitation .jar { width: 110px; height: 110px; margin: -12px 0 4px; }
   .park-invitation .button { width: 100%; }
   .habit-trails { grid-template-columns: minmax(0, 1fr); gap: 10px; }
   .habit-trail { padding: 16px 18px; }

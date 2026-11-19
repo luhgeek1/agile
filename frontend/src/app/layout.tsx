@@ -8,6 +8,7 @@ import './styles/refinement.css'
 import './styles/goals.css'
 import './styles/activities.css'
 import './styles/history.css'
+import './styles/welcome.css'
 import '@fontsource-variable/nunito-sans/wght.css'
 import '@fontsource-variable/nunito/wght.css'
 
@@ -18,9 +19,9 @@ export const metadata: Metadata = {
   },
   description:
     'Коплю — Трачу — Помогаю. Три маленькие привычки для больших открытий. Образовательная копилка для детей и родителей.',
-  icons: { icon: '/favicon.svg' },
+  icons: { icon: '/brand/favicon.png' },
 }
-export const viewport: Viewport = { themeColor: '#F6F8F6' }
+export const viewport: Viewport = { themeColor: '#F7F2E8' }
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (

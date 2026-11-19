@@ -1,14 +1,17 @@
-export function Logo({ compact = false }: { compact?: boolean }) {
+import Image from 'next/image'
+
+export function Logo() {
   return (
-    <span className={`brand ${compact ? 'compact' : ''}`}>
-      <span className="brand-symbol" aria-hidden="true">
-        <i />
-        <i />
-        <i />
-      </span>
-      <span className="brand-words">
-        Коплю<span>Трачу · Помогаю</span>
-      </span>
+    <span className="brand">
+      <Image
+        className="brand-image"
+        src="/brand/logo.webp"
+        width={720}
+        height={409}
+        alt="Коплю — Трачу — Помогаю"
+        loading="eager"
+        unoptimized
+      />
     </span>
   )
 }

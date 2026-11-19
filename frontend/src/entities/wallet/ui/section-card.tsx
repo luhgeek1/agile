@@ -5,7 +5,7 @@ import { ArrowUpRight as Arrow } from 'lucide-react'
 import Link from 'next/link'
 
 import { categories } from '../model/categories'
-import { Jar } from './jar'
+import { Mascot } from './mascot'
 
 export function SectionCard({
   category,
@@ -18,7 +18,7 @@ export function SectionCard({
 }) {
   return (
     <Card className={`section-card pocket-card ${category}`}>
-      <Jar category={category} />
+      <Mascot category={category} />
       <h2>{categories[category].title}</h2>
       <p className="section-description">
         <span className="description-full">{categories[category].description}</span>

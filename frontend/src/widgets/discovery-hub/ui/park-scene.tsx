@@ -1,4 +1,4 @@
-import { Jar } from '@/entities/wallet'
+import { Mascot } from '@/entities/wallet'
 
 export function ParkScene() {
   return (
@@ -11,9 +11,9 @@ export function ParkScene() {
         <circle cx="278" cy="49" r="5" fill="#d7b33e" />
         <circle cx="89" cy="169" r="4" fill="#d7b33e" />
       </svg>
-      <Jar category="save" className="park-guide-save" />
-      <Jar category="spend" className="park-guide-spend" />
-      <Jar category="help" className="park-guide-help" />
+      <Mascot category="save" className="park-guide-save" />
+      <Mascot category="spend" className="park-guide-spend" />
+      <Mascot category="help" className="park-guide-help" />
       <span className="park-scene-caption">Три друга. Много открытий.</span>
     </div>
   )

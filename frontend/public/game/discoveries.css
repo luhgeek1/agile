@@ -1,14 +1,7 @@
-:root {
-  --canvas: #f6f8f6;
-  --ink: #263e3b;
-  --muted: #53675f;
-  --line: #dfe7e2;
-}
 .header { height: auto; min-height: 100px; gap: 20px; flex-wrap: wrap; padding-block: 16px; }
 .header nav { flex-wrap: wrap; }
 .help-button { min-width: 44px; min-height: 44px; }
 .skip:not(:focus) { clip-path: inset(50%); width: 1px; height: 1px; overflow: hidden; padding: 0; white-space: nowrap; }
-.nav-button.active { background: #dff3ee; color: #245f55; }
 .nav-button { min-height: 44px; }
 .practice-layout { display: grid; grid-template-columns: minmax(0, 2fr) minmax(240px, 1fr); gap: 24px; }
 .practice-position { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; font-weight: 800; }
@@ -17,7 +10,7 @@
 .situation-illustration { width: 84px; height: 84px; display: grid; place-items: center; border-radius: 25px; margin-bottom: 22px; }
 .situation-illustration svg { width: 44px; height: 44px; }
 .situation-prompt { margin: 16px 0 24px; font-size: 19px; max-width: 58ch; }
-.practice-guide { align-self: start; background: #edf2ef; }
+.practice-guide { align-self: start; background: var(--save-soft); }
 .practice-guide h2 { font-size: 23px; }
 .earned-seal { display: grid; place-items: center; width: 96px; height: 96px; margin: 0 auto 20px; border-radius: 50%; background: #fff1c9; border: 3px double #a78a35; color: #735a13; }
 .earned-seal svg { width: 48px; height: 48px; }

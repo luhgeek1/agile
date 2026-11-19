@@ -6,14 +6,14 @@ import { Check, Clock3 } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { ActivityInstructions } from '@/entities/activity'
-import { Jar } from '@/entities/wallet'
+import { Mascot } from '@/entities/wallet'
 
 export function ActivityAction({ activity, onClose }: { activity: Activity; onClose: () => void }) {
   const save = useSave(`/activities/${activity.id}/complete`, 'PUT')
   return (
     <div className="activity-detail">
       <div className={`activity-detail-art ${activity.category}`}>
-        <Jar category={activity.category} />
+        <Mascot category={activity.category} />
       </div>
       <p>{activity.description}</p>
       <ActivityInstructions activity={activity} />

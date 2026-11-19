@@ -1,15 +1,4 @@
-/* The child's workspace: tactile savings toys, quiet surfaces, clear actions. */
-:root {
-  --canvas: #f6f8f6;
-  --surface-soft: #edf2ef;
-  --line: #dfe7e2;
-  --ink: #263e3b;
-  --ink-muted: #5e706b;
-  --save-soft: #dff3ee;
-  --spend-soft: #fbe7ee;
-  --help-soft: #fff1c9;
-}
-
+/* The child's workspace: illustrated pockets, quiet surfaces, clear actions. */
 .header-inner {
   padding-block: 16px;
 }
@@ -21,14 +10,14 @@
   border-radius: 14px;
 }
 .desktop-nav a.active {
-  background: var(--spend-soft);
-  color: #a8255e;
+  background: var(--save-soft);
+  color: var(--primary);
 }
 .desktop-nav a.active::after {
   display: none;
 }
 .demo-strip {
-  background: #edf2ef;
+  background: var(--surface-soft);
   border-color: var(--line);
 }
 .app-main {
@@ -40,11 +29,11 @@
 }
 .greeting {
   margin-bottom: 10px;
-  color: #536d63;
+  color: var(--ink-muted);
   font-size: 16px;
 }
 .greeting-sun {
-  color: #98751c;
+  color: var(--brand-brown);
 }
 .home-hero h1 {
   font-size: clamp(30px, 3.3vw, 44px);
@@ -62,7 +51,7 @@
 .home-hero-side .button {
   margin: 0;
   border-radius: 16px;
-  box-shadow: 0 3px 0 #9e2357;
+  box-shadow: 0 3px 0 var(--primary-hover);
 }
 .home-hero-side .button:active {
   box-shadow: none;
@@ -94,9 +83,9 @@
   overflow: hidden;
 }
 .pocket-card .jar {
-  width: calc(100% + 28px);
-  margin: 0 -14px 2px;
-  height: 174px;
+  width: 100%;
+  margin: 4px 0 14px;
+  height: clamp(122px, 12vw, 166px);
 }
 .pocket-card h2 {
   font-size: 27px;
@@ -106,7 +95,7 @@
   font-size: 13px;
   min-height: 39px;
   margin-top: 4px;
-  color: #4d635e;
+  color: var(--ink-muted);
 }
 .pocket-card .section-bottom {
   display: flex;
@@ -155,19 +144,6 @@
   flex-shrink: 0;
   margin-top: 2px;
 }
-.jar-character,
-.jar-accessory {
-  transform-origin: 120px 175px;
-  transition: transform 220ms ease;
-}
-@media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  .pocket-card:has(.section-add:hover) .jar-character {
-    transform: translateY(-3px) rotate(-3deg);
-  }
-  .pocket-card:has(.section-add:hover) .jar-accessory {
-    transform: translateY(5px);
-  }
-}
 .home-goal {
   padding-top: 0;
 }
@@ -183,7 +159,7 @@
   font-size: 13px;
   text-transform: none;
   letter-spacing: 0;
-  color: #536d63;
+  color: var(--ink-muted);
   font-weight: 800;
 }
 .goal-art-stage {
@@ -255,32 +231,6 @@
 .goal-large .goal-art-stage .goal-art {
   height: 210px;
   max-height: 210px;
-}
-.welcome-intro h1 {
-  max-width: 700px;
-  margin-inline: auto;
-  font-size: clamp(36px, 5vw, 58px);
-  line-height: 1.1;
-  letter-spacing: -1.7px;
-}
-.welcome-jar {
-  padding-top: 14px;
-  border-radius: 30px;
-}
-.welcome-jar:nth-child(1),
-.welcome-jar:nth-child(2),
-.welcome-jar:nth-child(3) {
-  transform: none;
-}
-.welcome-jar .jar {
-  max-height: 210px;
-}
-.welcome-intro .eyebrow {
-  text-transform: none;
-  letter-spacing: 0;
-}
-.welcome-parent {
-  background: white;
 }
 
 @media (min-width: 768px) and (max-width: 1100px) {
@@ -381,9 +331,9 @@
   .pocket-card .jar {
     grid-column: 1;
     grid-row: 1 / 4;
-    width: 124px;
-    height: 112px;
-    margin: -6px -9px -4px;
+    width: 92px;
+    height: 92px;
+    margin: 0 auto;
   }
   .pocket-card h2 {
     grid-column: 2;
@@ -498,33 +448,6 @@
   .mobile-nav a {
     font-size: 12px;
   }
-  .mobile-nav a.active {
-    color: #a8255e;
-  }
-  .welcome-intro h1 {
-    font-size: 40px;
-    max-width: 350px;
-    letter-spacing: -1px;
-  }
-  .welcome-jars {
-    gap: 8px;
-    margin-top: 28px;
-  }
-  .welcome-jar {
-    border-radius: 20px;
-    padding: 10px 5px 18px;
-  }
-  .welcome-jar .jar {
-    width: calc(100% + 14px);
-    margin-left: -7px;
-    height: 100px;
-  }
-  .welcome-jar h2 {
-    font-size: 18px;
-  }
-  .welcome-jar p {
-    font-size: 12px;
-  }
 }
 
 @media (max-width: 380px) {
@@ -540,7 +463,7 @@
     padding-right: 13px;
   }
   .pocket-card .jar {
-    width: 112px;
+    width: 82px;
   }
   .pocket-card h2 {
     font-size: 22px;
@@ -554,15 +477,5 @@
   }
   .home-goal .goal-card h2 {
     font-size: 18px;
-  }
-  .welcome-jar h2 {
-    font-size: 16px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .jar-character,
-  .jar-accessory {
-    transition: none;
   }
 }

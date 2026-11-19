@@ -29,7 +29,7 @@ export function routePanel(route, count, total, icon, park) {
   </section>`;
 }
 
-export function mapView({ missions, routes, state, selectedRoute, icon, park, jar }) {
+export function mapView({ missions, routes, state, selectedRoute, icon, park, mascot }) {
   const count = state.completed.length;
   const total = missions.length;
   const complete = count === total;
@@ -56,7 +56,7 @@ export function mapView({ missions, routes, state, selectedRoute, icon, park, ja
     </div>
     <div class="map-layout">
       ${routePanel(routes[routeIndex], count, total, icon, park)}
-      <aside class="guide-card">${jar('save', 'guide-art')}
+      <aside class="guide-card">${mascot('save', 'guide-art')}
         <div class="tiny">${complete && !active ? 'Твои открытия' : `История ${target + 1} из ${total}`}</div>
         <h2>${complete && !active ? 'Весь парк открыт' : story.title}</h2>
         <p>${active ? 'Мы сохранили твой выбор. Продолжим с того же места?' : complete
