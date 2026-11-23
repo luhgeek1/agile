@@ -1,8 +1,58 @@
-/* Quiet, interruptible motion; CSS entrances also work before hydration. */
-.page { animation: page-arrive 320ms cubic-bezier(.2, .8, .2, 1) both; }
+/* CSS entrances also work before hydration. */
+:root {
+  --motion-press: 90ms;
+  --motion-quick: 180ms;
+  --motion-move: 320ms;
+  --motion-out: cubic-bezier(.2, .8, .2, 1);
+}
+.page { animation: page-arrive var(--motion-move) var(--motion-out) both; }
 @keyframes page-arrive { from { opacity: .8; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-.button, .icon-button, .habit-trail { transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 240ms cubic-bezier(.2, .8, .2, 1); }
-.button:active:not(:disabled), .icon-button:active:not(:disabled), .habit-trail:active:not(:disabled) { transform: scale(.97); transition-duration: 70ms; }
+
+.button, .icon-button, .task-row, .section-add, .category-option, .illustration-picker button,
+.action-tabs button, .quick-amounts button, .desktop-nav a, .mobile-nav a, .parent-link {
+  transition:
+    background-color var(--motion-quick) ease,
+    border-color var(--motion-quick) ease,
+    color var(--motion-quick) ease,
+    box-shadow var(--motion-quick) ease,
+    scale var(--motion-quick) var(--motion-out);
+}
+:is(.button, .icon-button, .task-row, .section-add, .category-option, .illustration-picker button,
+.action-tabs button, .quick-amounts button, .parent-link):active:not(:disabled) {
+  scale: .98;
+  transition-duration: var(--motion-press);
+}
+.desktop-nav, .mobile-nav { isolation: isolate; }
+.desktop-nav a, .mobile-nav a { position: relative; }
+.desktop-nav a.active, .mobile-nav a.active { background: transparent; }
+.nav-active-fill {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--save-soft);
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .task-progress-track > span { transition: transform var(--motion-move) var(--motion-out); }
+  .task-row-mascot { transition: translate var(--motion-move) var(--motion-out); }
+  .task-row-featured .task-row-mascot { animation: detail-in 240ms var(--motion-out); }
+  .welcome-art .jar { animation: detail-in 440ms var(--motion-out) both; }
+  .welcome-art .welcome-mascot-spend { animation-delay: 45ms; }
+  .welcome-art .welcome-mascot-help { animation-delay: 85ms; }
+  .pocket-amount { display: inline-block; animation: detail-in 240ms var(--motion-out); }
+  .history-day .transaction-item, .activity-detail .success-inline, .feedback-success {
+    animation: detail-in 240ms var(--motion-out);
+  }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .task-row-featured:hover .task-row-mascot { translate: 0 -4px; }
+}
+@keyframes detail-in {
+  from { opacity: .78; translate: 0 5px; }
+  to { opacity: 1; translate: 0 0; }
+}
+
 .progress-fill { transition: none; }
 .segmented-control { display: inline-flex; gap: 2px; padding: 4px; border: 1px solid var(--line); border-radius: 17px; background: #edf1ee; isolation: isolate; max-width: 100%; }
 .segmented-control button { position: relative; min-height: 44px; padding: 10px 17px; border: 0; background: transparent; border-radius: 13px; color: var(--ink-muted); font-size: 14px; font-weight: 800; transition: color 180ms ease; }
@@ -30,6 +80,9 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .page, .dialog-content[data-state], .dialog-overlay[data-state] { animation: none; }
-  .button, .icon-button, .habit-trail { transition: none; }
-  .button:active:not(:disabled), .icon-button:active:not(:disabled), .habit-trail:active:not(:disabled) { transform: none; }
+  :is(.button, .icon-button, .task-row, .section-add, .category-option, .illustration-picker button,
+  .action-tabs button, .quick-amounts button, .parent-link):active:not(:disabled) {
+    scale: none;
+    transform: none;
+  }
 }

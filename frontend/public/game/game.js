@@ -119,7 +119,13 @@ let parentAccess;
 if (page === 'game' && !state.active) page = 'map';
 const main=document.querySelector('main');
 const modal=document.querySelector('#modal');
+const storageNotice = document.createElement('p');
+storageNotice.className = 'storage-note';
+storageNotice.textContent = 'После закрытия страницы игра может начаться заново.';
+let sceneElement = document.createElement('div');
+main.append(storageNotice, sceneElement);
 let modalTrigger = null;
+let renderedScene;
 modal.addEventListener('close', () => {
  (modalTrigger?.isConnected ? modalTrigger : main).focus({ preventScroll: true });
 });
@@ -133,7 +139,18 @@ function render(focus=true){
    : page === 'parents' ? parentView()
    : page === 'game' ? gameView()
    : mapView({ missions, routes, state, selectedRoute, icon, park, mascot });
- main.innerHTML = (!storageAvailable ? '<p class="storage-note">После закрытия страницы игра может начаться заново.</p>' : '') + view;
+ const scene = page === 'game'
+   ? `game:${state.active.id}:${state.active.phase}:${state.active.confirmed}`
+   : page === 'practice' ? `practice:${practiceProgress().cursor}` : page;
+ if (scene !== renderedScene) {
+   const next = document.createElement('div');
+   next.className = 'game-scene game-scene-enter';
+   sceneElement.replaceWith(next);
+   sceneElement = next;
+   renderedScene = scene;
+ }
+ storageNotice.hidden = storageAvailable;
+ sceneElement.innerHTML = view;
  const title = page === 'game' ? missions[state.active.id].title
    : page === 'parents' ? 'Родителям' : page === 'practice' ? 'Мастерская решений'
    : page === 'collection' ? 'Мои значки' : 'Парк маленьких открытий';

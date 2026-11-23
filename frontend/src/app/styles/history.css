@@ -111,8 +111,8 @@
   min-height: 44px;
   color: var(--primary);
 }
-.history-results { transition: opacity 180ms ease; }
-.history-results[aria-busy=true] { opacity: .64; }
+.history-results { transition: opacity var(--motion-quick) ease; }
+.history-results[aria-busy=true] { opacity: .84; }
 @container (max-width: 390px) {
   .history-day {
     display: block;

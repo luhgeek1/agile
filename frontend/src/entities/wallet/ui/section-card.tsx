@@ -25,7 +25,11 @@ export function SectionCard({
         <span className="description-short">{categories[category].short}</span>
       </p>
       <div className="section-bottom">
-        <strong data-testid={`balance-${category}`}>{money(amount)}</strong>
+        <strong data-testid={`balance-${category}`}>
+          <span className="pocket-amount" key={amount}>
+            {money(amount)}
+          </span>
+        </strong>
         <button
           className="section-add"
           aria-label={`Добавить деньги в «${categories[category].title}»`}

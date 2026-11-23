@@ -17,6 +17,7 @@ import {
   Users,
   X,
 } from 'lucide-react'
+import { motion } from 'motion/react'
 import { useEffect, useState, type PropsWithChildren } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
@@ -29,6 +30,40 @@ const navItems = [
   { to: '/app/activities', icon: Sparkles, text: 'Задания', short: 'Задания' },
   { to: '/game/index.html', icon: Gamepad2, text: 'Игра', short: 'Игра', external: true },
 ]
+function ProductNav({ pathname, mobile = false }: { pathname: string; mobile?: boolean }) {
+  return (
+    <motion.nav
+      className={mobile ? 'mobile-nav' : 'desktop-nav'}
+      aria-label={mobile ? 'Навигация на телефоне' : 'Основная навигация'}
+      layoutRoot={mobile}
+    >
+      {navItems.map(({ to, icon: Icon, text, short, end, external }) => {
+        const NavLink = external ? 'a' : Link
+        const active = end ? pathname === to : pathname.startsWith(to)
+        return (
+          <NavLink
+            key={to}
+            href={to}
+            className={active ? 'active' : undefined}
+            aria-current={active ? 'page' : undefined}
+          >
+            {active && (
+              <motion.span
+                className="nav-active-fill"
+                layoutId={mobile ? 'mobile-active' : 'desktop-active'}
+                transition={{ type: 'spring', bounce: 0, duration: 0.3 }}
+                aria-hidden="true"
+              />
+            )}
+            {mobile && <Icon size={23} strokeWidth={1.8} aria-hidden="true" />}
+            <span>{mobile ? short : text}</span>
+          </NavLink>
+        )
+      })}
+    </motion.nav>
+  )
+}
+
 export function ProductLayout({ children }: PropsWithChildren) {
   const query = useAppState()
   const pathname = usePathname()
@@ -95,25 +130,7 @@ export function ProductLayout({ children }: PropsWithChildren) {
           )}
           {!isParent && (
             <>
-              <nav className="desktop-nav" aria-label="Основная навигация">
-                {navItems.map(({ to, text, end, external }) => {
-                  const NavLink = external ? 'a' : Link
-                  return (
-                    <NavLink
-                      key={to}
-                      href={to}
-                      className={
-                        (end ? pathname === to : pathname.startsWith(to)) ? 'active' : undefined
-                      }
-                      aria-current={
-                        (end ? pathname === to : pathname.startsWith(to)) ? 'page' : undefined
-                      }
-                    >
-                      {text}
-                    </NavLink>
-                  )
-                })}
-              </nav>
+              <ProductNav pathname={pathname} />
               <div className="header-actions">
                 <Link
                   href="/app/parent"
@@ -180,26 +197,7 @@ export function ProductLayout({ children }: PropsWithChildren) {
             </Link>
             <span>Образовательный прототип · НЦФГ</span>
           </footer>
-          <nav className="mobile-nav" aria-label="Навигация на телефоне">
-            {navItems.map(({ to, icon: Icon, short, end, external }) => {
-              const NavLink = external ? 'a' : Link
-              return (
-                <NavLink
-                  key={to}
-                  href={to}
-                  className={
-                    (end ? pathname === to : pathname.startsWith(to)) ? 'active' : undefined
-                  }
-                  aria-current={
-                    (end ? pathname === to : pathname.startsWith(to)) ? 'page' : undefined
-                  }
-                >
-                  <Icon size={23} strokeWidth={1.8} />
-                  <span>{short}</span>
-                </NavLink>
-              )
-            })}
-          </nav>
+          <ProductNav pathname={pathname} mobile />
         </>
       )}
       <OperationDialog

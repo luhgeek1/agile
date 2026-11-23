@@ -126,9 +126,6 @@
   background: white;
   transform: none;
 }
-.pocket-card .section-add:active {
-  transform: scale(0.97);
-}
 .pocket-card .category-history {
   font-size: 12px;
   margin-top: 12px;

@@ -1,6 +1,7 @@
 import type { Activity } from '@/entities/activity'
 import { CategoryIcon, Mascot } from '@/entities/wallet'
 import { ArrowRight, ArrowUpRight, Check, ChevronRight, Clock3 } from 'lucide-react'
+import { motion } from 'motion/react'
 import Link from 'next/link'
 
 export function HomeTasks({
@@ -29,7 +30,15 @@ export function HomeTasks({
           <span role="status">
             Выполнено {completed} из {activities.length}
           </span>
-          <progress value={completed} max={activities.length} aria-label="Прогресс заданий" />
+          <progress
+            className="sr-only"
+            value={completed}
+            max={activities.length}
+            aria-label="Прогресс заданий"
+          />
+          <span className="task-progress-track" aria-hidden="true">
+            <span style={{ transform: `scaleX(${completed / activities.length})` }} />
+          </span>
         </div>
         <ul className="task-board-list">
           {tasks.map((activity, index) => {
@@ -37,7 +46,12 @@ export function HomeTasks({
             const done = Boolean(activity.completed_at)
             const action = done ? 'Вспомнить' : featured ? 'Начать задание' : 'Открыть задание'
             return (
-              <li key={activity.id}>
+              <motion.li
+                key={activity.id}
+                layout="position"
+                layoutDependency={next.id}
+                transition={{ type: 'spring', duration: 0.32, bounce: 0 }}
+              >
                 <button
                   type="button"
                   className={`task-row ${activity.category}${featured ? ' task-row-featured' : ''}`}
@@ -72,7 +86,7 @@ export function HomeTasks({
                     <ChevronRight className="task-row-chevron" size={18} aria-hidden="true" />
                   )}
                 </button>
-              </li>
+              </motion.li>
             )
           })}
         </ul>

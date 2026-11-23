@@ -150,3 +150,36 @@
   .manual-plan .jars { grid-template-columns: 1fr; }
 }
 .report-export { margin-top: 16px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .game-scene-enter {
+    animation: game-scene-in 300ms cubic-bezier(.2, .8, .2, 1);
+  }
+  .play-disclosure[open] > :not(summary), .feedback:not(:empty), #modal[open] {
+    animation: game-scene-in 220ms cubic-bezier(.2, .8, .2, 1);
+  }
+  .game-global-nav a, .primary, .secondary, .choice, .shop-item, .quiz-option,
+  .discovery-badge, .counter button, .play-disclosure summary {
+    transition:
+      background-color 170ms ease,
+      color 170ms ease,
+      border-color 170ms ease,
+      transform 180ms cubic-bezier(.2, .8, .2, 1);
+  }
+  :is(.primary, .secondary, .choice, .shop-item, .quiz-option, .discovery-badge,
+  .counter button):active:not(:disabled) {
+    transform: scale(.98);
+    transition-duration: 90ms;
+  }
+  .choice.selected .choice-art, .shop-item.selected .item-toggle, .quiz-option.correct {
+    animation: answer-in 190ms cubic-bezier(.2, .8, .2, 1);
+  }
+}
+@keyframes game-scene-in {
+  from { opacity: .78; translate: 0 7px; }
+  to { opacity: 1; translate: 0 0; }
+}
+@keyframes answer-in {
+  from { scale: .96; }
+  to { scale: 1; }
+}
