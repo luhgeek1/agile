@@ -807,27 +807,16 @@ main:focus {
 .home-bottom {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  align-items: start;
   column-gap: 24px;
   margin-top: 32px;
 }
 .home-task,
 .home-recent {
-  display: grid;
-  grid-row: span 3;
-  grid-template-rows: subgrid;
   min-width: 0;
 }
 .home-task > .section-heading {
   margin-inline: 14px;
-}
-.home-task {
-  grid-row: span 4;
-}
-.home-task > .activity-carousel {
-  display: grid;
-  grid-row: span 2;
-  grid-template-rows: subgrid;
 }
 .activity-card {
   padding: 24px;
@@ -2524,17 +2513,8 @@ main:focus {
   }
   .home-bottom {
     grid-template-columns: 1fr;
-    grid-template-rows: none;
     gap: 26px;
     margin-top: 28px;
-  }
-  .home-task,
-  .home-recent {
-    display: block;
-    grid-row: auto;
-  }
-  .home-task > .activity-carousel {
-    display: block;
   }
   .featured-activity {
     padding: 22px;
