@@ -18,26 +18,26 @@ const firstStories = [
       ['Наклейки',40,'','star','Украшение для твоих вещей'],
       ['Обойдусь без покупки',0,'','kite','Сохраню монеты на другой раз'],
     ],result:'У мечты появился план',title:'Мечта взлетает',place:'Мастерская воздушных змеев',topic:'Копим на мечту',budget:100,initial:60,goal:120,art:'kite',
-    intro:'У тебя уже есть 60 монет на воздушного змея. Он стоит 120. Распредели ещё 100 монет между тремя отсеками.',
+    intro:'Змей стоит 120 монет. Ты уже накопил 60.',
     aside:'Отложенные монеты приближают мечту. Можно оставить часть на покупки и помощь — решение за тобой.',
-    eventTitle:'По дороге в мастерскую',eventText:'У киоска продаются мороженое и наклейки. Хочешь что-нибудь купить? На это можно использовать монеты из отсека «Трачу».',
+    eventTitle:'Заглянем в киоск?',eventText:'Выбери покупку или оставь монеты на потом.',
     question:'Что произойдёт с накоплениями, если взять 20 монет из «Коплю» на другую покупку?',
     answers:['В «Коплю» станет на 20 монет меньше.','Ничего: накопления не изменятся.','Мечта сразу станет дешевле.'],correct:0,
-    explanation:'Одна и та же монета не может оплатить две покупки. Если тратить из «Коплю», накопления уменьшаются. Это может отдалить покупку мечты.',
+    explanation:'Если взять 20 монет из «Коплю», на мечту останется на 20 меньше.',
     family:'Придумайте вместе небольшую цель. Сколько она стоит? Сколько уже есть? Обсудите, какую часть следующих карманных денег ребёнок хочет отложить.',
     talk:'Почему ты выбрал именно такое распределение? Что изменится, если отложить на 10 монет больше?'
   },
   {id:1,from:1,items:[
-      {name:'Фрукты',desc:'Чтобы перекусить',price:30,icon:'fruit'},
-      {name:'Вода',desc:'Чтобы утолить жажду',price:20,icon:'water'},
+      {name:'Фрукты',needed:true,desc:'Чтобы перекусить',price:30,icon:'fruit'},
+      {name:'Вода',needed:true,desc:'Чтобы утолить жажду',price:20,icon:'water'},
       {name:'Вертушка',desc:'Поиграть на ветру',price:50,icon:'toy'},
     ],result:'У каждой покупки есть цена',title:'Пикник без лишнего',place:'Лавка у большой поляны',topic:'Выбираем покупки',budget:80,initial:0,goal:50,art:'basket',
-    intro:'На пикник нужно купить фрукты за 30 монет и воду за 20. У тебя 80 монет. Сначала реши, сколько оставить на покупки, накопления и помощь.',
+    intro:'На пикник нужны фрукты и вода.',
     aside:'Фрукты и вода обойдутся в 50 монет. Сначала план, потом покупки. Необязательно тратить всё, что есть.',
-    eventTitle:'Что положим в корзину?',eventText:'Для пикника нужны фрукты и вода. В лавке есть ещё игрушечная вертушка. Собери корзину в пределах отсека «Трачу».',
+    eventTitle:'Что положим в корзину?',eventText:'Положи в корзину фрукты и воду. Хватит ли монет на вертушку?',
     question:'Монет не хватает на всё. Что поможет собрать нужное для пикника?',
     answers:['Купить самое яркое, а потом посмотреть на остаток.','Сначала посчитать стоимость нужных покупок.','Положить в корзину всё — денег станет больше.'],correct:1,
-    explanation:'Список и подсчёт помогают сначала купить нужное. Остальные покупки можно выбрать позже, если хватит денег.',
+    explanation:'Сначала посчитай, сколько стоят нужные покупки.',
     family:'Перед небольшой покупкой составьте список из двух нужных вещей и одной желаемой. Посчитайте стоимость и обсудите, что помещается в бюджет.',
     talk:'Какие покупки были нужны именно для пикника? Было ли трудно отказаться от вертушки?'
   },
@@ -46,12 +46,12 @@ const firstStories = [
       ['Помогу полить цветы',0,'','water','Вместе со взрослым'],
       ['Нарисую табличку для клумбы',0,'','star','Помогу своим временем и умением'],
     ],result:'Помогать можно по-разному',title:'Добро по силам',place:'Сад добрых дел',topic:'Помогаем по-разному',budget:60,initial:0,goal:30,art:'plant',
-    intro:'Соседи хотят посадить цветы в парке. Можно купить семена за 30 монет или помочь с поливом вместе со взрослым. Распредели свои 60 монет.',
+    intro:'Соседи сажают цветы. Им пригодится твоя помощь.',
     aside:'Помощь бывает разной: деньгами, временем, заботой. Выбери посильный способ — здесь нет соревнования, кто отдаст больше.',
-    eventTitle:'Как поможем саду?',eventText:'Выбери посильное доброе дело. Для покупки семян есть отсек «Помогаю». Полив и рисунок для таблички не требуют монет.',
+    eventTitle:'Как помочь саду?',eventText:'Выбери, чем хочешь помочь.',
     question:'У друга нет свободных денег. Может ли он помочь саду?',
     answers:['Нет, помощь всегда стоит денег.','Да, но только если отдаст все накопления.','Да: например, полить цветы вместе со взрослым.'],correct:2,
-    explanation:'Время, внимание и забота тоже помогают. Доброе дело можно выбрать по своим возможностям и обсудить со взрослым.',
+    explanation:'Можно помочь делом. Например, полить цветы.',
     family:'Выберите одно небольшое доброе дело на неделю. Например, вместе полить растения или помочь знакомому. Денежная помощь не обязательна.',
     talk:'Какой способ помощи тебе ближе? Что можно сделать без денег и с кем это безопасно обсудить?'
   }
@@ -113,7 +113,9 @@ function validRun(a) {
    Number.isFinite(Date.parse(a.finishedAt)));
 }
 try{const raw=JSON.parse(localStorage.getItem(STORAGE_KEY)||'null');if(raw&&raw.version===1&&Array.isArray(raw.completed)&&raw.completed.length<=missions.length&&raw.completed.every((r,i)=>r.id===i&&validRun(r)&&r.phase==='result'&&r.quizPassed)&&(!raw.active||validRun(raw.active)&&raw.active.id<=raw.completed.length)){state=raw;}}catch{storageAvailable=false;}
-let page = ['practice', 'parents', 'game'].includes(location.hash.slice(1)) ? location.hash.slice(1) : 'map';
+const screens = ['practice', 'collection', 'parents', 'game'];
+let page = screens.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'map';
+let parentAccess;
 if (page === 'game' && !state.active) page = 'map';
 const main=document.querySelector('main');
 const modal=document.querySelector('#modal');
@@ -126,17 +128,31 @@ function announce(t){document.querySelector('#announce').textContent=t;}
 function focusMain(){main.focus({preventScroll:true});window.scrollTo({top:0,behavior:'instant'});}
 function render(focus=true){
  if (focus && location.hash !== `#${page}`) history.pushState(null, '', `#${page}`);
- document.querySelectorAll('[data-nav]').forEach(b=>b.classList.toggle('active',b.dataset.nav===page));
- main.innerHTML=(!storageAvailable?'<div class="storage-note">Браузер не разрешает сохранять прогресс. Игра работает, но после закрытия страницы путь может начаться заново.</div>':'')+(page==='practice'?practiceView(icon):page==='parents'?parentView():page==='game'&&state.active?gameView():mapView({missions,routes,state,selectedRoute,icon,park,mascot}));
- document.title=(page==='game'?missions[state.active.id].title:page==='parents'?'Родителям':'Парк маленьких открытий')+' · Коплю — Трачу — Помогаю';
- if(page==='map' || page==='parents') main.insertAdjacentHTML('beforeend',collectionView(state.completed,missions.length,icon,art));
- if(page==='practice') document.title='Мастерская решений · Коплю — Трачу — Помогаю';
- if(page==='game' && state.active.phase==='result') {
-   const title=earnedTitle(state.active.id, missions.length);
-   if(title) main.querySelector('.badge').textContent='Значок в коллекции · '+title;
-   main.querySelector('.family-task').insertAdjacentHTML('beforeend','<a class="back" href="/app/activities">Выбрать дело с настоящей копилкой →</a>');
- }
- if(focus)focusMain();
+ const view = page === 'practice' ? practiceView(icon)
+   : page === 'collection' ? `<button class="back" data-nav="map">${icon('back')} В парк</button>${collectionView(state.completed, missions.length, icon, art)}`
+   : page === 'parents' ? parentView()
+   : page === 'game' ? gameView()
+   : mapView({ missions, routes, state, selectedRoute, icon, park, mascot });
+ main.innerHTML = (!storageAvailable ? '<p class="storage-note">После закрытия страницы игра может начаться заново.</p>' : '') + view;
+ const title = page === 'game' ? missions[state.active.id].title
+   : page === 'parents' ? 'Родителям' : page === 'practice' ? 'Мастерская решений'
+   : page === 'collection' ? 'Мои значки' : 'Парк маленьких открытий';
+ document.title = `${title} · Коплю — Трачу — Помогаю`;
+ if (focus) focusMain();
+}
+async function hasParentAccess() {
+  try {
+    const response = await fetch('/api/demo/parent', { cache: 'no-store', signal: AbortSignal.timeout(8000) });
+    return response.ok && (await response.json()).unlocked === true;
+  } catch {
+    return false;
+  }
+}
+async function checkParentAccess() {
+  parentAccess = undefined;
+  render(false);
+  parentAccess = await hasParentAccess();
+  if (page === 'parents') render(false);
 }
 main.addEventListener('change', event => {
  if (event.target.id !== 'route-select') return;
@@ -164,7 +180,6 @@ function allocatedBalance(a,index){
 function balance(a,index){
  return allocatedBalance(a,index)-(index===missions[a.id].from?spent(a):0);
 }
-function balances(a){return `<div class="balances">${cats.map((c,i)=>`<span class="balance ${c}">${names[i]}: ${balance(a,i)}</span>`).join('')}</div>`}
 function hasSelection(a){
  return missions[a.id].items ? a.items.length>0 : a.choice!==null;
 }
@@ -175,18 +190,97 @@ function chosen(a){
  const m=missions[a.id];
  return m.items ? a.items.map(i=>m.items[i].name) : m.options[a.choice][0];
 }
-function gameView(){const a=current(),m=missions[a.id];if(a.phase==='result')return resultView(a);const step=['allocate','event','quiz'].indexOf(a.phase);
- return `<div class="game-head"><button class="back" data-nav="map">${icon('back')} Карта приключений</button><div class="steps"><span class="steps-label">${['Распредели','Выбери','Разберись'][step]}</span>${[0,1,2].map(i=>`${i?'<i class="step-line"></i>':''}<span class="step-dot ${i===step?'current':i<step?'done':''}" ${i===step?'aria-current="step"':''}>${i<step?'✓':i+1}</span>`).join('')}</div></div><div class="game-title"><div class="eyebrow">История ${a.id+1} · ${m.topic}</div><h1>${a.phase==='allocate'?m.title:a.phase==='event'?m.eventTitle:'Маленькое открытие'}</h1><p>${a.phase==='allocate'?'У каждой монеты может быть свой план.':a.phase==='event'?'Посмотри на свои возможности и сделай выбор.':'Один вопрос, чтобы разобраться в своём решении.'}</p></div>
- <div class="game-layout"><section class="game-board" aria-label="Задание">${a.phase==='allocate'?allocationView(a):a.phase==='event'?eventView(a):quizView(a)}</section><aside class="side-note">${art(m.art,'scene-art')}<h3>${m.place??m.topic}</h3><p>${m.aside}</p>${(m.goal&&m.from===0)||a.id===0?`<div class="goal-number"><span id="goal-saved">${balance(a,0)}</span> <span class="micro">из ${m.goal} монет</span></div><div class="meter" role="progressbar" aria-label="Накоплено на цель" aria-valuemin="0" aria-valuemax="${m.goal}" aria-valuenow="${Math.min(balance(a,0),m.goal)}"><span style="width:${Math.min(balance(a,0)/m.goal*100,100)}%"></span></div>`:''}<div class="small-note">${icon('info')} Игровые монеты не меняют баланс настоящей копилки.</div></aside></div>`;
+function gameView() {
+  const a = current();
+  const m = missions[a.id];
+  if (a.phase === 'result') return resultView(a);
+  const step = ['allocate', 'event', 'quiz'].indexOf(a.phase);
+  const title = [m.title, m.eventTitle, m.question][step];
+  return `<div class="story-screen">
+    <div class="game-head">
+      <button class="back" data-nav="map">${icon('back')} В парк</button>
+      <span class="story-step">Шаг ${step + 1} из 3</span>
+    </div>
+    <div class="game-title"><p class="story-number">История ${a.id + 1} из ${missions.length}</p><h1>${title}</h1></div>
+    <section class="game-board" aria-label="Ход игры">
+      ${[allocationView, eventView, quizView][step](a)}
+    </section>
+  </div>`;
 }
-function allocationView(a){const m=missions[a.id],remaining=m.budget-a.alloc.reduce((s,n)=>s+n,0);return `<div class="narration">${mascot('save','mini-jar')}<div><strong>Давай начнём с плана</strong><p>${m.intro}</p></div></div><div class="coin-bank"><div><h2>Распредели монеты</h2><p>Кнопки + и − добавляют и возвращают 10 монет.</p></div><div class="coin-count"><span class="coin" aria-hidden="true">₽</span><output id="remaining" aria-label="Осталось распределить">${remaining}</output></div></div><div class="jars">${cats.map((c,i)=>`<section class="jar-card ${c}">${mascot(c)}<h3>${names[i]}</h3><p>${['На большую мечту','На небольшие покупки','На добрые дела'][i]}</p><div class="counter"><button data-adjust="${i}" data-delta="-10" aria-label="Вернуть 10 монет из ${names[i]}" ${a.alloc[i]===0?'disabled':''}>−</button><output id="alloc-${i}" aria-label="Положено в ${names[i]}">${a.alloc[i]}</output><button data-adjust="${i}" data-delta="10" aria-label="Положить 10 монет в ${names[i]}" ${remaining===0?'disabled':''}>+</button></div>${i===0&&m.initial?`<span class="balance-desc">Ещё ${m.initial} монет уже накоплено</span>`:''}</section>`).join('')}</div><div class="action-row"><p class="action-hint" id="alloc-hint">${remaining?`Осталось распределить ${remaining} монет. Можно выбрать любые пропорции.`:'Все монеты на своих местах. План готов!'}</p><button class="primary" data-action="allocation-next" ${remaining?'disabled':''}>План готов ${icon('arrow')}</button></div>`;}
-function updateAllocation(index,delta){const a=current();if(!a||a.phase!=='allocate')return;const remain=missions[a.id].budget-a.alloc.reduce((s,n)=>s+n,0);if(a.alloc[index]+delta<0||delta>remain)return;a.alloc[index]+=delta;persist();const next=remain-delta;document.querySelector('#remaining').textContent=next;document.querySelector(`#alloc-${index}`).textContent=a.alloc[index];document.querySelectorAll('[data-adjust]').forEach(b=>{b.disabled=Number(b.dataset.delta)>0?next===0:a.alloc[Number(b.dataset.adjust)]===0;});document.querySelector('[data-action="allocation-next"]').disabled=next!==0;document.querySelector('#alloc-hint').textContent=next?`Осталось распределить ${next} монет. Можно выбрать любые пропорции.`:'Все монеты на своих местах. План готов!';const meter=document.querySelector('.side-note .meter');
- if(meter){const saved=balance(a,0),goal=missions[a.id].goal;document.querySelector('#goal-saved').textContent=saved;meter.setAttribute('aria-valuenow',Math.min(saved,goal));meter.firstElementChild.style.width=Math.min(saved/goal*100,100)+'%';}announce(`${names[index]}: ${a.alloc[index]}. Осталось распределить: ${next}.`);}
-function eventView(a){const m=missions[a.id];let content='';
- if(m.items){content=`<div class="shop-grid">${m.items.map((it,i)=>`<button class="shop-item ${a.items.includes(i)?'selected':''}" data-item="${i}" aria-pressed="${a.items.includes(i)}" ${a.confirmed?'disabled':''}>${icon(it.icon)}<strong>${it.name}</strong><small>${it.desc}</small><span class="price">${it.price} монет</span><span class="item-toggle">${a.items.includes(i)?'✓ В корзине':'+ В корзину'}</span></button>`).join('')}</div><div class="receipt"><span>Корзина: <strong>${selectionCost(a)} монет</strong></span><span>Бюджет: <strong>${allocatedBalance(a,m.from)}</strong></span></div>`;
- }else {
- content=`<div class="choice-list">${m.options.map(([t,p,,im=m.art,d],i)=>`<button class="choice ${a.choice===i?'selected':''}" data-choice="${i}" aria-pressed="${a.choice===i}" ${a.confirmed?'disabled':''}><span class="choice-art">${im==='kite'?art('kite'):icon(im)}</span><span><strong>${t}</strong>${d?`<small>${d}</small>`:''}</span><span class="price">${p?p+' монет':'0 монет'}</span></button>`).join('')}</div>`;}
- return `<div class="narration">${mascot(cats[m.from],'mini-jar')}<div><strong>Твой выбор имеет значение</strong><p>${m.eventText}</p></div></div>${balances(a)}${content}<div id="event-feedback" class="feedback ${a.confirmed?'':'error'}" role="status">${a.confirmed?eventFeedback(a):''}</div><div class="action-row">${!a.confirmed?'<button class="text-button" data-action="replan">← Изменить распределение</button>':'<p class="action-hint">Решение сохранено. Теперь обсудим, что получилось.</p>'}<button class="primary" data-action="${a.confirmed?'to-quiz':'confirm-event'}" ${!a.confirmed&&!hasSelection(a)?'disabled':''}>${a.confirmed?'Что я узнал':'Выбираю так'} ${icon('arrow')}</button></div>`;
+
+function readyPlan(m) {
+  if (m.plan) return [...m.plan];
+  const cost = m.items
+    ? m.items.filter(item => item.needed).reduce((sum, item) => sum + item.price, 0)
+    : Math.max(...m.options.map(option => option[1]));
+  const plan = [0, 0, 0];
+  plan[m.from] = Math.min(m.budget, Math.max(0, Math.ceil((cost - (m.from === 0 ? m.initial ?? 0 : 0)) / 10) * 10));
+  plan[m.from === 0 ? 1 : 0] = m.budget - plan[m.from];
+  return plan;
+}
+
+function allocationView(a) {
+  const m = missions[a.id];
+  const remaining = m.budget - a.alloc.reduce((sum, coins) => sum + coins, 0);
+  const plan = readyPlan(m);
+  return `<div class="plan-intro">${art(m.art, 'scene-art')}<div><p>${m.intro}</p>
+    <p class="plan-bank">Есть ещё ${m.budget} монет</p></div></div>
+    <ul class="plan-pockets" aria-label="Готовый план">
+      ${names.map((name, index) => `<li class="${cats[index]}"><span>${name}</span><strong>${plan[index]}</strong></li>`).join('')}
+    </ul>
+    <button class="primary" data-action="ready-plan">Играть с этим планом ${icon('arrow')}</button>
+    <details class="play-disclosure manual-plan" ${a.alloc.some(Boolean) ? 'open' : ''}>
+      <summary>Разложить монеты самому</summary>
+      <p>Осталось монет <output id="remaining" aria-label="Осталось распределить">${remaining}</output>. Кнопки + и − меняют сумму на 10.</p>
+      <div class="jars">${cats.map((category, index) => `<section class="jar-card ${category}">
+        <h2>${names[index]}</h2><div class="counter">
+          <button data-adjust="${index}" data-delta="-10" aria-label="Вернуть 10 монет из ${names[index]}" ${a.alloc[index] === 0 ? 'disabled' : ''}>−</button>
+          <output id="alloc-${index}" aria-label="Положено в ${names[index]}">${a.alloc[index]}</output>
+          <button data-adjust="${index}" data-delta="10" aria-label="Положить 10 монет в ${names[index]}" ${remaining === 0 ? 'disabled' : ''}>+</button>
+        </div></section>`).join('')}</div>
+      <button class="primary" data-action="allocation-next" ${remaining ? 'disabled' : ''}>План готов ${icon('arrow')}</button>
+    </details>`;
+}
+
+function updateAllocation(index, delta) {
+  const a = current();
+  if (!a || a.phase !== 'allocate') return;
+  const remaining = missions[a.id].budget - a.alloc.reduce((sum, coins) => sum + coins, 0);
+  if (a.alloc[index] + delta < 0 || delta > remaining) return;
+  a.alloc[index] += delta;
+  persist();
+  const next = remaining - delta;
+  main.querySelector('#remaining').textContent = next;
+  main.querySelector(`#alloc-${index}`).textContent = a.alloc[index];
+  main.querySelectorAll('[data-adjust]').forEach(button => {
+    button.disabled = Number(button.dataset.delta) > 0 ? next === 0 : a.alloc[Number(button.dataset.adjust)] === 0;
+  });
+  main.querySelector('[data-action="allocation-next"]').disabled = next !== 0;
+  announce(`${names[index]}: ${a.alloc[index]}. Осталось монет: ${next}.`);
+}
+
+function eventView(a) {
+  const m = missions[a.id];
+  if (a.confirmed) {
+    return `<div id="event-feedback" class="feedback event-result">${eventFeedback(a)}</div>
+      <div class="action-row"><button class="primary" data-action="to-quiz">Дальше ${icon('arrow')}</button></div>`;
+  }
+  const content = m.items
+    ? `<div class="shop-grid">${m.items.map((item, index) => `<button class="shop-item ${a.items.includes(index) ? 'selected' : ''}"
+        data-item="${index}" aria-pressed="${a.items.includes(index)}">${icon(item.icon)}<strong>${item.name}</strong>
+        <span class="price">${item.price} монет</span><span class="item-toggle">${a.items.includes(index) ? '✓ В корзине' : '+ В корзину'}</span></button>`).join('')}</div>
+      <p class="receipt">В корзине: <strong>${selectionCost(a)} монет</strong></p>`
+    : `<div class="choice-list">${m.options.map(([label, price, , image = m.art], index) => `<button
+        class="choice ${a.choice === index ? 'selected' : ''}" data-choice="${index}" aria-pressed="${a.choice === index}">
+        <span class="choice-art">${image === 'kite' ? art('kite') : icon(image)}</span><strong>${label}</strong><span class="price">${price} монет</span>
+      </button>`).join('')}</div>`;
+  return `<p class="event-prompt">${m.eventText}</p>
+    <p class="event-budget"><span class="balance ${cats[m.from]}">${names[m.from]}: ${allocatedBalance(a, m.from)} монет</span></p>
+    ${content}<div id="event-feedback" class="feedback error" role="status"></div>
+    <div class="action-row">
+      <button class="primary" data-action="confirm-event" ${!hasSelection(a) ? 'disabled' : ''}>Проверить выбор ${icon('arrow')}</button>
+      <button class="text-button" data-action="replan">Изменить план</button>
+    </div>`;
 }
 function eventFeedback(a){
  const m=missions[a.id];
@@ -200,44 +294,137 @@ function eventFeedback(a){
   }
   return `<strong>${m.options[a.choice][0]}</strong>${m.options[a.choice][2]} В «${names[m.from]}» осталось монет: ${balance(a,m.from)}.`;
  }
-if(a.id===0){const saved=balance(a,0);return `<strong>${saved>=120?'На воздушного змея хватает!':saved>60?'Мечта стала ближе':'У мечты есть свой план'}</strong>${saved>=120?`У тебя ${saved} монет в «Коплю», змей стоит 120. Можно купить его, когда решишь.`:`В «Коплю» ${saved} монет. До змея осталось ${120-saved}. Можно продолжить копить в следующий раз.`} ${a.choice===2?'Ты решил обойтись без покупки: из «Трачу» ничего не списано.':`На покупку ушло ${spent(a)} монет из «Трачу».`} Покупку змея мы пока не записываем.`;}
- if(a.id===1){const needed=a.items.includes(0)&&a.items.includes(1);return `<strong>${needed?'Для пикника всё готово!':'Посмотрим на наш список'}</strong>${needed?'Фрукты и вода в корзине.':`В корзине нет ${!a.items.includes(0)&&!a.items.includes(1)?'фруктов и воды':!a.items.includes(0)?'фруктов':'воды'}. В следующий раз можно сначала отложить на них 50 монет.`} Потрачено ${spent(a)}, в «Трачу» осталось ${balance(a,1)}. ${a.items.includes(2)?'Вертушка — дополнительная покупка для игры.':'Оставшиеся монеты можно сохранить на другой раз.'}`;}
- return `<strong>${a.choice===0?'У сада появятся семена!':a.choice===1?'Цветы получат заботу!':'У клумбы появится своя табличка!'}</strong>${a.choice===0?'Ты выбрал помочь 30 игровыми монетами.':'Ты выбрал помочь временем и умением, без денежных трат.'} Каждый из этих способов полезен. Настоящее доброе дело сначала обсуди со взрослым.`;
+ if (a.id === 0) {
+  const saved = balance(a, 0);
+  const lesson = saved >= 120
+   ? '<strong>На воздушного змея хватает!</strong>'
+   : `<strong>До змея осталось ${120 - saved} монет.</strong>`;
+  return lesson + `В «Коплю» ${saved} монет. В «Трачу» осталось ${balance(a, 1)}.`;
+ }
+ if (a.id === 1) {
+  const missing = m.items.filter((item, index) => item.needed && !a.items.includes(index));
+  const lesson = missing.length
+    ? `Для пикника ещё нужны: ${missing.map(item => item.name.toLowerCase()).join(', ')}.`
+    : 'Для пикника всё готово!';
+  return `<strong>${lesson}</strong>В «Трачу» осталось ${balance(a, 1)} монет.`;
+ }
+ return a.choice === 0
+  ? '<strong>Семена куплены!</strong> Соседи смогут посадить цветы.'
+  : '<strong>Ты помог саду!</strong> Соседям пригодилось твоё время.';
 }
-function quizView(a){const m=missions[a.id];return `${balances(a)}<h2 class="quiz-question">${m.question}</h2><div class="quiz-options">${m.answers.map((t,i)=>`<button class="quiz-option ${a.quizPassed&&i===m.correct?'correct':''}" data-answer="${i}" ${a.quizPassed?'disabled':''}><span>${a.quizPassed&&i===m.correct?'✓':i+1}</span>${t}</button>`).join('')}</div><div class="feedback" id="quiz-feedback" role="status">${a.quizPassed?'<strong>Верно, ты разобрался!</strong>'+m.explanation:''}</div><div class="action-row"><p class="action-hint">Можно подумать и попробовать снова.</p><button class="primary" data-action="finish" ${a.quizPassed?'':'disabled'}>Моё открытие ${icon('arrow')}</button></div>`;}
-function resultView(a){const m=missions[a.id];return `<button class="back" data-nav="map">${icon('back')} Карта приключений</button><section class="result">${art(m.art,'big-art')}<div class="badge">ОТКРЫТИЕ ${a.id+1} ИЗ ${missions.length}</div><h1>${m.result}</h1><p>${m.explanation}</p><div class="result-stats">${cats.map((c,i)=>`<div class="result-stat ${c}"><small>${names[i]} · осталось</small><strong>${balance(a,i)} <span class="micro">монет</span></strong></div>`).join('')}</div><div class="feedback" style="text-align:left">${eventFeedback(a)}</div><div class="family-task"><strong>Попробуйте вместе со взрослым</strong><p>${m.family}</p></div><div class="action-row"><button class="secondary" data-action="replay" data-id="${a.id}">Попробовать иначе</button><button class="primary" ${a.id<missions.length-1?`data-action="next-mission" data-id="${a.id+1}"`:'data-nav="parents"'}>${a.id<missions.length-1?'Следующая история':'Мои открытия'} ${icon('arrow')}</button></div><p class="micro">Остановиться и продолжить позже тоже можно. Мы сохранили твоё открытие.</p></section>`;}
-function parentView(){return `<div class="parent-page"><button class="back" data-nav="map">${icon('back')} К приключениям</button><div class="intro"><div><div class="eyebrow">Для совместной практики</div><h1>Открытия, которые можно обсудить</h1><p>Короткая игра — повод для разговора и небольшого действия в настоящей жизни.</p></div></div><div class="parent-grid"><section class="parent-card"><h2>Путь ребёнка</h2><p>Пройдено ${state.completed.length} из ${missions.length} историй. Это факты игры, а не оценка финансовой грамотности.</p>${state.completed.length?state.completed.map(a=>{const m=missions[a.id];return `<details class="history-row"><summary>${a.id+1}. ${m.title}</summary><small>${new Date(a.finishedAt).toLocaleDateString('ru-RU',{day:'numeric',month:'long',timeZone:'Europe/Moscow'})} · ${m.topic}</small><p>${m.items?`Корзина: ${chosen(a).join(', ')}.`:`Выбор: ${chosen(a)}.`}</p><p><b>Спросите:</b> ${m.talk}</p></details>`}).join(''):'<div class="history-row"><p>Пока нет пройденных историй. Начните с мастерской воздушных змеев.</p><button class="primary" data-action="start" data-id="0" style="margin-top:16px">Начать вместе →</button></div>'}</section><section class="parent-card"><h2>Как поддержать ребёнка</h2><ul><li>Попросите объяснить выбор своими словами. Не подсказывайте ответ сразу.</li><li>Обсудите последствия: что получилось, на что не хватило, что можно изменить.</li><li>Позвольте пройти историю иначе и сравнить два решения.</li><li>Помощь добровольна. Время и забота не менее значимы, чем монеты.</li></ul><p>Предлагаемый возраст — 6–10 лет. Младшим детям взрослый может читать условия вслух.</p></section><section class="parent-card"><h2>Шаг из игры в жизнь</h2><p>${state.completed.length?missions[state.completed[state.completed.length-1].id].family:'Выберите одну небольшую цель ребёнка. Обсудите, сколько она стоит и как можно начать копить.'}</p><p>Возвращайтесь, когда появится новая ситуация для обсуждения. Обязательных ежедневных входов и штрафов за перерыв нет.</p></section><section class="parent-card"><h2>Об этой версии</h2><p>Учебная браузерная игра по мотивам проекта «Коплю — Трачу — Помогаю». Сценарий предложен командой и требует методической проверки НЦФГ.</p><p>Все суммы условные. Связи с банком и балансами прототипа нет. AR и камера в этой версии не используются.</p><p>Прогресс хранится только в этом браузере. Очистка данных сайта удалит его. Персональные данные не запрашиваются.</p><button class="secondary" data-action="export" style="margin-top:16px">Скачать результаты</button></section></div><div class="danger-zone"><div><strong>Начать с чистого листа</strong><p>Удалить только прогресс этой игры в этом браузере.</p></div><button class="secondary" data-action="reset">Сбросить прогресс</button></div></div>`;}
+function quizView(a) {
+  const m = missions[a.id];
+  return `<div class="quiz-options">${m.answers.map((answer, index) => `<button
+    class="quiz-option ${a.quizPassed && index === m.correct ? 'correct' : ''}"
+    data-answer="${index}" ${a.quizPassed ? 'disabled' : ''}>${answer}</button>`).join('')}</div>
+    <div id="quiz-feedback" class="feedback" role="status">${a.quizPassed ? '<strong>Верно!</strong>' + m.explanation : ''}</div>
+    <div class="action-row"><button class="primary" data-action="finish" ${a.quizPassed ? '' : 'disabled'}>Закончить историю ${icon('arrow')}</button></div>`;
+}
+
+function resultView(a) {
+  const m = missions[a.id];
+  const title = earnedTitle(a.id, missions.length);
+  const next = a.id + 1;
+  return `<div class="story-screen"><button class="back" data-nav="map">${icon('back')} В парк</button>
+    <section class="result">${art(m.art, 'big-art')}
+      ${title ? `<p class="badge">Значок · ${title}</p>` : ''}
+      <h1>${m.result}</h1><p>${m.explanation}</p>
+      <div class="action-row">
+        <button class="primary" ${next < missions.length ? `data-action="next-mission" data-id="${next}"` : 'data-nav="collection"'}>
+          ${next < missions.length ? 'Следующая история' : 'Мои значки'} ${icon('arrow')}
+        </button>
+        <button class="secondary" data-action="replay" data-id="${a.id}">Сыграть ещё раз</button>
+      </div>
+      <details class="play-disclosure family-task"><summary>Попробовать дома</summary>
+        <p>${m.family}</p><a class="back" href="/app/activities">К заданиям ${icon('arrow')}</a>
+      </details>
+    </section></div>`;
+}
+function parentView() {
+  if (parentAccess === undefined) return '<p role="status">Проверяем доступ…</p>';
+  if (!parentAccess) {
+    return `<section class="parent-card story-screen"><h1>Прогресс в игре</h1>
+      <p>Войдите в родительский режим, чтобы посмотреть результаты.</p>
+      <p><a class="primary" href="/app/parent">Войти</a></p></section>`;
+  }
+  return `<div class="parent-page">
+    <a class="back" href="/app/parent">${icon('back')} В родительский кабинет</a>
+    <div class="intro"><h1>Прогресс в игре</h1></div>
+    <section class="parent-card"><h2>Истории</h2>
+      <p>Пройдено ${state.completed.length} из ${missions.length} историй.</p>
+      ${state.completed.map(run => {
+        const m = missions[run.id];
+        const choice = m.items ? `Корзина: ${chosen(run).join(', ')}.` : `Выбор: ${chosen(run)}.`;
+        return `<details class="history-row"><summary>${m.title}</summary>
+          <p>${choice}</p><p>${m.talk}</p></details>`;
+      }).join('')}
+      <button class="secondary report-export" data-action="export">Скачать результаты</button>
+    </section>
+    <div class="danger-zone"><p>Прогресс игры хранится в этом браузере.</p>
+      <button class="secondary" data-action="reset">Сбросить прогресс</button></div>
+  </div>`;
+}
 function openModal(title,body){document.querySelector('#modal-content').innerHTML=`<h2 id="modal-title">${title}</h2>${body}`;modal.showModal();}
-function showHelp(){openModal('Как играть?',`<p>Копик приглашает тебя в парк. Здесь ${missions.length} историй. Выбери участок на карте и проходи истории по очереди.</p><ol><li><b>Составь план.</b> Разложи монеты кнопками + и −. Один шаг — 10 монет.</li><li><b>Сделай выбор.</b> Сравни цену и свой бюджет. Можно вернуться и изменить план.</li><li><b>Разберись.</b> Ответь на вопрос, прочитай объяснение и обсуди открытие со взрослым.</li></ol><p>Можно остановиться в любой момент. Прогресс остаётся в этом браузере. Монеты игровые, настоящие деньги не нужны.</p><button class="primary full" data-action="close">Всё понятно!</button>`);}
-document.addEventListener('click',e=>{
- const b=e.target.closest('button,a.brand');if(!b)return;
+function showHelp() {
+  openModal('Как играть?', `<p>Выбери план для монет. Затем реши, что сделать, и ответь на вопрос.</p>
+    <p>Можно вернуться позже. Игровые монеты остаются в парке.</p>
+    <button class="primary full" data-action="close">Понятно</button>`);
+}
+document.addEventListener('click',async e=>{
+ const link = e.target.closest('.game-global-nav a, .header .brand');
+ if (link && page === 'parents' && parentAccess) {
+  e.preventDefault();
+  modalTrigger = link;
+  try {
+   const response = await fetch('/api/demo/parent', { method: 'DELETE', signal: AbortSignal.timeout(8000) });
+   if (response.ok || response.status === 401) {
+    location.assign(link.href);
+    return;
+   }
+  } catch {
+   // Display a retryable message in the open report.
+  }
+  openModal('Кабинет пока открыт', '<p>Не удалось закрыть сессию. Попробуйте ещё раз.</p><button class="primary" data-action="close">Понятно</button>');
+  return;
+ }
+ const b=e.target.closest('button');if(!b)return;
  if (!modal.open) modalTrigger = b;
  if(b.dataset.badge !== undefined){badgeDetails(Number(b.dataset.badge),state.completed,missions.length,openModal,icon);return;}
  if(b.dataset.practice || b.dataset.practiceAnswer !== undefined){handlePractice(b,render,announce);return;}
- if(b.matches('a.brand')){e.preventDefault();page='map';render();return;}
  if(b.classList.contains('close-modal')){modal.close();return;}
- if(b.dataset.nav){if(b.dataset.nav==='help'){showHelp();return;}page=b.dataset.nav;render();return;}
+ if(b.dataset.nav){if(b.dataset.nav==='help'){showHelp();return;}page=b.dataset.nav;render();if(page==='parents')void checkParentAccess();return;}
  if(b.dataset.mission!==undefined){const id=Number(b.dataset.mission);if(id>state.completed.length){openModal('Сначала — предыдущее открытие',`<p>Пройди историю «${missions[id-1].title}», и это место откроется.</p><button class="primary full" data-action="close">Хорошо</button>`);return;}start(id);return;}
  if(b.dataset.adjust!==undefined){updateAllocation(Number(b.dataset.adjust),Number(b.dataset.delta));return;}
  const a=current();
  if(b.dataset.choice!==undefined&&a&&a.phase==='event'&&!a.confirmed){a.choice=Number(b.dataset.choice);persist();render(false);document.querySelector(`[data-choice="${a.choice}"]`).focus();return;}
  if(b.dataset.item!==undefined&&a&&a.phase==='event'&&!a.confirmed){const id=Number(b.dataset.item);a.items=a.items.includes(id)?a.items.filter(n=>n!==id):[...a.items,id];persist();render(false);document.querySelector(`[data-item="${id}"]`).focus();return;}
- if(b.dataset.answer!==undefined&&a&&a.phase==='quiz'&&!a.quizPassed){const n=Number(b.dataset.answer),m=missions[a.id];if(n===m.correct){a.quizPassed=true;persist();render(false);document.querySelector('[data-action="finish"]').focus();announce('Верно! '+m.explanation);}else{document.querySelectorAll('[data-answer]').forEach(x=>x.classList.remove('incorrect'));b.classList.add('incorrect');const f=document.querySelector('#quiz-feedback');f.className='feedback error';f.innerHTML='<strong>Давай подумаем ещё</strong>'+m.explanation+' Попробуй выбрать ответ ещё раз.';}return;}
+ if(b.dataset.answer!==undefined&&a&&a.phase==='quiz'&&!a.quizPassed){const n=Number(b.dataset.answer),m=missions[a.id];if(n===m.correct){a.quizPassed=true;persist();render(false);document.querySelector('[data-action="finish"]').focus();announce('Верно! '+m.explanation);}else{document.querySelectorAll('[data-answer]').forEach(x=>x.classList.remove('incorrect'));b.classList.add('incorrect');const f=document.querySelector('#quiz-feedback');f.className='feedback error';f.innerHTML='<strong>Попробуй ещё раз</strong>'+m.explanation;}return;}
  const action=b.dataset.action;if(!action)return;
  if(action==='close'){modal.close();return;}
  if(action==='start'){start(Number(b.dataset.id));return;}
  if(action==='resume'){selectedRoute=null;page='game';render();return;}
  if(action==='replace'){modal.close();newRun(Number(b.dataset.id));return;}
+ if (['reset', 'confirm-reset', 'export'].includes(action)) {
+  if (page !== 'parents' || !parentAccess) return;
+  parentAccess = await hasParentAccess();
+  if (page !== 'parents') return;
+  if (!parentAccess) {
+   if (modal.open) modal.close();
+   render(false);
+   return;
+  }
+ }
  if(action==='reset'){openModal('Сбросить прогресс?',`<p>Истории, тренировка и значки будут удалены из этого браузера. Записи семьи в копилке сохранятся. Это действие нельзя отменить.</p><div class="dialog-actions"><button class="secondary" data-action="close">Сохранить прогресс</button><button class="primary" data-action="confirm-reset">Сбросить</button></div>`);return;}
- if(action==='confirm-reset'){selectedRoute=null;state={version:1,completed:[],active:null};resetPractice();persist();modal.close();page='map';render();return;}
+ if(action==='confirm-reset'){selectedRoute=null;state={version:1,completed:[],active:null};resetPractice();persist();modal.close();render();return;}
  if(action==='export'){const report={game:'Парк маленьких открытий',version:2,practice:{...practiceProgress(),topics:practiceProgress().mastered.map(id=>situations[id].title)},exportedAt:new Date().toISOString(),note:'Результаты игры не являются оценкой финансовой грамотности.',stories:state.completed.map(run=>({title:missions[run.id].title,allocated:Object.fromEntries(names.map((n,i)=>[n,run.alloc[i]])),remaining:Object.fromEntries(names.map((n,i)=>[n,balance(run,i)])),choice:chosen(run),finishedAt:run.finishedAt}))};const url=URL.createObjectURL(new Blob([JSON.stringify(report,null,2)],{type:'application/json'}));const link=document.createElement('a');link.href=url;link.download='moi-otkrytiya.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);return;}
  if(!a)return;
- if(action==='allocation-next'&&a.phase==='allocate'&&a.alloc.reduce((s,n)=>s+n,0)===missions[a.id].budget){a.phase='event';persist();render();}
+ if(action==='ready-plan'&&a.phase==='allocate'){a.alloc=readyPlan(missions[a.id]);a.phase='event';persist();render();}
+ else if(action==='allocation-next'&&a.phase==='allocate'&&a.alloc.reduce((s,n)=>s+n,0)===missions[a.id].budget){a.phase='event';persist();render();}
  else if(action==='replan'&&a.phase==='event'&&!a.confirmed){a.phase='allocate';a.choice=null;a.items=[];persist();render();}
  else if(action==='confirm-event'&&a.phase==='event'&&!a.confirmed){if(!canResolve(a)){
  const m=missions[a.id];
  const f=document.querySelector('#event-feedback');
- f.innerHTML=`<strong>На этот выбор не хватает монет</strong>В «${names[m.from]}» есть ${balance(a,m.from)} монет, а нужно ${selectionCost(a)}. Можно изменить выбор или план.`;
+ f.innerHTML=`<strong>На этот выбор не хватает монет</strong>Есть ${balance(a,m.from)} монет, а нужно ${selectionCost(a)}.`;
  announce(f.textContent);
  return;
 }a.confirmed=true;persist();render(false);document.querySelector('[data-action="to-quiz"]').focus();announce('Решение сохранено. '+document.querySelector('#event-feedback').textContent);}
@@ -248,13 +435,18 @@ document.addEventListener('click',e=>{
 });
 modal.addEventListener('click',e=>{if(e.target===modal){const r=modal.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)modal.close();}});
 window.addEventListener('popstate', () => {
- page = ['practice', 'parents', 'game'].includes(location.hash.slice(1)) ? location.hash.slice(1) : 'map';
+ page = screens.includes(location.hash.slice(1)) ? location.hash.slice(1) : 'map';
  if (page === 'game' && !state.active) page = 'map';
  if (modal.open) modal.close();
- render(false);
+ if (page === 'parents') void checkParentAccess();
+ else render(false);
  focusMain();
 });
-render(false);
+if (page === 'parents') void checkParentAccess();
+else render(false);
+window.addEventListener('pageshow', event => {
+  if (event.persisted && page === 'parents') void checkParentAccess();
+});
 window.render_game_to_text = () => JSON.stringify({
  page, totalStories: missions.length, selectedRoute: page === 'map' ? main.querySelector('#route-select').value : null,
  active: state.active, completed: state.completed.map(run => run.id), practice: practiceProgress(),

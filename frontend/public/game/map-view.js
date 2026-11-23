@@ -38,12 +38,28 @@ export function mapView({ missions, routes, state, selectedRoute, icon, park, ma
   const story = missions[target];
   const routeIndex = selectedRoute ?? currentRoute(routes, target);
 
-  return `<div class="intro"><div><div class="eyebrow">${icon('sun')} Играем и учимся вместе</div>
-    <h1>Парк маленьких открытий</h1><p>Копи на мечту, выбирай покупки и помогай другим.</p></div>
-    <span class="session-pill">${icon('clock')} ${total} историй · по 3–5 минут</span></div>
-    ${complete ? `<div class="journey-complete"><div><strong>Все истории пройдены!</strong>
-      <p>Можно повторить любимую историю или обсудить открытия со взрослым.</p></div>
-      <button class="secondary" data-nav="parents">Мои открытия →</button></div>` : ''}
+  return `<section class="play-intro" aria-labelledby="park-title">
+    <div class="play-intro-copy">
+      <h1 id="park-title">Парк маленьких открытий</h1>
+      <p class="play-progress">${count} из ${total} историй пройдено</p>
+      ${complete && !active
+        ? '<button class="primary" data-nav="collection">Мои значки</button>'
+        : `<p class="play-story">${story.title}</p>
+          <button class="primary" data-action="${active ? 'resume' : 'start'}" data-id="${target}">
+            ${active ? 'Продолжить' : 'Начать игру'} ${icon('arrow')}
+          </button>`}
+    </div>
+    <div class="play-intro-art" aria-hidden="true">
+      ${park()}
+      ${mascot('save')}
+    </div>
+  </section>
+  <div class="play-extra">
+    <button class="secondary" data-nav="practice">Тренировка</button>
+    ${complete && !active ? '' : '<button class="secondary" data-nav="collection">Мои значки</button>'}
+  </div>
+  <details class="play-disclosure" ${selectedRoute !== null ? 'open' : ''}>
+    <summary>Все истории</summary>
     <div class="route-picker">
       <label for="route-select">Участок парка</label>
       <select id="route-select" aria-controls="route-map">
@@ -54,19 +70,6 @@ export function mapView({ missions, routes, state, selectedRoute, icon, park, ma
         }).join('')}
       </select>
     </div>
-    <div class="map-layout">
-      ${routePanel(routes[routeIndex], count, total, icon, park)}
-      <aside class="guide-card">${mascot('save', 'guide-art')}
-        <div class="tiny">${complete && !active ? 'Твои открытия' : `История ${target + 1} из ${total}`}</div>
-        <h2>${complete && !active ? 'Весь парк открыт' : story.title}</h2>
-        <p>${active ? 'Мы сохранили твой выбор. Продолжим с того же места?' : complete
-          ? 'Выбери любую историю на карте и посмотри, что изменится, если решить иначе.' : story.intro}</p>
-        ${complete && !active ? '' : `<button class="primary full" data-action="${active ? 'resume' : 'start'}"
-          data-id="${target}">${active ? 'Продолжить' : count ? 'Начать историю' : 'Начать приключение'} ${icon('arrow')}</button>`}
-        <div class="journey-progress">
-          <progress value="${count}" max="${total}" aria-label="Пройдено историй"></progress>
-          <span>${count} из ${total} пройдено</span>
-        </div>
-      </aside>
-    </div>`;
+    ${routePanel(routes[routeIndex], count, total, icon, park)}
+  </details>`;
 }

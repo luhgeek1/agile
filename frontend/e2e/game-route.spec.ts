@@ -26,43 +26,44 @@ test('existing saves unlock the new routes and all 20 stories can be completed',
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto('/game/index.html')
 
+  await page.getByRole('button', { name: 'Мои значки' }).click()
+  await expect(page.getByRole('button', { name: 'Исследователь парка: получен' })).toBeVisible()
+  await page.locator('[data-nav="map"]').click()
+  await page.getByText('Все истории', { exact: true }).click()
   const route = page.getByLabel('Участок парка')
   await expect(route).toHaveValue('1')
   await expect(page.locator('.map-chip')).toHaveText('3 из 20 открытий')
-  await expect(page.getByRole('button', { name: 'Исследователь парка: получен' })).toBeVisible()
   await route.selectOption('6')
   await page.locator('[data-mission="19"]').click()
   await expect(page.getByRole('dialog')).toContainText('Стол для гостей')
   await page.keyboard.press('Escape')
   await expect(page.locator('[data-mission="19"]')).toBeFocused()
-  await expect(page.locator('[data-action="start"]')).toHaveText('Начать историю')
+  await expect(page.locator('[data-action="start"]')).toHaveText('Начать игру')
   await page.locator('[data-action="start"]').click()
 
-  const stories: { from: number; amount: number; answer: number; choice?: number }[] = [
-    { from: 0, amount: 60, answer: 1, choice: 0 },
-    { from: 0, amount: 70, answer: 1, choice: 1 },
-    { from: 0, amount: 60, answer: 2, choice: 2 },
-    { from: 1, amount: 80, answer: 0 },
-    { from: 1, amount: 70, answer: 1, choice: 1 },
-    { from: 1, amount: 60, answer: 2, choice: 0 },
-    { from: 2, amount: 50, answer: 0, choice: 1 },
-    { from: 2, amount: 50, answer: 1, choice: 2 },
-    { from: 2, amount: 60, answer: 2, choice: 0 },
-    { from: 1, amount: 70, answer: 0, choice: 1 },
-    { from: 0, amount: 50, answer: 1, choice: 0 },
-    { from: 1, amount: 50, answer: 2, choice: 1 },
-    { from: 1, amount: 50, answer: 0, choice: 0 },
-    { from: 1, amount: 60, answer: 1, choice: 0 },
-    { from: 1, amount: 70, answer: 2 },
-    { from: 1, amount: 90, answer: 0 },
-    { from: 2, amount: 100, answer: 1, choice: 0 },
+  const stories: { answer: number; choice?: number }[] = [
+    { answer: 1, choice: 0 },
+    { answer: 1, choice: 1 },
+    { answer: 2, choice: 2 },
+    { answer: 0 },
+    { answer: 1, choice: 1 },
+    { answer: 2, choice: 0 },
+    { answer: 0, choice: 1 },
+    { answer: 1, choice: 2 },
+    { answer: 2, choice: 0 },
+    { answer: 0, choice: 1 },
+    { answer: 1, choice: 0 },
+    { answer: 2, choice: 1 },
+    { answer: 0, choice: 0 },
+    { answer: 1, choice: 0 },
+    { answer: 2 },
+    { answer: 0 },
+    { answer: 1, choice: 0 },
   ]
   for (const [index, story] of stories.entries()) {
     const id = index + 3
-    await expect(page.locator('.game-title .eyebrow')).toContainText(`История ${id + 1} ·`)
-    const add = page.locator(`[data-adjust="${story.from}"][data-delta="10"]`)
-    for (let coins = 0; coins < story.amount; coins += 10) await add.click()
-    await page.locator('[data-action="allocation-next"]').click()
+    await expect(page.locator('.story-number')).toContainText(`История ${id + 1} из 20`)
+    await page.getByRole('button', { name: 'Играть с этим планом' }).click()
     if (story.choice === undefined) {
       await page.locator('[data-item="0"]').click()
       await page.locator('[data-item="1"]').click()
@@ -85,7 +86,13 @@ test('existing saves unlock the new routes and all 20 stories can be completed',
   }
 
   await expect(page.locator('.result .badge')).toContainText('Весь парк открыт')
-  await page.getByRole('button', { name: 'Мои открытия' }).click()
+  await page.getByRole('button', { name: 'Мои значки' }).click()
+  await expect(page.getByRole('button', { name: 'Весь парк открыт: получен' })).toBeVisible()
+  await page.request.post('/api/demo')
+  expect(
+    (await page.request.post('/api/demo/parent', { data: { pin: '0639', setup: true } })).ok(),
+  ).toBe(true)
+  await page.goto('/game/index.html#parents')
   await expect(page.locator('.parent-card').first()).toContainText('Пройдено 20 из 20 историй')
   await expect(page.locator('.parent-card details')).toHaveCount(20)
   const finalHistory = page.locator('.parent-card details').last()
@@ -96,10 +103,9 @@ test('existing saves unlock the new routes and all 20 stories can be completed',
   await page.getByRole('button', { name: 'Скачать результаты' }).click()
   const report = JSON.parse(await readFile((await (await download).path())!, 'utf8'))
   expect(report.stories).toHaveLength(20)
-  expect(report.stories[3].remaining['Коплю']).toBe(10)
-  expect(report.stories[18].remaining['Трачу']).toBe(20)
-  await page.locator('header [data-nav="map"]').click()
-  await expect(page.locator('.map-chip')).toHaveText('20 из 20 открытий')
-  await expect(page.getByRole('button', { name: 'Весь парк открыт: получен' })).toBeVisible()
+  expect(report.stories[3].remaining['Коплю']).toBe(0)
+  expect(report.stories[18].remaining['Трачу']).toBe(0)
+  await page.goto('/game/index.html')
+  await expect(page.locator('.play-progress')).toHaveText('20 из 20 историй пройдено')
   expect(errors).toEqual([])
 })
