@@ -11,11 +11,11 @@ import { useRouter } from 'next/navigation'
 export function WelcomePage() {
   const router = useRouter()
   const queryClient = useQueryClient()
-  const start = useMutation({
+  const start = useMutation<unknown, Error, 'child' | 'parent'>({
     mutationFn: () => api('/demo', { method: 'POST' }),
-    onSuccess: () => {
+    onSuccess: (_, role) => {
       queryClient.removeQueries()
-      router.push('/app')
+      router.push(role === 'parent' ? '/app/parent' : '/app')
     },
   })
 
@@ -25,21 +25,31 @@ export function WelcomePage() {
         <Link href="/" aria-label="Коплю — Трачу — Помогаю, главная">
           <Logo />
         </Link>
-        <a className="welcome-family-link" href="#welcome-family">
-          Родителям <ArrowRight size={16} aria-hidden="true" />
-        </a>
       </header>
       <main className="welcome-main">
         <Page>
           <section className="welcome-hero">
             <div className="welcome-intro">
-              <h1>У мечты есть своя копилка.</h1>
-              <p>Копи на мечту, выбирай покупки с умом и помогай другим.</p>
+              <h1>Коплю, трачу, помогаю</h1>
+              <p>Твоя копилка, задания и игра.</p>
               <div className="welcome-action">
-                <Button busy={start.isPending} onClick={() => start.mutate()}>
-                  Посмотреть демо <ArrowRight size={20} aria-hidden="true" />
-                </Button>
-                <p>Без регистрации. Можно всё попробовать.</p>
+                <div className="welcome-role-actions">
+                  <Button
+                    busy={start.isPending && start.variables === 'child'}
+                    disabled={start.isPending}
+                    onClick={() => start.mutate('child')}
+                  >
+                    Я ребёнок <ArrowRight size={20} aria-hidden="true" />
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    busy={start.isPending && start.variables === 'parent'}
+                    disabled={start.isPending}
+                    onClick={() => start.mutate('parent')}
+                  >
+                    Я родитель <Users size={20} aria-hidden="true" />
+                  </Button>
+                </div>
                 {start.error && (
                   <p role="alert" className="field-error">
                     {start.error.message}
@@ -68,18 +78,10 @@ export function WelcomePage() {
               ))}
             </ul>
           </section>
-          <section className="welcome-family" id="welcome-family">
-            <Users size={26} aria-hidden="true" />
-            <div>
-              <h2>Для детей 6–10 лет и их родителей</h2>
-              <p>Положите деньги в настоящую копилку, затем вместе запишите действие здесь.</p>
-            </div>
-          </section>
         </Page>
       </main>
       <footer className="welcome-footer">
-        <p>Образовательный прототип по проекту НЦФГ</p>
-        <p>В демо нет платежей и переводов реальных денег.</p>
+        <p>Демо-копилка для детей 6–10 лет и родителей.</p>
       </footer>
     </div>
   )

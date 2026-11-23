@@ -2,7 +2,7 @@ import { expect, test, type Page } from '@playwright/test'
 
 async function enter(page: Page, path: string) {
   await page.goto('/')
-  await page.getByRole('button', { name: 'Посмотреть демо' }).click()
+  await page.getByRole('button', { name: 'Я ребёнок' }).click()
   await expect(page.getByRole('heading', { name: 'Мои три отсека' })).toBeVisible()
   await page.waitForLoadState('networkidle')
   await page.goto(path)
@@ -132,9 +132,7 @@ for (const width of [390, 640, 1440]) {
         return bounds ? bounds.y + bounds.height : Infinity
       })
       .toBeLessThanOrEqual(width < 768 ? navBounds!.y - 8 : 888)
-    await nav
-      .getByRole('link', { name: 'Задания', exact: true })
-      .click()
+    await nav.getByRole('link', { name: 'Задания', exact: true }).click()
     await expect(page.getByRole('heading', { name: 'Задания', exact: true })).toBeVisible()
     const close = page.getByRole('button', { name: 'Закрыть уведомление' })
     const closeBounds = await close.boundingBox()

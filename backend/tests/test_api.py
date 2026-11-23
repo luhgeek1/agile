@@ -7,7 +7,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import select, update
 from sqlalchemy.exc import IntegrityError
 
-from app.api.cookies import COOKIE
+from app.api.cookies import COOKIE, PARENT_COOKIE
 from app.db.models import DemoSession, Transaction, Wallet
 from app.domain.common.clock import now
 
@@ -153,6 +153,8 @@ def test_activities_are_persistent_idempotent_and_not_money(demo):
 
 def test_feedback_validation_persistence_and_safe_export(demo):
     data = {"usefulness": 5, "difficulty": "easy", "comment": "Удобно", "adult_confirmed": True}
+    assert demo.post("/api/feedback", json=data).status_code == 403
+    assert demo.post("/api/demo/parent", json={"pin": "4927", "setup": True}).status_code == 200
     assert demo.post("/api/feedback", json={**data, "adult_confirmed": False}).status_code == 422
     assert demo.post("/api/feedback", json={**data, "usefulness": 6}).status_code == 422
     assert demo.post("/api/feedback", json=data).status_code == 201
@@ -163,8 +165,10 @@ def test_feedback_validation_persistence_and_safe_export(demo):
 
 def test_family_isolation_and_reset_scope(demo, app):
     first_state = state(demo)
+    assert demo.post("/api/demo/parent", json={"pin": "4927", "setup": True}).status_code == 200
     with TestClient(app) as other:
         other.post("/api/demo")
+        assert other.post("/api/demo/parent", json={"pin": "4927", "setup": True}).status_code == 200
         other.post("/api/transactions", json=payload(amount=1))
         other.post("/api/feedback", json={"usefulness": 3, "difficulty": "okay", "adult_confirmed": True})
         assert state(demo)["balances"] == first_state["balances"]
@@ -178,6 +182,38 @@ def test_family_isolation_and_reset_scope(demo, app):
     assert not any(a["completed_at"] for a in empty["activities"])
     demo.post("/api/demo/reset", json={"seeded": True})
     assert state(demo)["balances"] == first_state["balances"]
+
+
+def test_parent_pin_is_family_bound_and_logout_revokes_access(demo, app):
+    url = "/api/demo/parent"
+    assert demo.get(url).json() == {"configured": False, "unlocked": False}
+    assert demo.post(url, json={"pin": "123", "setup": True}).status_code == 422
+    assert demo.get("/api/feedback/export").status_code == 403
+    response = demo.post(url, json={"pin": "0639", "setup": True})
+    assert response.json() == {"configured": True, "unlocked": True}
+    assert "HttpOnly" in response.headers["set-cookie"]
+    token = demo.cookies.get(PARENT_COOKIE)
+    with TestClient(app) as other:
+        other.post("/api/demo")
+        other.cookies.set(PARENT_COOKIE, token, path="/api")
+        assert not other.get(url).json()["unlocked"]
+    assert demo.delete(url).status_code == 200
+    demo.cookies.set(PARENT_COOKIE, token, path="/api")
+    assert not demo.get(url).json()["unlocked"]
+    assert demo.get("/api/feedback/export").status_code == 403
+    assert demo.post(url, json={"pin": "1111", "setup": True}).status_code == 409
+    assert demo.post(url, json={"pin": "1111"}).status_code == 403
+    assert demo.post(url, json={"pin": "0639"}).status_code == 200
+
+
+def test_parent_pin_rate_limit_survives_requests(demo):
+    url = "/api/demo/parent"
+    assert demo.post(url, json={"pin": "4927", "setup": True}).status_code == 200
+    demo.delete(url)
+    for _ in range(4):
+        assert demo.post(url, json={"pin": "9999"}).status_code == 403
+    assert demo.post(url, json={"pin": "9999"}).status_code == 429
+    assert demo.post(url, json={"pin": "4927"}).status_code == 429
 
 
 def test_session_reuse_and_expiration(demo, database):

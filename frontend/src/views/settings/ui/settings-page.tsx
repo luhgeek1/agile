@@ -1,37 +1,14 @@
 'use client'
 
-import { api, useSave } from '@/shared/api'
+import { useSave } from '@/shared/api'
 import { Button, Card, Confirm, FieldError, Page, PageHeading } from '@/shared/ui'
 import { useProduct } from '@/widgets/product-shell'
-import { Download, Info, Leaf, RotateCcw, ShieldCheck } from 'lucide-react'
-import { useState } from 'react'
+import { Info, Leaf, RotateCcw, ShieldCheck } from 'lucide-react'
 import { toast } from 'sonner'
 
 export function SettingsPage() {
   const { state } = useProduct()
   const reset = useSave<{ seeded: boolean }>('/demo/reset')
-  const [exporting, setExporting] = useState(false)
-  const [exportError, setExportError] = useState('')
-  const exportFeedback = async () => {
-    setExporting(true)
-    setExportError('')
-    try {
-      const data = await api('/feedback/export')
-      const url = URL.createObjectURL(
-        new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }),
-      )
-      const anchor = document.createElement('a')
-      anchor.href = url
-      anchor.download = 'kopilka-demo-feedback.json'
-      anchor.click()
-      URL.revokeObjectURL(url)
-      toast.success('Отзывы из этой сессии выгружены')
-    } catch (e) {
-      setExportError((e as Error).message)
-    } finally {
-      setExporting(false)
-    }
-  }
   const resetDemo = async (seeded: boolean) => {
     try {
       await reset.mutateAsync({ seeded })
@@ -75,7 +52,7 @@ export function SettingsPage() {
               <details>
                 <summary>Сохранятся ли мои действия?</summary>
                 <p>
-                  Да, на сервере. Этот браузер хранит только cookie демо-сессии на 30 дней. Если
+                  Да, на сервере. Доступ к демо-копилке в этом браузере сохраняется на 30 дней. Если
                   удалить cookie или открыть другой браузер, создастся отдельная демо-копилка.
                 </p>
               </details>
@@ -155,24 +132,6 @@ export function SettingsPage() {
               />
             </div>
             <FieldError message={reset.error?.message} />
-          </Card>
-          <Card className="export-card">
-            <h2>Отзывы для проверки</h2>
-            <p>
-              JSON-файл с отзывами только этой демо-сессии, без идентификаторов семьи. Не публикуйте
-              файл, если сами добавили в текст личные данные.
-            </p>
-            <Button
-              variant="secondary"
-              busy={exporting}
-              onClick={() => {
-                void exportFeedback()
-              }}
-            >
-              <Download size={18} />
-              Выгрузить отзывы
-            </Button>
-            <FieldError message={exportError} />
           </Card>
         </div>
       </div>

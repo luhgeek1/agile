@@ -32,6 +32,7 @@ const navItems = [
 export function ProductLayout({ children }: PropsWithChildren) {
   const query = useAppState()
   const pathname = usePathname()
+  const isParent = pathname === '/app/parent' || pathname.startsWith('/app/parent/')
   const router = useRouter()
   const [operation, setOperation] = useState<OperationOptions | null>(null)
   const [goalOpen, setGoalOpen] = useState(false)
@@ -85,51 +86,59 @@ export function ProductLayout({ children }: PropsWithChildren) {
       </a>
       <header className="app-header">
         <div className="header-inner">
-          <Link href="/app" aria-label="Коплю — Трачу — Помогаю, главная">
+          {isParent ? (
             <Logo />
-          </Link>
-          <nav className="desktop-nav" aria-label="Основная навигация">
-            {navItems.map(({ to, text, end, external }) => {
-              const NavLink = external ? 'a' : Link
-              return (
-                <NavLink
-                  key={to}
-                  href={to}
-                  className={
-                    (end ? pathname === to : pathname.startsWith(to)) ? 'active' : undefined
-                  }
-                  aria-current={
-                    (end ? pathname === to : pathname.startsWith(to)) ? 'page' : undefined
-                  }
+          ) : (
+            <Link href="/app" aria-label="Коплю — Трачу — Помогаю, главная">
+              <Logo />
+            </Link>
+          )}
+          {!isParent && (
+            <>
+              <nav className="desktop-nav" aria-label="Основная навигация">
+                {navItems.map(({ to, text, end, external }) => {
+                  const NavLink = external ? 'a' : Link
+                  return (
+                    <NavLink
+                      key={to}
+                      href={to}
+                      className={
+                        (end ? pathname === to : pathname.startsWith(to)) ? 'active' : undefined
+                      }
+                      aria-current={
+                        (end ? pathname === to : pathname.startsWith(to)) ? 'page' : undefined
+                      }
+                    >
+                      {text}
+                    </NavLink>
+                  )
+                })}
+              </nav>
+              <div className="header-actions">
+                <Link
+                  href="/app/parent"
+                  className={`parent-link${pathname.startsWith('/app/parent') ? ' active' : ''}`}
+                  aria-current={pathname === '/app/parent' ? 'page' : undefined}
                 >
-                  {text}
-                </NavLink>
-              )
-            })}
-          </nav>
-          <div className="header-actions">
-            <Link
-              href="/app/parent"
-              className={`parent-link${pathname.startsWith('/app/parent') ? ' active' : ''}`}
-              aria-current={pathname === '/app/parent' ? 'page' : undefined}
-            >
-              <Users size={20} />
-              <span>Родителям</span>
-            </Link>
-            <Link
-              className="icon-button settings-link"
-              href="/app/settings"
-              aria-label="Настройки и справка"
-            >
-              <Settings size={21} />
-            </Link>
-            <span className="avatar" aria-label={`Демо-профиль ${state.nickname}`}>
-              {state.nickname.slice(0, 1).toLocaleUpperCase('ru-RU')}
-            </span>
-          </div>
+                  <Users size={20} />
+                  <span>Родителям</span>
+                </Link>
+                <Link
+                  className="icon-button settings-link"
+                  href="/app/settings"
+                  aria-label="Настройки и справка"
+                >
+                  <Settings size={21} />
+                </Link>
+                <span className="avatar" aria-label={`Демо-профиль ${state.nickname}`}>
+                  {state.nickname.slice(0, 1).toLocaleUpperCase('ru-RU')}
+                </span>
+              </div>
+            </>
+          )}
         </div>
       </header>
-      {!demoNoticeHidden && (
+      {!isParent && !demoNoticeHidden && (
         <div className="demo-strip">
           <div>
             <span className="demo-dot" />
@@ -162,29 +171,37 @@ export function ProductLayout({ children }: PropsWithChildren) {
           {children}
         </ProductStateContext.Provider>
       </main>
-      <footer className="app-footer">
-        <Link href="/app/settings">
-          <CircleHelp size={17} />
-          Как это работает
-        </Link>
-        <span>Образовательный прототип · НЦФГ</span>
-      </footer>
-      <nav className="mobile-nav" aria-label="Навигация на телефоне">
-        {navItems.map(({ to, icon: Icon, short, end, external }) => {
-          const NavLink = external ? 'a' : Link
-          return (
-            <NavLink
-              key={to}
-              href={to}
-              className={(end ? pathname === to : pathname.startsWith(to)) ? 'active' : undefined}
-              aria-current={(end ? pathname === to : pathname.startsWith(to)) ? 'page' : undefined}
-            >
-              <Icon size={23} strokeWidth={1.8} />
-              <span>{short}</span>
-            </NavLink>
-          )
-        })}
-      </nav>
+      {!isParent && (
+        <>
+          <footer className="app-footer">
+            <Link href="/app/settings">
+              <CircleHelp size={17} />
+              Как это работает
+            </Link>
+            <span>Образовательный прототип · НЦФГ</span>
+          </footer>
+          <nav className="mobile-nav" aria-label="Навигация на телефоне">
+            {navItems.map(({ to, icon: Icon, short, end, external }) => {
+              const NavLink = external ? 'a' : Link
+              return (
+                <NavLink
+                  key={to}
+                  href={to}
+                  className={
+                    (end ? pathname === to : pathname.startsWith(to)) ? 'active' : undefined
+                  }
+                  aria-current={
+                    (end ? pathname === to : pathname.startsWith(to)) ? 'page' : undefined
+                  }
+                >
+                  <Icon size={23} strokeWidth={1.8} />
+                  <span>{short}</span>
+                </NavLink>
+              )
+            })}
+          </nav>
+        </>
+      )}
       <OperationDialog
         open={operation !== null}
         initial={operation ?? {}}

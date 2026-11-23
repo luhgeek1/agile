@@ -8,13 +8,13 @@ test('welcome is rendered on the server with Russian metadata and local fonts', 
   expect(response.status()).toBe(200)
   const html = await response.text()
   expect(html).toContain('<html lang="ru"')
-  expect(html).toContain('У мечты есть своя копилка.')
+  expect(html).toContain('Коплю, трачу, помогаю')
   expect(html).toContain('name="description"')
   expect(html).toContain('/_next/')
   const context = await browser.newContext({ javaScriptEnabled: false })
   const page = await context.newPage()
   await page.goto('/')
-  await expect(page.getByRole('heading', { name: 'У мечты есть своя копилка.' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Коплю, трачу, помогаю' })).toBeVisible()
   await context.close()
 })
 
@@ -24,7 +24,7 @@ test('Next navigation preserves the document, updates titles and restores URL fi
   const errors: string[] = []
   page.on('pageerror', (error) => errors.push(error.message))
   await page.goto('/')
-  await page.getByRole('button', { name: 'Посмотреть демо' }).click()
+  await page.getByRole('button', { name: 'Я ребёнок' }).click()
   await expect(page.getByRole('heading', { name: 'Мои три отсека' })).toBeVisible()
   await page.evaluate(() => {
     document.documentElement.dataset.navigationProbe = 'same-document'
@@ -66,7 +66,7 @@ test('dismissed demo notice survives hydration and reload without React errors',
     if (message.type() === 'error') errors.push(message.text())
   })
   await page.goto('/')
-  await page.getByRole('button', { name: 'Посмотреть демо' }).click()
+  await page.getByRole('button', { name: 'Я ребёнок' }).click()
   await page.getByRole('button', { name: 'Закрыть сообщение о демо-пространстве' }).click()
   await page.reload()
   await expect(page.getByRole('heading', { name: 'Мои три отсека' })).toBeVisible()

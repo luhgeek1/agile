@@ -5,7 +5,7 @@ const qaDirectory = process.env.PLAYWRIGHT_ARTIFACTS_DIR ?? '../artifacts/qa'
 
 async function enter(page: Page) {
   await page.goto('/')
-  await page.getByRole('button', { name: 'Посмотреть демо' }).click()
+  await page.getByRole('button', { name: 'Я ребёнок' }).click()
   await expect(page.getByRole('heading', { name: 'Мои три отсека' })).toBeVisible()
   await page.waitForLoadState('networkidle')
 }
@@ -95,6 +95,9 @@ test('activities, parent progress, feedback validation, persistence, export', as
   await expect(task.getByText('Выполнено', { exact: true })).toBeVisible()
   expect((await (await page.request.get('/api/state')).json()).balances).toEqual(before.balances)
   await page.goto('/app/parent')
+  await page.getByLabel('Новый PIN', { exact: true }).fill('0639')
+  await page.getByLabel('Повторите PIN').fill('0639')
+  await page.getByRole('button', { name: 'Создать PIN и войти' }).click()
   await expect(page.getByRole('heading', { name: 'О чём поговорить сегодня' })).toBeVisible()
   await expect(
     page.locator('.completed-list').getByRole('button', { name: /Помоги с домашним делом/ }),
@@ -112,7 +115,6 @@ test('activities, parent progress, feedback validation, persistence, export', as
   await expect(page.getByRole('heading', { name: 'Спасибо, что поделились!' })).toBeVisible()
   const records = await (await page.request.get('/api/feedback/export')).json()
   expect(records.items[0].comment).toBe('Понятные три отсека')
-  await page.goto('/app/settings')
   const download = page.waitForEvent('download')
   await page.getByRole('button', { name: 'Выгрузить отзывы' }).click()
   expect((await download).suggestedFilename()).toBe('kopilka-demo-feedback.json')
@@ -162,7 +164,7 @@ test('API outage, error retry, expired session, unknown route', async ({ page })
   await expect(page.getByTestId('balance-save')).toBeVisible()
   await page.context().clearCookies()
   await page.reload()
-  await expect(page.getByRole('button', { name: 'Посмотреть демо' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Я ребёнок' })).toBeVisible()
 })
 
 for (const width of [320, 360, 390, 430, 768, 820, 1024, 1366, 1440, 1920]) {
@@ -176,6 +178,9 @@ for (const width of [320, 360, 390, 430, 768, 820, 1024, 1366, 1440, 1920]) {
       if (response.status() >= 400) networkErrors.push(`${response.status()} ${response.url()}`)
     })
     await enter(page)
+    expect(
+      (await page.request.post('/api/demo/parent', { data: { pin: '0639', setup: true } })).ok(),
+    ).toBe(true)
     for (const path of [
       '/app',
       '/app/goals',
@@ -232,7 +237,7 @@ test('new browser session never reuses the previous family query cache', async (
   await expect(page.getByTestId('balance-save')).toHaveText(/1\s400\s₽/)
   await page.context().clearCookies()
   await page.goBack()
-  await page.getByRole('button', { name: 'Посмотреть демо' }).click()
+  await page.getByRole('button', { name: 'Я ребёнок' }).click()
   await expect(page.getByTestId('balance-save')).toHaveText(/1\s250\s₽/)
 })
 
@@ -263,8 +268,11 @@ for (const width of [390, 1440]) {
       .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
       .analyze()
     expect(result.violations).toEqual([])
-    await page.getByRole('button', { name: 'Посмотреть демо' }).click()
+    await page.getByRole('button', { name: 'Я ребёнок' }).click()
     await expect(page.getByRole('heading', { name: 'Мои три отсека' })).toBeVisible()
+    expect(
+      (await page.request.post('/api/demo/parent', { data: { pin: '0639', setup: true } })).ok(),
+    ).toBe(true)
     for (const path of [
       '/app',
       '/app/goals',

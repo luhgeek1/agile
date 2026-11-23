@@ -21,6 +21,12 @@ class FamilyRepository:
     def lock_snapshot(self, family_id: str) -> None:
         self._session.execute(select(Family.id).where(Family.id == family_id).with_for_update(read=True))
 
+    def get_for_update(self, family_id: str) -> Family:
+        self.lock(family_id)
+        return self._session.scalars(
+            select(Family).where(Family.id == family_id).execution_options(populate_existing=True)
+        ).one()
+
 
 class SessionRepository:
     def __init__(self, session: Session):

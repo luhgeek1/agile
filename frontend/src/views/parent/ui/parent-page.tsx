@@ -6,16 +6,7 @@ import { dateLabel, money } from '@/shared/lib/money'
 import { Button, Card, Page, PageHeading, Progress } from '@/shared/ui'
 import { MethodNote } from '@/widgets/method-note'
 import { useProduct } from '@/widgets/product-shell'
-import {
-  ArrowUpRight,
-  BookOpen,
-  CheckCircle2,
-  History,
-  MessageCircle,
-  ShieldCheck,
-  Target,
-  Users,
-} from 'lucide-react'
+import { ArrowUpRight, BookOpen, CheckCircle2, History, MessageCircle, Target } from 'lucide-react'
 import Link from 'next/link'
 
 export function ParentPage() {
@@ -23,25 +14,11 @@ export function ParentPage() {
   const completed = state.activities.filter((a) => a.completed_at)
   return (
     <Page className="parent-page">
-      <PageHeading
-        eyebrow="Родительское пространство"
-        title="Рядом с каждым открытием"
-        description="Помогайте замечать маленькие шаги. Большие разговоры начинаются с них."
-        action={
-          <span className="parent-mode">
-            <Users size={18} />
-            Режим родителя · демо
-          </span>
-        }
-      />
-      <div className="parent-intro">
-        <ShieldCheck size={22} />
-        <p>
-          Вы смотрите данные демо-профиля «{state.nickname}». Это отдельная зона интерфейса, без
-          защиты PIN-кодом. Ввод реальных данных детей здесь не предусмотрен.
-        </p>
-      </div>
+      <PageHeading title="Копилка ребёнка" description={`Демо-профиль «${state.nickname}»`} />
       <BalanceStrip state={state} />
+      <a className="text-link parent-game-link" href="/game/index.html#parents">
+        Прогресс в игре <ArrowUpRight size={17} aria-hidden="true" />
+      </a>
       <div className="parent-stats">
         <Card>
           <History size={23} />
@@ -61,9 +38,6 @@ export function ParentPage() {
           <span>пути к текущей цели</span>
         </Card>
       </div>
-      <p className="small-note">
-        По записям вашей демо-семьи. Это не оценка финансового поведения ребёнка.
-      </p>
       <div className="parent-columns">
         <Card>
           <div className="section-heading">

@@ -1,9 +1,10 @@
 'use client'
 
-import { useSave } from '@/shared/api'
+import { api, useSave } from '@/shared/api'
 import { Button, Card, FieldError, Page, PageHeading } from '@/shared/ui'
+import { useMutation } from '@tanstack/react-query'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ArrowRight, ArrowUpRight, Check, Heart, Star } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Check, Download, Heart, Star } from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Link from 'next/link'
@@ -17,6 +18,19 @@ const feedbackSchema = z.object({
 })
 export function FeedbackPage() {
   const save = useSave('/feedback')
+  const exportFeedback = useMutation({
+    mutationFn: () => api('/feedback/export'),
+    onSuccess: (data) => {
+      const url = URL.createObjectURL(
+        new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }),
+      )
+      const link = document.createElement('a')
+      link.href = url
+      link.download = 'kopilka-demo-feedback.json'
+      link.click()
+      setTimeout(() => URL.revokeObjectURL(url), 1000)
+    },
+  })
   const [success, setSuccess] = useState(false)
   const {
     register,
@@ -45,10 +59,7 @@ export function FeedbackPage() {
                 <Check size={35} />
               </span>
               <h2>Спасибо, что поделились!</h2>
-              <p>
-                Отзыв сохранён на сервере в вашей демо-сессии. Его можно выгрузить в настройках.
-                Автоматической отправки в НЦФГ в этой версии нет.
-              </p>
+              <p>Отзыв сохранён в вашей демо-сессии. Вы можете скачать его на этой странице.</p>
               <Button asChild>
                 <Link href="/app/parent">
                   К прогрессу ребёнка
@@ -148,10 +159,14 @@ export function FeedbackPage() {
           <p>
             В демо отзыв доступен только в этой сессии. НЦФГ не получает доступ к профилю ребёнка.
           </p>
-          <Link href="/app/settings" className="text-link">
-            О демо и данных
-            <ArrowUpRight size={17} />
-          </Link>
+          <Button
+            variant="secondary"
+            busy={exportFeedback.isPending}
+            onClick={() => exportFeedback.mutate()}
+          >
+            <Download size={18} aria-hidden="true" /> Выгрузить отзывы
+          </Button>
+          <FieldError message={exportFeedback.error?.message} />
         </aside>
       </div>
     </Page>

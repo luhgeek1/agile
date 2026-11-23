@@ -5,7 +5,7 @@ const qaDirectory = process.env.PLAYWRIGHT_ARTIFACTS_DIR ?? '../artifacts/qa'
 
 async function enter(page: Page) {
   await page.goto('/')
-  await page.getByRole('button', { name: 'Посмотреть демо' }).click()
+  await page.getByRole('button', { name: 'Я ребёнок' }).click()
   await expect(page.getByRole('heading', { name: 'Мои три отсека' })).toBeVisible()
   const carousel = page.getByRole('region', { name: 'Задания для полезных привычек' })
   await carousel.scrollIntoViewIfNeeded()

@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 
 test('game is a separate navigation item on the home and tasks screens', async ({ page }) => {
   await page.goto('/')
-  await page.getByRole('button', { name: 'Посмотреть демо' }).click()
+  await page.getByRole('button', { name: 'Я ребёнок' }).click()
   await expect(page.locator('.home-task')).toBeVisible()
   for (const [route, width] of [
     ['/app', 1440],
@@ -27,7 +27,7 @@ test('game is a separate navigation item on the home and tasks screens', async (
 test('carousel arrows leave all task text unobstructed on narrow screens', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto('/')
-  await page.getByRole('button', { name: 'Посмотреть демо' }).click()
+  await page.getByRole('button', { name: 'Я ребёнок' }).click()
   const carousel = page.locator('.activity-carousel')
   await expect(carousel.getByRole('button', { name: 'Следующее задание' })).toBeEnabled()
   await page.evaluate(() => document.fonts.ready)

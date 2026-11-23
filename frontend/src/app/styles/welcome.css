@@ -14,19 +14,6 @@
   justify-content: space-between;
   min-height: 92px;
 }
-.welcome-family-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 44px;
-  padding-inline: 8px;
-  color: var(--ink-muted);
-  font-weight: 800;
-}
-.welcome-family-link:hover {
-  color: var(--primary);
-  text-decoration: underline;
-}
 .welcome-hero {
   display: grid;
   grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
@@ -35,7 +22,7 @@
   padding-block: 20px 48px;
 }
 .welcome-intro h1 {
-  max-width: 12ch;
+  max-width: 14ch;
   font-size: clamp(42px, 5.1vw, 75px);
   font-weight: 950;
   line-height: 1.02;
@@ -50,6 +37,11 @@
 }
 .welcome-action {
   margin-top: 28px;
+}
+.welcome-role-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 .welcome-action .button {
   gap: 18px;
@@ -204,3 +196,25 @@
     padding: 15px;
   }
 }
+
+.parent-gate {
+  width: min(100%, 440px);
+  margin: 18px auto;
+}
+.parent-gate .card { padding: clamp(20px, 6vw, 32px); }
+.parent-gate-icon { color: var(--primary); margin-bottom: 12px; }
+.parent-gate h1 { font-size: clamp(25px, 5vw, 32px); }
+.parent-gate h1 + p { margin-top: 8px; color: var(--ink-muted); }
+.parent-gate form { margin-block: 22px 12px; }
+.parent-gate .text-link { min-height: 44px; }
+.parent-session-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 20px;
+  margin-bottom: 20px;
+  color: var(--ink-muted);
+  font-weight: 800;
+}
+.parent-game-link { min-height: 44px; margin-top: 8px; }
