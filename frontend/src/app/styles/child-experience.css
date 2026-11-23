@@ -205,19 +205,9 @@
 .home-bottom {
   margin-top: 30px;
 }
-.activity-card.featured-activity {
-  background: #eaf1e7;
-  border-color: #dae6d6;
-}
 .activity-card .pill {
   text-transform: none;
   letter-spacing: 0;
-}
-.featured-activity .activity-bottom .button {
-  background: #315c4c;
-}
-.featured-activity .activity-bottom .button:hover {
-  background: #244a3c;
 }
 .recent-card {
   border-radius: 22px;
@@ -432,12 +422,6 @@
   .home-bottom {
     margin-top: 26px;
     gap: 26px;
-  }
-  .home-task > .section-heading {
-    margin-inline: 0;
-  }
-  .activity-carousel-slide > .activity-card {
-    padding: 22px 34px;
   }
   .recent-card {
     padding-inline: 18px;

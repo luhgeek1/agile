@@ -6,16 +6,14 @@ import { CategoryIcon } from '@/entities/wallet/@x/activity'
 
 export function ActivityCard({
   activity,
-  featured = false,
   onOpen,
 }: {
   activity: Activity
-  featured?: boolean
   onOpen: (activity: Activity) => void
 }) {
   return (
     <Card
-      className={`activity-card ${activity.category} ${activity.completed_at ? 'is-complete' : ''} ${featured ? 'featured-activity' : ''}`}
+      className={`activity-card ${activity.category} ${activity.completed_at ? 'is-complete' : ''}`}
     >
       <div className="activity-top">
         <span className={`activity-mark ${activity.category}`}>
@@ -34,7 +32,7 @@ export function ActivityCard({
           <Clock3 size={16} />
           {activity.duration}
         </span>
-        <Button variant={featured ? 'primary' : 'secondary'} onClick={() => onOpen(activity)}>
+        <Button variant="secondary" onClick={() => onOpen(activity)}>
           {activity.completed_at ? 'Вспомнить задание' : 'Начать задание'}
           <Arrow size={17} />
         </Button>

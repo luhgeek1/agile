@@ -3,7 +3,7 @@ import { TransactionItem } from './transaction-item'
 
 const dateFormat = new Intl.DateTimeFormat('ru-RU', {
   day: 'numeric',
-  month: 'long',
+  month: 'short',
   year: 'numeric',
   timeZone: 'Europe/Moscow',
 })

@@ -7,7 +7,7 @@ import { api } from '@/shared/api'
 import { Button, Card, EmptyState, ErrorState, Loading, SegmentedControl } from '@/shared/ui'
 import { useProduct } from '@/widgets/product-shell'
 import { keepPreviousData, useInfiniteQuery } from '@tanstack/react-query'
-import { History, Plus } from 'lucide-react'
+import { ChevronDown, Plus } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useRef } from 'react'
 
@@ -50,11 +50,21 @@ export function RecentTransactions() {
   const items = query.data?.pages.flatMap((p) => p.items) ?? []
   return (
     <section id="recent" className="home-recent" aria-labelledby="recent-title" ref={section}>
-      <div className="section-heading">
-        <h2 id="recent-title">
-          <History size={21} aria-hidden="true" />
-          Последние шаги
-        </h2>
+      <div className="section-heading home-panel-heading">
+        <h2 id="recent-title">Последние шаги</h2>
+        <label className="history-kind">
+          <select
+            aria-label="Тип операции"
+            value={kind}
+            onChange={(event) => changeFilter('kind', event.target.value)}
+          >
+            <option value="">Все действия</option>
+            <option value="deposit">Пополнения</option>
+            <option value="withdraw">Траты и помощь</option>
+            <option value="transfer">Переносы</option>
+          </select>
+          <ChevronDown size={15} aria-hidden="true" />
+        </label>
       </div>
       <Card className="history-card">
         <div className="history-filters">
@@ -67,19 +77,6 @@ export function RecentTransactions() {
               ...categoryKeys.map((value) => ({ value, label: categories[value].title })),
             ]}
           />
-          <label className="type-filter">
-            <span>Действие</span>
-            <select
-              aria-label="Тип операции"
-              value={kind}
-              onChange={(e) => changeFilter('kind', e.target.value)}
-            >
-              <option value="">Все действия</option>
-              <option value="deposit">Пополнения</option>
-              <option value="withdraw">Траты и помощь</option>
-              <option value="transfer">Переносы</option>
-            </select>
-          </label>
         </div>
         <p className="sr-only" role="status">
           {query.isPending
@@ -107,7 +104,7 @@ export function RecentTransactions() {
             {query.hasNextPage && (
               <div className="load-more">
                 <Button
-                  variant="secondary"
+                  variant="ghost"
                   busy={query.isFetchingNextPage}
                   disabled={query.isPlaceholderData}
                   onClick={() => {

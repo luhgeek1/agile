@@ -24,55 +24,31 @@ test('game is a separate navigation item on the home and tasks screens', async (
   }
 })
 
-test('carousel arrows leave all task text unobstructed on narrow screens', async ({ page }) => {
+test('tasks and recent records fit at narrow widths and align on desktop', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' })
   await page.goto('/')
   await page.getByRole('button', { name: 'Я ребёнок' }).click()
-  const carousel = page.locator('.activity-carousel')
-  await expect(carousel.getByRole('button', { name: 'Следующее задание' })).toBeEnabled()
+  const tasks = page.getByRole('region', { name: 'Выбери задание' })
+  const recent = page.getByRole('region', { name: 'Последние шаги' })
+  await expect(tasks.getByRole('button')).toHaveCount(6)
+  await expect(recent.locator('.transaction-item')).toHaveCount(5)
   await page.evaluate(() => document.fonts.ready)
-  for (const width of [320, 390, 768, 1440]) {
+
+  for (const width of [320, 360, 390, 768, 1024, 1366, 1440]) {
     await page.setViewportSize({ width, height: 900 })
-    for (let slide = 0; slide < 6; slide++) {
-      await expect
-        .poll(
-          () =>
-            carousel.evaluate((root) => {
-              const card = root.querySelector('[data-active="true"]')!
-              const viewport = root
-                .querySelector('.activity-carousel-viewport')!
-                .getBoundingClientRect()
-              if (Math.abs(card.getBoundingClientRect().left - viewport.left) > 1.5) {
-                return ['active slide is not aligned to the viewport']
-              }
-              const arrows = [...root.querySelectorAll('.activity-carousel-arrow')].map((arrow) =>
-                arrow.getBoundingClientRect(),
-              )
-              const walker = document.createTreeWalker(card, NodeFilter.SHOW_TEXT)
-              const collisions: string[] = []
-              while (walker.nextNode()) {
-                const node = walker.currentNode
-                if (!node.textContent?.trim() || node.parentElement?.closest('svg')) continue
-                const range = document.createRange()
-                range.selectNodeContents(node)
-                for (const text of range.getClientRects()) {
-                  if (
-                    arrows.some(
-                      (arrow) =>
-                        Math.min(text.right, arrow.right) - Math.max(text.left, arrow.left) > 1 &&
-                        Math.min(text.bottom, arrow.bottom) - Math.max(text.top, arrow.top) > 1,
-                    )
-                  ) {
-                    collisions.push(node.textContent.trim())
-                  }
-                }
-              }
-              return collisions
-            }),
-          { message: `unobstructed task ${slide + 1} at ${width}px` },
-        )
-        .toEqual([])
-      await carousel.getByRole('button', { name: 'Следующее задание' }).click()
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+    for (const control of await tasks.getByRole('button').all()) {
+      expect((await control.boundingBox())!.height).toBeGreaterThanOrEqual(44)
+    }
+    const taskHeading = (await tasks.getByRole('heading').boundingBox())!
+    const recentHeading = (await recent
+      .getByRole('heading', { name: 'Последние шаги' })
+      .boundingBox())!
+    if (width >= 1024) {
+      expect(Math.abs(taskHeading.y - recentHeading.y)).toBeLessThan(2)
+      expect(recentHeading.x).toBeGreaterThan(taskHeading.x)
+    } else if (width < 768) {
+      expect(recentHeading.y).toBeGreaterThan(taskHeading.y)
     }
   }
 })

@@ -5,12 +5,11 @@ import { categoryKeys, SectionCard } from '@/entities/wallet'
 import { AddButton } from '@/features/record-operation'
 import { money } from '@/shared/lib/money'
 import { Loading, Page } from '@/shared/ui'
-import { ActivityCarousel } from '@/widgets/activity-carousel'
 import { useProduct } from '@/widgets/product-shell'
-import { ArrowUpRight, Info, Sparkles } from 'lucide-react'
-import Link from 'next/link'
+import { Info } from 'lucide-react'
 import { Suspense } from 'react'
 
+import { HomeTasks } from './home-tasks'
 import { RecentTransactions } from './recent-transactions'
 
 export function HomePage() {
@@ -55,19 +54,7 @@ export function HomePage() {
         </div>
       </div>
       <div className="home-bottom">
-        <section className="home-task">
-          <div className="section-heading">
-            <h2>
-              <Sparkles size={21} />
-              Выбери задание
-            </h2>
-            <Link className="text-link" href="/app/activities">
-              Все задания
-              <ArrowUpRight size={17} />
-            </Link>
-          </div>
-          <ActivityCarousel activities={state.activities} onOpen={openActivity} />
-        </section>
+        <HomeTasks activities={state.activities} onOpen={openActivity} />
         <Suspense fallback={<Loading />}>
           <RecentTransactions />
         </Suspense>
