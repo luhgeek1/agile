@@ -3,7 +3,6 @@ import type { PropsWithChildren } from 'react'
 import { AppProviders } from './providers/app-providers'
 import './styles/index.css'
 import './styles/child-experience.css'
-import './styles/gamification.css'
 import './styles/refinement.css'
 import './styles/goals.css'
 import './styles/activities.css'
@@ -17,8 +16,7 @@ export const metadata: Metadata = {
     default: 'Коплю — Трачу — Помогаю · Моя копилка',
     template: '%s · Коплю — Трачу — Помогаю',
   },
-  description:
-    'Коплю — Трачу — Помогаю. Три маленькие привычки для больших открытий. Образовательная копилка для детей и родителей.',
+  description: 'Коплю — Трачу — Помогаю. Копилка и задания о деньгах для детей 6–10 лет.',
   icons: { icon: '/brand/favicon.png' },
 }
 export const viewport: Viewport = { themeColor: '#F7F2E8' }

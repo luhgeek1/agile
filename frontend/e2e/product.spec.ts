@@ -87,9 +87,9 @@ test('activities, parent progress, feedback validation, persistence, export', as
   await page.goto('/app/activities')
   const task = page
     .locator('.activity-card')
-    .filter({ has: page.getByRole('heading', { name: 'Добро без монет' }) })
-  await task.getByRole('button', { name: 'Попробовать' }).click()
-  await page.getByRole('button', { name: 'Я попробовал!' }).click()
+    .filter({ has: page.getByRole('heading', { name: 'Помоги с домашним делом' }) })
+  await task.getByRole('button', { name: 'Начать задание' }).click()
+  await page.getByRole('button', { name: 'Готово!' }).click()
   await expect(page.getByRole('dialog')).not.toBeVisible()
   await page.reload()
   await expect(task.getByText('Выполнено', { exact: true })).toBeVisible()
@@ -97,7 +97,7 @@ test('activities, parent progress, feedback validation, persistence, export', as
   await page.goto('/app/parent')
   await expect(page.getByRole('heading', { name: 'О чём поговорить сегодня' })).toBeVisible()
   await expect(
-    page.locator('.completed-list').getByRole('button', { name: /Добро без монет/ }),
+    page.locator('.completed-list').getByRole('button', { name: /Помоги с домашним делом/ }),
   ).toBeVisible()
   await page.getByRole('link', { name: 'Оставить отзыв' }).click()
   await page.getByRole('button', { name: 'Сохранить отзыв' }).click()
@@ -128,7 +128,7 @@ test('safe reset, empty states, goal creation and achieved state', async ({ page
   await page.getByRole('button', { name: 'Да, сбросить' }).click()
   await expect(page.getByText('Профиль «Саша» · 0 записей.', { exact: false })).toBeVisible()
   await page.goto('/app/transactions')
-  await expect(page.getByRole('heading', { name: 'Здесь пока тихо' })).toBeVisible()
+  await expect(page.getByRole('heading', { name: 'Записей пока нет' })).toBeVisible()
   await page.goto('/app/goals')
   await page.getByRole('button', { name: 'Создать цель' }).click()
   await page.getByRole('button', { name: 'Сохранить цель', exact: true }).click()

@@ -9,7 +9,7 @@ import type { Activity } from '@/shared/api/contracts'
 import { ErrorState, Loading, Logo, Modal } from '@/shared/ui'
 import {
   CircleHelp,
-  History,
+  Gamepad2,
   Home as HomeIcon,
   Settings,
   Sparkles,
@@ -27,7 +27,7 @@ const navItems = [
   { to: '/app', icon: HomeIcon, text: 'Моя копилка', short: 'Копилка', end: true },
   { to: '/app/goals', icon: Target, text: 'Моя цель', short: 'Цель' },
   { to: '/app/activities', icon: Sparkles, text: 'Задания', short: 'Задания' },
-  { to: '/app/transactions', icon: History, text: 'История', short: 'История' },
+  { to: '/game/index.html', icon: Gamepad2, text: 'Игра', short: 'Игра', external: true },
 ]
 export function ProductLayout({ children }: PropsWithChildren) {
   const query = useAppState()
@@ -55,7 +55,7 @@ export function ProductLayout({ children }: PropsWithChildren) {
     }
   }
   useEffect(() => {
-    window.scrollTo(0, 0)
+    if (!window.location.hash) window.scrollTo(0, 0)
     document.getElementById('main')?.focus({ preventScroll: true })
   }, [pathname, query.isPending])
   const sessionExpired = query.error instanceof ApiError && query.error.status === 401
@@ -89,18 +89,23 @@ export function ProductLayout({ children }: PropsWithChildren) {
             <Logo />
           </Link>
           <nav className="desktop-nav" aria-label="Основная навигация">
-            {navItems.map(({ to, text, end }) => (
-              <Link
-                key={to}
-                href={to}
-                className={(end ? pathname === to : pathname.startsWith(to)) ? 'active' : undefined}
-                aria-current={
-                  (end ? pathname === to : pathname.startsWith(to)) ? 'page' : undefined
-                }
-              >
-                {text}
-              </Link>
-            ))}
+            {navItems.map(({ to, text, end, external }) => {
+              const NavLink = external ? 'a' : Link
+              return (
+                <NavLink
+                  key={to}
+                  href={to}
+                  className={
+                    (end ? pathname === to : pathname.startsWith(to)) ? 'active' : undefined
+                  }
+                  aria-current={
+                    (end ? pathname === to : pathname.startsWith(to)) ? 'page' : undefined
+                  }
+                >
+                  {text}
+                </NavLink>
+              )
+            })}
           </nav>
           <div className="header-actions">
             <Link
@@ -128,11 +133,7 @@ export function ProductLayout({ children }: PropsWithChildren) {
         <div className="demo-strip">
           <div>
             <span className="demo-dot" />
-            <Link href="/app/settings">Демо-пространство</Link>
-            <span className="demo-strip-description">
-              Можно пробовать. Все изменения сохраняются.
-            </span>
-            <span className="demo-mobile-description">Изменения сохраняются</span>
+            <Link href="/app/settings">Демо</Link>
             <button
               type="button"
               className="icon-button demo-strip-close"
@@ -162,9 +163,6 @@ export function ProductLayout({ children }: PropsWithChildren) {
         </ProductStateContext.Provider>
       </main>
       <footer className="app-footer">
-        <span>
-          <span className="footer-mark">к·т·п</span> Маленькие шаги имеют значение.
-        </span>
         <Link href="/app/settings">
           <CircleHelp size={17} />
           Как это работает
@@ -172,17 +170,20 @@ export function ProductLayout({ children }: PropsWithChildren) {
         <span>Образовательный прототип · НЦФГ</span>
       </footer>
       <nav className="mobile-nav" aria-label="Навигация на телефоне">
-        {navItems.map(({ to, icon: Icon, short, end }) => (
-          <Link
-            key={to}
-            href={to}
-            className={(end ? pathname === to : pathname.startsWith(to)) ? 'active' : undefined}
-            aria-current={(end ? pathname === to : pathname.startsWith(to)) ? 'page' : undefined}
-          >
-            <Icon size={23} strokeWidth={1.8} />
-            <span>{short}</span>
-          </Link>
-        ))}
+        {navItems.map(({ to, icon: Icon, short, end, external }) => {
+          const NavLink = external ? 'a' : Link
+          return (
+            <NavLink
+              key={to}
+              href={to}
+              className={(end ? pathname === to : pathname.startsWith(to)) ? 'active' : undefined}
+              aria-current={(end ? pathname === to : pathname.startsWith(to)) ? 'page' : undefined}
+            >
+              <Icon size={23} strokeWidth={1.8} />
+              <span>{short}</span>
+            </NavLink>
+          )
+        })}
       </nav>
       <OperationDialog
         open={operation !== null}
@@ -198,7 +199,7 @@ export function ProductLayout({ children }: PropsWithChildren) {
         }}
         title={activity?.title ?? 'Задание'}
         fallbackFocus={activityFocus}
-        description="Маленькое открытие для тебя и твоей семьи."
+        description={activity?.description ?? 'Что сделать'}
       >
         {activity && (
           <ActivityAction

@@ -12,14 +12,14 @@ async function enter(page: Page, path: string) {
 test('journal merges a date across pages, keeps years distinct and ignores stale filters', async ({
   page,
 }) => {
-  const records = Array.from({ length: 32 }, (_, index) => ({
+  const records = Array.from({ length: 7 }, (_, index) => ({
     id: String(index),
     kind: 'deposit',
     category: index % 2 ? 'save' : 'help',
     destination: null,
     amount: 12500,
     note: `Запись №${index + 1}`,
-    occurred_on: index < 31 ? '2026-11-15' : '2025-11-15',
+    occurred_on: index < 6 ? '2026-11-15' : '2025-11-15',
     created_at: '2026-11-16T00:00:00Z',
   }))
   await page.route('**/api/transactions?*', async (route) => {
@@ -30,26 +30,26 @@ test('journal merges a date across pages, keeps years distinct and ignores stale
     if (category)
       await new Promise((resolve) => setTimeout(resolve, category === 'save' ? 1200 : 80))
     await route.fulfill({
-      json: { items: selected.slice(offset, offset + 30), has_more: offset + 30 < selected.length },
+      json: { items: selected.slice(offset, offset + 5), has_more: offset + 5 < selected.length },
     })
   })
   await enter(page, '/app/transactions')
   await expect(page.locator('.history-day')).toHaveCount(1)
-  await expect(page.locator('.transaction-item')).toHaveCount(30)
+  await expect(page.locator('.transaction-item')).toHaveCount(5)
   await page.getByRole('button', { name: 'Показать ещё' }).click()
-  await expect(page.locator('.transaction-item')).toHaveCount(32)
+  await expect(page.locator('.transaction-item')).toHaveCount(7)
   await expect(page.locator('.history-day')).toHaveCount(2)
-  await expect(page.locator('.history-day').first().locator('li')).toHaveCount(31)
+  await expect(page.locator('.history-day').first().locator('li')).toHaveCount(6)
   await expect(page.locator('time[datetime="2025-11-15"]')).toContainText('2025')
   await page.getByRole('button', { name: 'Коплю', exact: true }).click()
   await expect(page.locator('.history-results')).toHaveAttribute('aria-busy', 'true')
-  await expect(page.locator('.transaction-item')).toHaveCount(32)
+  await expect(page.locator('.transaction-item')).toHaveCount(7)
   await page.getByRole('button', { name: 'Помогаю', exact: true }).click()
   await expect(page.locator('.history-results')).toHaveAttribute('aria-busy', 'false')
   await page.waitForLoadState('networkidle')
-  await expect(page.locator('.transaction-item')).toHaveCount(16)
+  await expect(page.locator('.transaction-item')).toHaveCount(4)
   await expect(page.locator('.transaction-icon.save')).toHaveCount(0)
-  await expect(page.locator('.history-caption')).toContainText('Показано записей: 16')
+  await expect(page.locator('#recent [role=status]')).toContainText('Показано записей: 4')
 })
 
 test('activity filters remain usable through completion and repeated switching', async ({
@@ -58,24 +58,23 @@ test('activity filters remain usable through completion and repeated switching',
   await page.setViewportSize({ width: 390, height: 844 })
   await enter(page, '/app/activities')
   const filters = page.getByRole('group', { name: 'Фильтр заданий' })
-  await filters.getByRole('button', { name: 'Можно попробовать' }).click()
+  await filters.getByRole('button', { name: 'Новые' }).click()
   await expect(page.locator('.activities-grid .activity-card')).toHaveCount(5)
   await page
     .locator('.activities-grid')
-    .getByRole('button', { name: 'Попробовать' })
+    .getByRole('button', { name: 'Начать задание' })
     .first()
     .focus()
   await page.keyboard.press('Enter')
-  await page.getByRole('dialog').getByRole('button', { name: 'Я попробовал!' }).click()
+  await page.getByRole('dialog').getByRole('button', { name: 'Готово!' }).click()
   await expect(page.getByRole('dialog')).not.toBeVisible()
   await expect(page.locator('.activities-grid .activity-card')).toHaveCount(4)
-  await expect(page.locator('.activity-list-heading')).toContainText('Открыто 2 из 6')
-  await expect(filters.getByRole('button', { name: 'Можно попробовать' })).toBeFocused()
+  await expect(filters.getByRole('button', { name: 'Новые' })).toBeFocused()
   await filters.getByRole('button', { name: 'Выполнено', exact: true }).click()
   await expect(page.locator('.activities-grid .activity-card')).toHaveCount(2)
-  await filters.getByRole('button', { name: 'Все открытия' }).click()
-  await filters.getByRole('button', { name: 'Можно попробовать' }).click()
-  await filters.getByRole('button', { name: 'Все открытия' }).click()
+  await filters.getByRole('button', { name: 'Все задания' }).click()
+  await filters.getByRole('button', { name: 'Новые' }).click()
+  await filters.getByRole('button', { name: 'Все задания' }).click()
   await expect(page.locator('.activities-grid .activity-card')).toHaveCount(6)
   const opener = page
     .locator('.activities-grid')
@@ -133,8 +132,10 @@ for (const width of [390, 640, 1440]) {
         return bounds ? bounds.y + bounds.height : Infinity
       })
       .toBeLessThanOrEqual(width < 768 ? navBounds!.y - 8 : 888)
-    await nav.getByRole('link', { name: 'История', exact: true }).click()
-    await expect(page.getByRole('heading', { name: 'История копилки' })).toBeVisible()
+    await nav
+      .getByRole('link', { name: 'Задания', exact: true })
+      .click()
+    await expect(page.getByRole('heading', { name: 'Задания', exact: true })).toBeVisible()
     const close = page.getByRole('button', { name: 'Закрыть уведомление' })
     const closeBounds = await close.boundingBox()
     expect(closeBounds!.width).toBeGreaterThanOrEqual(43.99)

@@ -13,7 +13,7 @@ async function enter(page: Page) {
   return carousel
 }
 
-test('tasks loop in both directions, show actionable steps and open the selected task', async ({
+test('tasks loop in both directions, open the selected task and show its steps', async ({
   page,
 }) => {
   const carousel = await enter(page)
@@ -27,8 +27,6 @@ test('tasks loop in both directions, show actionable steps and open the selected
   let index = tasks.findIndex((task) => !task.completed_at)
   const active = carousel.locator('[data-active="true"]')
   await expect(active.getByRole('heading', { name: tasks[index].title, exact: true })).toBeVisible()
-  await expect(active.locator('.activity-steps > li')).toHaveCount(3)
-  await expect(active.getByText('Зачем?', { exact: true })).toBeVisible()
   for (const direction of [1, -1]) {
     for (let step = 0; step < tasks.length * 2 + 1; step++) {
       await carousel
@@ -48,7 +46,7 @@ test('tasks loop in both directions, show actionable steps and open the selected
   await expect(dialog.locator('.activity-steps > li > span:last-child')).toHaveText(
     tasks[index].steps,
   )
-  await dialog.getByRole('button', { name: 'Я попробовал!' }).click()
+  await dialog.getByRole('button', { name: 'Готово!' }).click()
   await expect(dialog).not.toBeVisible()
   await expect(active.getByRole('heading', { name: tasks[index].title, exact: true })).toBeVisible()
   await expect(active.getByText('Выполнено', { exact: true })).toBeVisible()

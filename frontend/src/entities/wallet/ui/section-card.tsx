@@ -35,8 +35,8 @@ export function SectionCard({
           <span className="pocket-add-label">Добавить</span>
         </button>
       </div>
-      <Link href={`/app/transactions?category=${category}`} className="category-history">
-        История отсека <Arrow size={15} />
+      <Link href={`/app?category=${category}#recent`} className="category-history">
+        Записи <Arrow size={15} />
       </Link>
     </Card>
   )

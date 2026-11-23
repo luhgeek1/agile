@@ -97,10 +97,10 @@ function GoalForm({ goal, onClose }: { goal: Goal | null; onClose: () => void })
         <div className="illustration-picker">
           {(
             [
+              ['star', Sparkles, 'Моя мечта'],
               ['bike', Bike, 'Велосипед'],
               ['book', BookOpen, 'Книга'],
               ['skates', Footprints, 'Ролики'],
-              ['star', Sparkles, 'Моя мечта'],
             ] as const
           ).map(([key, Icon, name]) => (
             <button

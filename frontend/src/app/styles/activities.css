@@ -1,47 +1,3 @@
-.park-invitation { grid-template-columns: 1.1fr .9fr; gap: 28px; padding: 36px 40px; background: var(--save-soft); border-color: var(--line); overflow: hidden; }
-.park-invitation-copy { min-width: 0; }
-.park-invitation h2 { font-size: clamp(28px, 3vw, 38px); line-height: 1.1; letter-spacing: -.025em; max-width: 18ch; margin: 14px 0; text-wrap: balance; }
-.park-invitation p { font-size: 15px; max-width: 47ch; line-height: 1.65; margin-bottom: 22px; }
-.park-invitation small { font-size: 12px; max-width: 53ch; line-height: 1.6; margin-top: 16px; }
-.park-scene { position: relative; width: 100%; aspect-ratio: 480 / 300; align-self: center; }
-.park-path { position: absolute; width: 100%; inset: 0; }
-.park-scene .jar { position: absolute; width: 32%; height: auto; margin: 0; }
-.park-scene .park-guide-save { left: 2%; top: 23%; rotate: -7deg; }
-.park-scene .park-guide-spend { left: 30%; top: 0; rotate: 5deg; }
-.park-scene .park-guide-help { right: 0; top: 28%; rotate: 7deg; }
-.park-scene-caption { position: absolute; inset: auto 0 0; text-align: center; color: #47633e; font-size: 12px; font-weight: 700; letter-spacing: .02em; }
-.habit-collection { margin-top: 34px; }
-.habit-collection > h2 { font-size: 24px; letter-spacing: -.02em; }
-.habit-collection > p { font-size: 14px; max-width: 70ch; margin-bottom: 22px; }
-.habit-trails { gap: 0; border-block: 1px solid var(--line); }
-.habit-trail { display: flex; flex-direction: column; border: 0; border-radius: 0; padding: 22px 24px; background: transparent; }
-.habit-trail + .habit-trail { border-left: 1px solid var(--line); }
-.habit-trail:hover { background: #edf3ee; }
-.habit-trail-title { width: 100%; margin-bottom: 14px; }
-.habit-trail-title strong { font-size: 18px; }
-.habit-trail .progress { width: 100%; height: 5px; }
-.habit-trail-next { font-size: 12px; margin-top: 12px; }
-@media (max-width: 1023px) {
-  .park-invitation { padding: 28px; gap: 10px; grid-template-columns: 1.2fr .8fr; }
-  .habit-trail { padding: 18px 16px; }
-}
-@media (max-width: 639px) {
-  .park-invitation { grid-template-columns: minmax(0, 1fr); padding: 24px; gap: 22px; }
-  .park-invitation h2 { font-size: 30px; }
-  .park-invitation .eyebrow { font-size: 10px; }
-  .park-scene { max-width: 290px; justify-self: center; }
-  .park-invitation .button { width: 100%; }
-  .habit-collection > h2 { font-size: 23px; line-height: 1.2; }
-  .habit-trails { grid-template-columns: minmax(0, 1fr); }
-  .habit-trail { padding: 18px 4px; }
-  .habit-trail + .habit-trail { border-left: 0; border-top: 1px solid var(--line); }
-}
-@media (min-width: 640px) and (max-width: 767px) {
-  .habit-trails { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-.activity-list-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 18px; }
-.activity-list-heading h2 { font-size: 24px; letter-spacing: -.02em; }
-.activity-list-heading > span { font-size: 13px; color: var(--ink-muted); white-space: nowrap; }
 .activities-page .activity-filters { margin-bottom: 20px; }
 .activities-page .activities-grid { display: block; background: white; border: 1px solid var(--line); border-radius: 24px; }
 .activities-page .activities-grid:empty { display: none; }
@@ -59,25 +15,12 @@
 .activities-page .activities-grid > div { animation: task-appear 220ms ease-out both; }
 @keyframes task-appear { from { opacity: 0; } to { opacity: 1; } }
 @media (max-width: 767px) {
-  .activity-list-heading { align-items: flex-start; flex-direction: column; gap: 8px; }
-  .activity-list-heading h2 { font-size: 23px; }
   .activities-page .activity-card { grid-template-columns: 42px minmax(0, 1fr); padding: 22px; gap: 5px 14px; }
   .activities-page .activity-mark { grid-row: 1 / 3; width: 42px; height: 42px; border-radius: 14px; }
   .activities-page .activity-card h2 { grid-row: 1; font-size: 20px; }
   .activities-page .activity-top .pill { grid-row: 2; }
   .activities-page .activity-card > p { grid-column: 1 / -1; margin-top: 8px; }
   .activities-page .activity-bottom { grid-column: 1 / -1; grid-row: 4; flex-direction: row; justify-content: space-between; align-items: center; margin-top: 14px; flex-wrap: wrap; }
-}
-@media (max-width: 639px) {
-  .park-scene { max-width: 240px; }
-  .habit-trails { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .habit-trail { padding: 16px 10px; }
-  .habit-trail + .habit-trail { border-top: 0; border-left: 1px solid var(--line); }
-  .habit-trail-title { flex-direction: column; align-items: flex-start; gap: 4px; }
-  .habit-trail-title svg { display: none; }
-  .habit-trail-title strong { font-size: 15px; }
-  .habit-trail-title > span { margin: 0; font-size: 12px; }
-  .habit-trail-next { font-size: 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .activities-page .activities-grid > div { animation: none; }

@@ -68,8 +68,8 @@ export function ParentPage() {
         <Card>
           <div className="section-heading">
             <h2>Последние действия</h2>
-            <Link className="text-link" href="/app/transactions">
-              История
+            <Link className="text-link" href="/app#recent">
+              Все записи
               <ArrowUpRight size={17} />
             </Link>
           </div>

@@ -1,15 +1,17 @@
 'use client'
 
 import { GoalCard } from '@/entities/goal'
-import { TransactionItem } from '@/entities/transaction'
 import { categoryKeys, SectionCard } from '@/entities/wallet'
 import { AddButton } from '@/features/record-operation'
 import { money } from '@/shared/lib/money'
-import { Button, Card, EmptyState, Page } from '@/shared/ui'
+import { Loading, Page } from '@/shared/ui'
 import { ActivityCarousel } from '@/widgets/activity-carousel'
 import { useProduct } from '@/widgets/product-shell'
-import { ArrowRight, ArrowUpRight, Heart, History, Info, Map, Sparkles, Sun } from 'lucide-react'
+import { ArrowUpRight, Info, Sparkles } from 'lucide-react'
 import Link from 'next/link'
+import { Suspense } from 'react'
+
+import { RecentTransactions } from './recent-transactions'
 
 export function HomePage() {
   const { state, add, editGoal, openActivity } = useProduct()
@@ -17,14 +19,7 @@ export function HomePage() {
   return (
     <Page>
       <div className="home-hero">
-        <div>
-          <div className="greeting">
-            <Sun className="greeting-sun" size={22} aria-hidden="true" />
-            Привет, {state.nickname}!
-          </div>
-          <h1>Что сделаем сегодня?</h1>
-          <p>Каждая монетка — маленький шаг к большой мечте.</p>
-        </div>
+        <h1>Моя копилка</h1>
         <div className="home-hero-side">
           <AddButton onClick={() => add()} />
         </div>
@@ -49,7 +44,7 @@ export function HomePage() {
           </div>
           <p className="physical-note">
             <Info size={15} />
-            Это твои записи. Настоящие монетки живут в настоящей копилке.
+            Записывай сюда, сколько положил или взял из копилки.
           </p>
         </div>
         <div className="home-goal">
@@ -72,51 +67,10 @@ export function HomePage() {
             </Link>
           </div>
           <ActivityCarousel activities={state.activities} onOpen={openActivity} />
-          <a className="home-park-link" href="/game/index.html">
-            <Map size={24} aria-hidden="true" />
-            <span>
-              <strong>Открыть карту игры</strong>
-              <small>Парк открытий · истории и тренировка</small>
-            </span>
-            <ArrowUpRight size={20} aria-hidden="true" />
-          </a>
         </section>
-        <section className="home-recent">
-          <div className="section-heading">
-            <h2>
-              <History size={21} />
-              Последние шаги
-            </h2>
-          </div>
-          <Card className="recent-card">
-            {state.recent_transactions.length ? (
-              <ul>
-                {state.recent_transactions.map((t) => (
-                  <TransactionItem key={t.id} item={t} />
-                ))}
-              </ul>
-            ) : (
-              <EmptyState
-                title="Твоя история начинается"
-                description="Запиши первое действие с копилкой."
-              >
-                <Button onClick={() => add()}>Добавить действие</Button>
-              </EmptyState>
-            )}
-          </Card>
-          <Link className="text-link recent-history-link" href="/app/transactions">
-            Посмотреть всю историю
-            <ArrowRight size={17} />
-          </Link>
-        </section>
-      </div>
-      <div className="together-note">
-        <Heart size={20} />
-        <p>Мечтать интереснее вместе. Позови взрослого — у него тоже есть своя страничка.</p>
-        <Link href="/app/parent">
-          Родителям
-          <ArrowUpRight size={18} />
-        </Link>
+        <Suspense fallback={<Loading />}>
+          <RecentTransactions />
+        </Suspense>
       </div>
     </Page>
   )

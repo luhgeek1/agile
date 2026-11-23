@@ -3,7 +3,6 @@ import { Button, Card } from '@/shared/ui'
 import { ArrowUpRight as Arrow, Check, Clock3 } from 'lucide-react'
 
 import { CategoryIcon } from '@/entities/wallet/@x/activity'
-import { ActivityInstructions } from './activity-instructions'
 
 export function ActivityCard({
   activity,
@@ -26,21 +25,17 @@ export function ActivityCard({
             <CategoryIcon category={activity.category} size={25} />
           )}
         </span>
-        <span className="pill">{activity.completed_at ? 'Выполнено' : activity.tag}</span>
+        {activity.completed_at && <span className="pill">Выполнено</span>}
       </div>
       <h2>{activity.title}</h2>
-      {featured ? <ActivityInstructions activity={activity} /> : <p>{activity.description}</p>}
+      <p>{activity.description}</p>
       <div className="activity-bottom">
         <span>
           <Clock3 size={16} />
           {activity.duration}
         </span>
         <Button variant={featured ? 'primary' : 'secondary'} onClick={() => onOpen(activity)}>
-          {activity.completed_at
-            ? 'Вспомнить задание'
-            : featured
-              ? 'Начать задание'
-              : 'Попробовать'}
+          {activity.completed_at ? 'Вспомнить задание' : 'Начать задание'}
           <Arrow size={17} />
         </Button>
       </div>

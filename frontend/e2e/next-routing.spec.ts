@@ -40,9 +40,9 @@ test('Next navigation preserves the document, updates titles and restores URL fi
   )
   await page
     .getByRole('navigation', { name: 'Основная навигация' })
-    .getByRole('link', { name: 'История' })
+    .getByRole('link', { name: 'Моя копилка' })
     .click()
-  await expect(page).toHaveURL(/\/app\/transactions$/)
+  await expect(page).toHaveURL(/\/app$/)
   await page.getByRole('button', { name: 'Коплю', exact: true }).click()
   await expect(page).toHaveURL(/category=save/)
   await page.getByLabel('Тип операции').selectOption('deposit')
